@@ -209,18 +209,18 @@ int TorqueTimerInfo::GetPowerOnTime(){
 
 class CommandMessage{
 private:
-	int TorqueCommand;
-	int SpeedCommand;
-	bool DirectionCommand;
-	bool InverterEnable;
-	bool InverterDischarge;
-	bool SpeedMode;
-	int CommandedTorqueLimit;
+	int TorqueCommand;  //FLAG 1
+	int SpeedCommand; //FLAG 2
+	bool DirectionCommand; //FLAG 3
+	bool InverterEnable; //FLAG 4
+	bool InverterDischarge; //FLAG 5
+	bool SpeedMode; //FLAG 6
+	int CommandedTorqueLimit; //FLAG 7
 	struct can_frame frame;
 
 public:
 	CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit);
-	void SetCommandedTorque;
+	void SetParameter(int, int);
 };
 
 CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit){
@@ -238,19 +238,20 @@ CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Directi
 	//Torque Command
 	frame.data[0] = this->TorqueCommand & 0xFF;
 	frame.data[1] = this->TorqueCommand >> 8;
-	//séed command nao importa por enquanto (soh fazendo o modo de torque aqui!)
+	//speed command nao importa por enquanto (soh fazendo o modo de torque aqui!)
 	frame.data[2] = 0;
 	frame.data[3] = 0;
 	//Direction Command
 	frame.data[4] = (unsigned char)this->DirectionCommand;
 	//Inverter Enable
 
-	frame.data[5] = ((unsigned char)this->InverterEnable) & 0x1 | ((unsigned char)this->InverterDischarge) & 0x1) << 1;
+	frame.data[5] = ((unsigned char)this->InverterEnable) & 0x1 | ((unsigned char)this->InverterDischarge) & 0x1 << 1; // conforme manual, cada um tem um bit
 
-	frame.data[6] = ;
-	frame.data[7] = ;
+	//Speed Mode Enable
+	frame.data[6] = 0; // O controlador não vai mudar para o modo speed
+	//CommandedTorqueLimit
+	frame.data[7] = 0; //como está zero, o valor usado será aquele da E2PROM
 
-	SetCommandedTorque(CommandedTorque); //TODO precisa disso aqui?
 
 };
 
@@ -259,6 +260,37 @@ void SetCommandedTorque(int Torque){ //TODO a desenvolver
 	frame.data[]; //
 }
 
+void CommandMessage::SetParameter(int Value, int flag){
+	if(flag == 1){ //TorqueCommand
+		TorqueCommand = Value;
+
+	}
+	if(flag == 2){
+		SpeedCommand = Value;
+		
+	}
+	if(flag == 3){
+		DirectionCommand = Value;
+		
+	}
+	if(flag == 4){
+		InverterEnable = Value;
+		
+	}
+	if(flag == 5){
+		InverterDischarge = Value;
+		
+	}
+	if(flag == 6){
+		SpeedMode = Value;
+		
+	}
+	if(flag == 7){
+		CommandedTorqueLimit = Value;
+		
+	}
+
+}
 
 
 int main(){
