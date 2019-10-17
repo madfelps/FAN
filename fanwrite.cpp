@@ -238,14 +238,14 @@ CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Directi
 	//Torque Command
 	frame.data[0] = this->TorqueCommand & 0xFF;
 	frame.data[1] = this->TorqueCommand >> 8;
-	//séed command nao importa por enquanto (soh fazendo o modo de torque aqui!)
+	//speed command nao importa por enquanto (soh fazendo o modo de torque aqui!)
 	frame.data[2] = 0;
 	frame.data[3] = 0;
 	//Direction Command
 	frame.data[4] = (unsigned char)this->DirectionCommand;
 	//Inverter Enable
 
-	frame.data[5] = ((unsigned char)this->InverterEnable) & 0x1 | ((unsigned char)this->InverterDischarge) & 0x1) << 1;
+	frame.data[5] = ((unsigned char)this->InverterEnable) & 0x1 | ((unsigned char)this->InverterDischarge) & 0x1 << 1;
 
 	frame.data[6] = ;
 	frame.data[7] = ;
@@ -306,10 +306,9 @@ int main(){
 		CommandMessage ObjCommandMessage(Aux, 0, 1, ?, ?, 0, Aux1);
 		//TODO mandar
 	}
-	else{
-
+	else{ // Programa será fechado
+		return 0;
 	}
-	//
 
 	int nbytes = write(s, &frame, sizeof(struct can_frame)); //TODO por que fazer isso?
 
