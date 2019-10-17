@@ -238,14 +238,14 @@ CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Directi
 	//Torque Command
 	frame.data[0] = this->TorqueCommand & 0xFF;
 	frame.data[1] = this->TorqueCommand >> 8;
-	//speed command nao importa por enquanto (soh fazendo o modo de torque aqui!)
+	//speed command nao importa por enquanto (soh fazendo o modo de torque aqui!) TODO a desenvolver
 	frame.data[2] = 0;
 	frame.data[3] = 0;
 	//Direction Command
 	frame.data[4] = (unsigned char)this->DirectionCommand;
 	//Inverter Enable
 
-	frame.data[5] = ((unsigned char)this->InverterEnable) & 0x1 | ((unsigned char)this->InverterDischarge) & 0x1 << 1; // conforme manual, cada um tem um bit
+	frame.data[5] = ((unsigned char)this->InverterEnable) & 0x1 | ((unsigned char)this->InverterDischarge) & 0x1 << 1; // TODO estudar essa lógica aqui
 
 	//Speed Mode Enable
 	frame.data[6] = 0; // O controlador não vai mudar para o modo speed
@@ -260,21 +260,23 @@ void SetCommandedTorque(int Torque){ //TODO a desenvolver
 	frame.data[]; //
 }
 
-void CommandMessage::SetParameter(int Value, int flag){
+void CommandMessage::SetParameter(int Value, int flag){ // TODO A DESENVOLVER 
 	if(flag == 1){ //TorqueCommand
-		TorqueCommand = Value;
+		frame.data[0] = Value & 0xFF;
+		frame.data[1] = Value >> 8;
 
 	}
 	if(flag == 2){
-		SpeedCommand = Value;
+		frame.data[2] = Value;
+		frame.data[3] = Value;
 		
 	}
 	if(flag == 3){
-		DirectionCommand = Value;
+		frame.data[4] = (unsigned char)Value;
 		
 	}
 	if(flag == 4){
-		InverterEnable = Value;
+		frame.data[5] = ((unsigned char)Value) & 0x1 | ((unsigned char)Value) & 0x1 << 1;
 		
 	}
 	if(flag == 5){
