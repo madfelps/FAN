@@ -209,21 +209,23 @@ int TorqueTimerInfo::GetPowerOnTime(){
 
 class CommandMessage{
 private:
-	int TorqueCommand;
-	int SpeedCommand;
-	bool DirectionCommand;
-	bool InverterEnable;
-	bool InverterDischarge;
-	bool SpeedMode;
-	int CommandedTorqueLimit;
+	int TorqueCommand;  //FLAG 0
+	int SpeedCommand; //FLAG 1
+	bool DirectionCommand; //FLAG 2
+	bool InverterEnable; //FLAG 3
+	bool InverterDischarge; //FLAG 4
+	bool SpeedMode; //FLAG 5
+	int CommandedTorqueLimit; //FLAG 6
 	struct can_frame frame;
 
 public:
 	CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit);
-	void SetCommandedTorque;
+	void SetParameter(int, signed short int);
 };
 
 CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit){
+	frame.can_id = COMMAND_MESSAGE;
+
 	this->TorqueCommand = TorqueCommand;
 	this->SpeedCommand = SpeedCommand;
 	this->DirectionCommand = DirectionCommand;
@@ -232,34 +234,82 @@ CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Directi
 	this->SpeedMode = SpeedMode;
 	this->CommandedTorqueLimit = CommandedTorqueLimit;
 
-	frame.can_dlc = 8;
-	frame.can_id = 0xC0;
+	//TorqueCommand
+	frame.data[0] = TorqueCommand & 0xFF;
+	frame.data[1] = TorqueCommand >> 8;
 
-	//Torque Command
-	frame.data[0] = this->TorqueCommand & 0xFF;
-	frame.data[1] = this->TorqueCommand >> 8;
-	//speed command nao importa por enquanto (soh fazendo o modo de torque aqui!)
-	frame.data[2] = 0;
-	frame.data[3] = 0;
-	//Direction Command
-	frame.data[4] = (unsigned char)this->DirectionCommand;
-	//Inverter Enable
 
-	frame.data[5] = ((unsigned char)this->InverterEnable) & 0x1 | ((unsigned char)this->InverterDischarge) & 0x1 << 1;
+	 //SpeedCommand
+	frame.data[2] = SpeedCommand;
+	frame.data[3] = SpeedCommand;
 
-	frame.data[6] = ;
-	frame.data[7] = ;
 
-	SetCommandedTorque(CommandedTorque); //TODO precisa disso aqui?
+	{//DirectionCommand
+	frame.data[4] = (unsigned char)Direction;
 
-};
 
-void SetCommandedTorque(int Torque){ //TODO a desenvolver
-	frame.can_id = COMMAND_MESSAGE;
-	frame.data[]; //
+	//InverterEnable and InverterDischarge
+	frame.data[5] = ((unsigned char)InverterEnable) & 0x1;
+
+
+	//InverterDischarge
+	frame.data[5] = ((unsigned char)InverterDischarge) & 0x1 << 1;
+
+
+	 //SpeedMode
+	frame.data[6] = SpeedMode;
+
+
+	//CommandedTorqueLimit
+	frame.data[7] = CommandedTorqueLimit;
+
+
 }
 
 
+};
+
+void CommandMessage::SetParameter(int Value, signed short int flag){ // TODO A DESENVOLVER
+	frame.can_id = COMMAND_MESSAGE;
+	if(flag == 0){ //TorqueCommand
+		TorqueCommand = Value;
+		frame.data[0] = TorqueCommand & 0xFF;
+		frame.data[1] = TorqueCommand >> 8;
+
+	}
+	if(flag == 1){ //SpeedCommand
+		SpeedCommand = Value;
+		frame.data[2] = SpeedCommand;
+		frame.data[3] = SpeedCommand;
+
+	}
+	if(flag == 2){//DirectionCommand
+		DirectionCommand = (unsigned char)Value;
+		frame.data[4] = DirectionCommand;
+
+	}
+	if(flag == 3){ //InverterEnable and InverterDischarge
+		InverterEnable = ((unsigned char)Value) & 0x1;
+		frame.data[5] = ((unsigned char)Value) & 0x1;
+
+	}
+	if(flag == 4){ //InverterDischarge
+		InverterDischarge = ((unsigned char)Value) & 0x1 << 1;
+		frame.data[5] = ((unsigned char)Value) & 0x1 << 1;
+
+	}
+	if(flag == 5){ //SpeedMode
+		SpeedMode = Value;
+		frame.data[6] = SpeedMode;
+
+	}
+	if(flag == 6){ //CommandedTorqueLimit
+		CommandedTorqueLimit = Value;
+		frame.data[7] = CommandedTorqueLimit;
+
+	}
+
+}
 
 int main(){
 
@@ -289,7 +339,6 @@ int main(){
 	struct can_frame frame;
 
 	frame.can_dlc = 8;
-
 	//
 
 	bool QuestionSetTorque;
@@ -303,7 +352,7 @@ int main(){
 		std::cin >> Aux;
 		std::cout << "Qual o valor limite para o torque? " << std::endl;
 		std::cin >> Aux1;
-		CommandMessage ObjCommandMessage(Aux, 0, 1, ?, ?, 0, Aux1);
+		CommandMessage ObjCommandMessage(Aux, 0, 1, ?, ?, 0, Aux1); //TODO DESENVOLVER ISSO AQUI
 		//TODO mandar
 	}
 	else{ // Programa será fechado
