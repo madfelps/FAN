@@ -14,7 +14,7 @@
  * */
 
 
-#define NUM_MSG 1e6
+#define NUM_MSG 1000000
 
 #define    UNDEFINED		         0
 #define    TEMPERATURES_1 	         0x0A0
@@ -51,12 +51,10 @@ class NegativeValues{
 private:
 
 public:
-	NegativeValues();
-	int NegativeValuesTwoBytes(int Value);
+	static int NegativeValuesTwoBytes(int Value);
 
 };
 
-NegativeValues::NegativeValues();
 
 int NegativeValues::NegativeValuesTwoBytes(int Value){
 		if(Value >= 32768){
@@ -71,12 +69,9 @@ class Torque:public NegativeValues{
 private:
 
 public:
-	Torque();
-	int ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte);
+	static int ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte);
 
 };
-
-Torque::Torque();
 
 int Torque::ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	int TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
@@ -89,12 +84,10 @@ class Angle:public NegativeValues{
 private:
 
 public:
-	Angle();
-	int ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte);
+	static int ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte);
 };
 
 
-Angle::Angle();
 
 int Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
@@ -112,11 +105,8 @@ class AngleVelocity:public NegativeValues{
 private:
 
 public:
-	AngleVelocity();
-	int ProcessAngleVelocity(unsigned char*, int MSByte, int LSByte);
+	static int ProcessAngleVelocity(unsigned char*, int MSByte, int LSByte);
 };
-
-AngleVelocity::AngleVelocity();
 
 int AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
@@ -137,11 +127,21 @@ private:
 public:
 
 	MotorPosInfo(unsigned char*);
+	MotorPosInfo();
 	int GetMotorAngle();
 	int GetMotorSpeed();
 	int GetElectricalOutFreq();
 	int GetDeltaResolverFiltered();
 
+};
+
+MotorPosInfo::MotorPosInfo(){
+	MotorAngle             = 0;
+	MotorAngle             = 0;
+	MotorSpeed             = 0;
+	MotorSpeed             = 0;
+	ElectricalOutFreq      = 0;
+	DeltaResolverFiltered  = 0;
 };
 
 MotorPosInfo::MotorPosInfo(unsigned char* CAN_DATA){
@@ -179,6 +179,7 @@ private:
 
 public:
 	TorqueTimerInfo(unsigned char*);
+	TorqueTimerInfo();
 
 	int GetCommandedTorque();
 	int GetTorqueFeedback();
@@ -186,7 +187,16 @@ public:
 
 };
 
-TorqueTimerInfoInfo::TorqueTimerInfo(unsigned char* CAN_DATA){
+TorqueTimerInfo::TorqueTimerInfo(){
+	CommandedTorque     = 0;
+	CommandedTorque     = 0;
+	TorqueFeedback      = 0;
+	TorqueFeedback      = 0;
+	PowerOnTime         = 0;
+
+}
+
+TorqueTimerInfo::TorqueTimerInfo(unsigned char* CAN_DATA){
 	CommandedTorque     = 0;
 	CommandedTorque     = ProcessTorque(CAN_DATA, 1, 0);
 	TorqueFeedback      = 0;
@@ -209,21 +219,23 @@ int TorqueTimerInfo::GetPowerOnTime(){
 
 class CommandMessage{
 private:
-	int TorqueCommand;  //FLAG 1
-	int SpeedCommand; //FLAG 2
-	bool DirectionCommand; //FLAG 3
-	bool InverterEnable; //FLAG 4
-	bool InverterDischarge; //FLAG 5
-	bool SpeedMode; //FLAG 6
-	int CommandedTorqueLimit; //FLAG 7
+	int TorqueCommand;  //FLAG 0
+	int SpeedCommand; //FLAG 1
+	bool DirectionCommand; //FLAG 2
+	bool InverterEnable; //FLAG 3
+	bool InverterDischarge; //FLAG 4
+	bool SpeedMode; //FLAG 5
+	int CommandedTorqueLimit; //FLAG 6
 	struct can_frame frame;
 
 public:
 	CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit);
-	void SetParameter(int, int);
+	void SetParameter(int, signed short int);
 };
 
 CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit){
+	frame.can_id = COMMAND_MESSAGE;
+
 	this->TorqueCommand = TorqueCommand;
 	this->SpeedCommand = SpeedCommand;
 	this->DirectionCommand = DirectionCommand;
@@ -232,63 +244,78 @@ CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Directi
 	this->SpeedMode = SpeedMode;
 	this->CommandedTorqueLimit = CommandedTorqueLimit;
 
-	frame.can_dlc = 8;
-	frame.can_id = 0xC0;
+	//TorqueCommand
+	frame.data[0] = TorqueCommand & 0xFF;
+	frame.data[1] = TorqueCommand >> 8;
 
-	//Torque Command
-	frame.data[0] = this->TorqueCommand & 0xFF;
-	frame.data[1] = this->TorqueCommand >> 8;
-	//speed command nao importa por enquanto (soh fazendo o modo de torque aqui!) TODO a desenvolver
-	frame.data[2] = 0;
-	frame.data[3] = 0;
-	//Direction Command
-	frame.data[4] = (unsigned char)this->DirectionCommand;
-	//Inverter Enable
 
-	frame.data[5] = ((unsigned char)this->InverterEnable) & 0x1 | ((unsigned char)this->InverterDischarge) & 0x1 << 1; // TODO estudar essa lógica aqui
+	 //SpeedCommand
+	frame.data[2] = SpeedCommand;
+	frame.data[3] = SpeedCommand;
 
-	//Speed Mode Enable
-	frame.data[6] = 0; // O controlador não vai mudar para o modo speed
+
+	{//DirectionCommand
+	frame.data[4] = (unsigned char)Direction;
+
+
+	//InverterEnable and InverterDischarge
+	frame.data[5] = ((unsigned char)InverterEnable) & 0x1;
+
+
+	//InverterDischarge
+	frame.data[5] = ((unsigned char)InverterDischarge) & 0x1 << 1;
+
+
+	 //SpeedMode
+	frame.data[6] = SpeedMode;
+
+
 	//CommandedTorqueLimit
-	frame.data[7] = 0; //como está zero, o valor usado será aquele da E2PROM
+	frame.data[7] = CommandedTorqueLimit;
+
+
+}
 
 
 };
 
-void SetCommandedTorque(int Torque){ //TODO a desenvolver
+void CommandMessage::SetParameter(int Value, signed short int flag){ // TODO A DESENVOLVER
 	frame.can_id = COMMAND_MESSAGE;
-	frame.data[]; //
-}
-
-void CommandMessage::SetParameter(int Value, int flag){ // TODO A DESENVOLVER 
-	if(flag == 1){ //TorqueCommand
-		frame.data[0] = Value & 0xFF;
-		frame.data[1] = Value >> 8;
+	if(flag == 0){ //TorqueCommand
+		TorqueCommand = Value;
+		frame.data[0] = TorqueCommand & 0xFF;
+		frame.data[1] = TorqueCommand >> 8;
 
 	}
-	if(flag == 2){
-		frame.data[2] = Value;
-		frame.data[3] = Value;
+	if(flag == 1){ //SpeedCommand
+		SpeedCommand = Value;
+		frame.data[2] = SpeedCommand;
+		frame.data[3] = SpeedCommand;
 		
 	}
-	if(flag == 3){
-		frame.data[4] = (unsigned char)Value;
+	if(flag == 2){//DirectionCommand
+		DirectionCommand = (unsigned char)Value;
+		frame.data[4] = DirectionCommand;
 		
 	}
-	if(flag == 4){
-		frame.data[5] = ((unsigned char)Value) & 0x1 | ((unsigned char)Value) & 0x1 << 1;
+	if(flag == 3){ //InverterEnable and InverterDischarge
+		InverterEnable = ((unsigned char)Value) & 0x1;
+		frame.data[5] = ((unsigned char)Value) & 0x1;
 		
 	}
-	if(flag == 5){
-		InverterDischarge = Value;
+	if(flag == 4){ //InverterDischarge
+		InverterDischarge = ((unsigned char)Value) & 0x1 << 1;
+		frame.data[5] = ((unsigned char)Value) & 0x1 << 1;
 		
 	}
-	if(flag == 6){
+	if(flag == 5){ //SpeedMode
 		SpeedMode = Value;
+		frame.data[6] = SpeedMode;
 		
 	}
-	if(flag == 7){
+	if(flag == 6){ //CommandedTorqueLimit
 		CommandedTorqueLimit = Value;
+		frame.data[7] = CommandedTorqueLimit;
 		
 	}
 
@@ -323,13 +350,10 @@ int main(){
 	struct can_frame frame;
 
 	frame.can_dlc = 8;
-
-	
-
 	//
 
 
-	nbytes = 0;
+	int nbytes = 0;
 
 	int MsgCounter = 0;
 	int i, j;
@@ -356,7 +380,7 @@ int main(){
 				if(frame.can_id == MOTOR_POSITION){
 					CounterMotorPosition++;
 					if(CounterMotorPosition == 100){
-						ObjMotorPosInfo = MotorPosInfo(frame.data);
+						ObjMotorPosInfo = MotorPosInfo(frame.data); //TODO reseta os parametros para zero e depois processa os de interesse
 						std::cout << "Angle: " << ObjMotorPosInfo.GetMotorAngle() << " ";
 						std::cout << "Speed: " << ObjMotorPosInfo.GetMotorSpeed() << std::endl;
 						CounterMotorPosition = 0;
