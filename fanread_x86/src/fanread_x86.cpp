@@ -56,7 +56,7 @@ public:
 };
 
 
-int NegativeValues::NegativeValuesTwoBytes(int Value){
+int NegativeValues::NegativeValuesTwoBytes(int Value){ // segundo o manual, se o valor for maior que 32768, isso indica um numero negativo; logo, deve-se fazer a conversao apropriada
 		if(Value >= 32768){
 			Value = Value - 65536;
 		}
@@ -96,7 +96,7 @@ int Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	AngleValue = AngleValue/10;
 	return AngleValue;
 
-		/*if(!((*AngleValue >= -359.9) && (*AngleValue <= 359.9))){ // tratamento de erros (a desenvolver)
+		/*if(!((*AngleValue >= -359.9) && (*AngleValue <= 359.9))){ // TODO tratamento de erros (a desenvolver)
 			throw 1;
 		}*/
 }

@@ -228,7 +228,7 @@ CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Directi
 
 	this->TorqueCommand = TorqueCommand;
 	this->SpeedCommand = SpeedCommand;
-	this->DirectionCommand = DirectionCommand;
+	this->DirectionCommand = Direction;
 	this->InverterEnable = InverterEnable;
 	this->InverterDischarge = InverterDischarge;
 	this->SpeedMode = SpeedMode;
@@ -269,7 +269,7 @@ CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Directi
 
 };
 
-void CommandMessage::SetParameter(int Value, signed short int flag){ // TODO A DESENVOLVER
+void CommandMessage::SetParameter(int Value, signed short int flag){ //
 	frame.can_id = COMMAND_MESSAGE;
 	if(flag == 0){ //TorqueCommand
 		TorqueCommand = Value;
@@ -313,6 +313,7 @@ void CommandMessage::SetParameter(int Value, signed short int flag){ // TODO A D
 
 int main(){
 
+	int MessageSend;
 	char DataLog[NUM_MSG][8];
 	unsigned int DataID[NUM_MSG];
 	TorqueTimerInfo ObjTorqueTimerInfo;
@@ -341,30 +342,36 @@ int main(){
 	frame.can_dlc = 8;
 	//
 
-	bool QuestionSetTorque;
-	int Aux;
-	int Aux1;
+	bool Question;
+	int TorqueValue;
+	int TorqueLimitValue;
 	// Setar torque
 	std::cout < <"\nVoce deseja configurar o torque? Digite (1) para SIM ou (0) para NAO"<< std::endl;
-	std::cin >> QuestionSetTorque;
-	if(QuestionSetTorque){
+	std::cin >> Question;
+	if(Question){
 		std::cout << "Qual o valor do torque desejado? " << std::endl;
-		std::cin >> Aux;
-		std::cout << "Qual o valor limite para o torque? " << std::endl;
-		std::cin >> Aux1;
-		CommandMessage ObjCommandMessage(Aux, 0, 1, ?, ?, 0, Aux1); //TODO DESENVOLVER ISSO AQUI
+		std::cin >> TorqueValue;
+		std::cout << "Qual o valor limite para o torque? " << std::endl; //TODO faz sentido essa ordem das perguntas?
+		std::cin >> TorqueLimitValue;
+		CommandMessage ObjCommandMessage(TorqueValue, 0, 1, 0, 0, 0, TorqueLimitValue); //
 		//TODO mandar
 	}
 	else{ // Programa será fechado
 		return 0;
 	}
 
-	int nbytes = write(s, &frame, sizeof(struct can_frame)); //TODO por que fazer isso?
+	int MessageSend = write(s, &frame, sizeof(struct can_frame));
 
-	nbytes = 0;
+	MessageSend = 0;
+
+	while (1){
+		std::cout<<".... Voce deseja fechar o software? ";
+		std::cin>>Question;
+		if(Question){
+			return 0;
+		}
+	}
 
 
 	close(s);
 
-	return 0;
-}
