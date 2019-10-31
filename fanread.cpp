@@ -47,11 +47,6 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
-int bytes; // variavel global auxiliar para realizar o envio do canframe (write)
-
-struct can_frame frame;
-
-
 class NegativeValues{
 private:
 
@@ -78,8 +73,6 @@ private:
 public:
 	Torque();
 	int ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte);
-	int ProcessTorqueInvMSB(int Value); 
-	int ProcessTorqueInvLSB(int Value);
 
 };
 
@@ -90,14 +83,6 @@ int Torque::ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	TorqueValue = NegativeValuesTwoBytes(TorqueValue);
 	TorqueValue = TorqueValue/10;
 	return TorqueValue;
-}
-
-int Torque::ProcessTorqueInvMSB(int Value){
-	return (Value&0xFF00)>>8;
-}
-
-int Torque::ProcessTorqueInvLSB(int Value){
-	return Value&0x00FF;
 }
 
 class Angle:public NegativeValues{
@@ -224,149 +209,94 @@ int TorqueTimerInfo::GetPowerOnTime(){
 
 class CommandMessage{
 private:
-	int TorqueCommand;  //FLAG 0
-	int SpeedCommand; //FLAG 1
-	bool DirectionCommand; //FLAG 2
-	bool InverterEnable; //FLAG 3
-	bool InverterDischarge; //FLAG 4
-	bool SpeedMode; //FLAG 5
-	int CommandedTorqueLimit; //FLAG 6
+	int TorqueCommand;  //FLAG 1
+	int SpeedCommand; //FLAG 2
+	bool DirectionCommand; //FLAG 3
+	bool InverterEnable; //FLAG 4
+	bool InverterDischarge; //FLAG 5
+	bool SpeedMode; //FLAG 6
+	int CommandedTorqueLimit; //FLAG 7
 	struct can_frame frame;
 
 public:
 	CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit);
-	void SetParameter(int, signed short int);
-	void SendFrame(); //TODO Desenvolver essa função para envio do frame pelo CAN ao motor 
-
+	void SetParameter(int, int);
 };
 
 CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit){
-	frame.can_id = COMMAND_MESSAGE;
-
 	this->TorqueCommand = TorqueCommand;
 	this->SpeedCommand = SpeedCommand;
-	this->DirectionCommand = Direction;
+	this->DirectionCommand = DirectionCommand;
 	this->InverterEnable = InverterEnable;
 	this->InverterDischarge = InverterDischarge;
 	this->SpeedMode = SpeedMode;
 	this->CommandedTorqueLimit = CommandedTorqueLimit;
 
-	//TorqueCommand
-	frame.data[0] = TorqueCommand & 0xFF;
-	frame.data[1] = TorqueCommand >> 8;
+	frame.can_dlc = 8;
+	frame.can_id = 0xC0;
 
+	//Torque Command
+	frame.data[0] = this->TorqueCommand & 0xFF;
+	frame.data[1] = this->TorqueCommand >> 8;
+	//speed command nao importa por enquanto (soh fazendo o modo de torque aqui!) TODO a desenvolver
+	frame.data[2] = 0;
+	frame.data[3] = 0;
+	//Direction Command
+	frame.data[4] = (unsigned char)this->DirectionCommand;
+	//Inverter Enable
 
-	 //SpeedCommand
-	frame.data[2] = SpeedCommand;
-	frame.data[3] = SpeedCommand;
+	frame.data[5] = ((unsigned char)this->InverterEnable) & 0x1 | ((unsigned char)this->InverterDischarge) & 0x1 << 1; // TODO estudar essa lógica aqui
 
-
-	{//DirectionCommand
-	frame.data[4] = (unsigned char)Direction;
-
-
-	//InverterEnable 
-	if(InverterEnable){
-		frame.data[5] = frame.data[5] | 0b00000001;
-	}
-	if(!InverterEnable){
-		frame.data[5] = frame.data[5] & 0b11111110;
-	}
-	
-	
-	//InverterDischarge
-	if(InverterDischarge){
-		frame.data[5] = frame.data[5] | 0b00000010;
-	}
-	if(!InverterDischarge){
-		frame.data[5] = frame.data[5] & 0b11111101;
-	}
-
-
-	 //SpeedMode
-	if(SpeedMode){ //TODO usar volatile nesse caso?
-		frame.data[5] = frame.data[5] | 0b00000010;
-	}
-	if(!SpeedMode){
-		frame.data[5] = frame.data[5] & 0b11111101;
-	}
-
-
+	//Speed Mode Enable
+	frame.data[6] = 0; // O controlador não vai mudar para o modo speed
 	//CommandedTorqueLimit
-	frame.data[6] = CommandedTorqueLimit & 0xFF;
-	frame.data[7] = CommandedTorqueLimit >> 8;
-
-
-}
+	frame.data[7] = 0; //como está zero, o valor usado será aquele da E2PROM
 
 
 };
 
-void CommandMessage::SetParameter(int Value, signed short int flag){ //
+void SetCommandedTorque(int Torque){ //TODO a desenvolver
 	frame.can_id = COMMAND_MESSAGE;
-	
-	if(flag == 0){ //TorqueCommand
-		TorqueCommand = (unsigned char)Value;
-		frame.data[0] = TorqueCommand & 0xFF;
-		frame.data[1] = TorqueCommand >> 8;
+	frame.data[]; //
+}
+
+void CommandMessage::SetParameter(int Value, int flag){ // TODO A DESENVOLVER 
+	if(flag == 1){ //TorqueCommand
+		frame.data[0] = Value & 0xFF;
+		frame.data[1] = Value >> 8;
 
 	}
-	if(flag == 1){ //SpeedCommand
-		SpeedCommand = (unsigned char)Value;
-		frame.data[2] = SpeedCommand & 0xFF;
-		frame.data[3] = SpeedCommand >> 8;
-
+	if(flag == 2){
+		frame.data[2] = Value;
+		frame.data[3] = Value;
+		
 	}
-	if(flag == 2){//DirectionCommand
-		DirectionCommand = (unsigned char)Value;
-		frame.data[4] = DirectionCommand;
-
+	if(flag == 3){
+		frame.data[4] = (unsigned char)Value;
+		
 	}
-	if(flag == 3){ //InverterEnable
-		InverterEnable = ((unsigned char)Value) & 0x1; 
-		if(InverterEnable){
-			frame.data[5] = frame.data[5] | 0b00000001;
-		}
-		if(!InverterEnable){
-			frame.data[5] = frame.data[5] & 0b11111110;
-		}
+	if(flag == 4){
+		frame.data[5] = ((unsigned char)Value) & 0x1 | ((unsigned char)Value) & 0x1 << 1;
+		
 	}
-	if(flag == 4){ //InverterDischarge
-		InverterDischarge = ((unsigned char)Value);
-		if(InverterDischarge){
-			frame.data[5] = frame.data[5] | 0b00000010;
-		}
-		if(!InverterDischarge){
-			frame.data[5] = frame.data[5] & 0b11111101;
-		}
-
+	if(flag == 5){
+		InverterDischarge = Value;
+		
 	}
-	if(flag == 5){ //SpeedMode
-		SpeedMode = Value & 0x1;
-		if(SpeedMode){ //TODO usar volatile nesse caso?
-			frame.data[5] = frame.data[5] | 0b00000010;
-		}
-		if(!SpeedMode){
-			frame.data[5] = frame.data[5] & 0b11111101;
-		}
+	if(flag == 6){
+		SpeedMode = Value;
+		
 	}
-	if(flag == 6){ //CommandedTorqueLimit
+	if(flag == 7){
 		CommandedTorqueLimit = Value;
-		frame.data[6] = CommandedTorqueLimit & 0xFF;
-		frame.data[7] = CommandedTorqueLimit >> 8;
-
+		
 	}
 
 }
 
-void CommandMessage::SendFrame(struct canFrame);
-	int nbytes = write(s, &frame, sizeof(struct can_frame));
-
-
 
 int main(){
 
-	int MessageSend;
 	char DataLog[NUM_MSG][8];
 	unsigned int DataID[NUM_MSG];
 	TorqueTimerInfo ObjTorqueTimerInfo;
@@ -393,38 +323,60 @@ int main(){
 	struct can_frame frame;
 
 	frame.can_dlc = 8;
+
+	
+
 	//
 
-	bool Question;
-	int TorqueValue;
-	int TorqueLimitValue;
-	// Setar torque
-	std::cout < <"\nVoce deseja configurar o torque limite? Digite (1) para SIM ou (0) para NAO"<< std::endl;
-	std::cin >> Question;
-	if(Question){
-		std::cout << "Qual o valor limite para o torque? " << std::endl;
-		std::cin >> TorqueLimitValue;
-		std::cout << "Qual o valor para o torque? " << std::endl;
-		std::cin << TorqueValue;
-		CommandMessage ObjCommandMessage(TorqueValue, 0, 1, 0, 0, 0, TorqueLimitValue); //
-		//TODO mandar
-	}
-	else{ // Programa será fechado
-		return 0;
-	}
 
-	int MessageSend = write(s, &frame, sizeof(struct can_frame));
+	nbytes = 0;
 
-	MessageSend = 0;
+	int MsgCounter = 0;
+	int i, j;
+	int CounterMotorPosition = 0;
+	int CounterTorqueTimerInfo = 0;
 
-	while (1){
-		std::cout<<".... Voce deseja fechar o software? ";
-		std::cin>>Question;
-		if(Question){
-			return 0;
+	while (MsgCounter < NUM_MSG) {
+		nbytes = read(s, &frame, sizeof(struct can_frame));
+		if(nbytes != 0){ // se realmente leu msg...
+			for(j = 0; j < frame.can_dlc; j++){
+				DataLog[MsgCounter][j] = frame.data[j];
+			}
+
+			DataID[MsgCounter] = frame.can_id;
+			MsgCounter++;
+
+			if(MsgCounter%100 == 0){ // imprime a cada 100 mensagens
+				for (i = 0; i < 8; i++) {
+					printf("%5d", DataLog[0][i]);
+				}
+
+				std::cout << "  |  ";
+
+				if(frame.can_id == MOTOR_POSITION){
+					CounterMotorPosition++;
+					if(CounterMotorPosition == 100){
+						ObjMotorPosInfo = MotorPosInfo(frame.data);
+						std::cout << "Angle: " << ObjMotorPosInfo.GetMotorAngle() << " ";
+						std::cout << "Speed: " << ObjMotorPosInfo.GetMotorSpeed() << std::endl;
+						CounterMotorPosition = 0;
+					}
+				}
+				else if(frame.can_id == TORQUE_TIMER_INFO){
+					CounterTorqueTimerInfo++;
+					if(CounterTorqueTimerInfo == 100){
+						ObjTorqueTimerInfo = TorqueTimerInfo(frame.data);
+						std::cout << "Torque Feedback: " << ObjTorqueTimerInfo.GetTorqueFeedback() << " ";
+						std::cout << "Commanded Torque: " << ObjTorqueTimerInfo.GetCommandedTorque() << std::endl;
+						CounterTorqueTimerInfo = 0;
+					}
+				}
+			}
 		}
-	}
 
+	}
 
 	close(s);
 
+	return 0;
+}
