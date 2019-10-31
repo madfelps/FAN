@@ -73,6 +73,8 @@ private:
 public:
 	Torque();
 	int ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte);
+	int ProcessTorqueInvMSB(int Value); 
+	int ProcessTorqueInvLSB(int Value);
 
 };
 
@@ -83,6 +85,14 @@ int Torque::ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	TorqueValue = NegativeValuesTwoBytes(TorqueValue);
 	TorqueValue = TorqueValue/10;
 	return TorqueValue;
+}
+
+int Torque::ProcessTorqueInvMSB(int Value){
+	return (Value&0xFF00)>>8;
+}
+
+int Torque::ProcessTorqueInvLSB(int Value){
+	return Value&0x00FF;
 }
 
 class Angle:public NegativeValues{
@@ -248,20 +258,36 @@ CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Directi
 	frame.data[4] = (unsigned char)Direction;
 
 
-	//InverterEnable and InverterDischarge
-	frame.data[5] = ((unsigned char)InverterEnable) & 0x1;
-
-
+	//InverterEnable 
+	if(InverterEnable){
+		frame.data[5] = frame.data[5] | 0b00000001;
+	}
+	if(!InverterEnable){
+		frame.data[5] = frame.data[5] & 0b11111110;
+	}
+	
+	
 	//InverterDischarge
-	frame.data[5] = ((unsigned char)InverterDischarge) & 0x1 << 1;
+	if(InverterDischarge){
+		frame.data[5] = frame.data[5] | 0b00000010;
+	}
+	if(!InverterDischarge){
+		frame.data[5] = frame.data[5] & 0b11111101;
+	}
 
 
 	 //SpeedMode
-	frame.data[6] = SpeedMode;
+	if(SpeedMode){ //TODO usar volatile nesse caso?
+		frame.data[5] = frame.data[5] | 0b00000010;
+	}
+	if(!SpeedMode){
+		frame.data[5] = frame.data[5] & 0b11111101;
+	}
 
 
 	//CommandedTorqueLimit
-	frame.data[7] = CommandedTorqueLimit;
+	frame.data[6] = CommandedTorqueLimit & 0xFF;
+	frame.data[7] = CommandedTorqueLimit >> 8;
 
 
 }
@@ -271,16 +297,17 @@ CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Directi
 
 void CommandMessage::SetParameter(int Value, signed short int flag){ //
 	frame.can_id = COMMAND_MESSAGE;
+	
 	if(flag == 0){ //TorqueCommand
-		TorqueCommand = Value;
+		TorqueCommand = (unsigned char)Value;
 		frame.data[0] = TorqueCommand & 0xFF;
 		frame.data[1] = TorqueCommand >> 8;
 
 	}
 	if(flag == 1){ //SpeedCommand
-		SpeedCommand = Value;
-		frame.data[2] = SpeedCommand;
-		frame.data[3] = SpeedCommand;
+		SpeedCommand = (unsigned char)Value;
+		frame.data[2] = SpeedCommand & 0xFF;
+		frame.data[3] = SpeedCommand >> 8;
 
 	}
 	if(flag == 2){//DirectionCommand
@@ -288,28 +315,44 @@ void CommandMessage::SetParameter(int Value, signed short int flag){ //
 		frame.data[4] = DirectionCommand;
 
 	}
-	if(flag == 3){ //InverterEnable and InverterDischarge
-		InverterEnable = ((unsigned char)Value) & 0x1;
-		frame.data[5] = ((unsigned char)Value) & 0x1;
-
+	if(flag == 3){ //InverterEnable
+		InverterEnable = ((unsigned char)Value) & 0x1; 
+		if(InverterEnable){
+			frame.data[5] = frame.data[5] | 0b00000001;
+		}
+		if(!InverterEnable){
+			frame.data[5] = frame.data[5] & 0b11111110;
+		}
 	}
 	if(flag == 4){ //InverterDischarge
-		InverterDischarge = ((unsigned char)Value) & 0x1 << 1;
-		frame.data[5] = ((unsigned char)Value) & 0x1 << 1;
+		InverterDischarge = ((unsigned char)Value);
+		if(InverterDischarge){
+			frame.data[5] = frame.data[5] | 0b00000010;
+		}
+		if(!InverterDischarge){
+			frame.data[5] = frame.data[5] & 0b11111101;
+		}
 
 	}
 	if(flag == 5){ //SpeedMode
-		SpeedMode = Value;
-		frame.data[6] = SpeedMode;
-
+		SpeedMode = Value & 0x1;
+		if(SpeedMode){ //TODO usar volatile nesse caso?
+			frame.data[5] = frame.data[5] | 0b00000010;
+		}
+		if(!SpeedMode){
+			frame.data[5] = frame.data[5] & 0b11111101;
+		}
 	}
 	if(flag == 6){ //CommandedTorqueLimit
 		CommandedTorqueLimit = Value;
-		frame.data[7] = CommandedTorqueLimit;
+		frame.data[6] = CommandedTorqueLimit & 0xFF;
+		frame.data[7] = CommandedTorqueLimit >> 8;
 
 	}
 
 }
+
+
 
 int main(){
 
@@ -349,8 +392,6 @@ int main(){
 	std::cout < <"\nVoce deseja configurar o torque? Digite (1) para SIM ou (0) para NAO"<< std::endl;
 	std::cin >> Question;
 	if(Question){
-		std::cout << "Qual o valor do torque desejado? " << std::endl;
-		std::cin >> TorqueValue;
 		std::cout << "Qual o valor limite para o torque? " << std::endl; //TODO faz sentido essa ordem das perguntas?
 		std::cin >> TorqueLimitValue;
 		CommandMessage ObjCommandMessage(TorqueValue, 0, 1, 0, 0, 0, TorqueLimitValue); //
