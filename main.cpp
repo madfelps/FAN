@@ -51,12 +51,10 @@ class NegativeValues{
 private:
 
 public:
-	NegativeValues();
 	int NegativeValuesTwoBytes(int Value);
 
 };
 
-NegativeValues::NegativeValues();
 
 int NegativeValues::NegativeValuesTwoBytes(int Value){
 		if(Value >= 32768){
@@ -71,12 +69,10 @@ class Torque:public NegativeValues{
 private:
 
 public:
-	Torque();
 	int ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte);
 
 };
 
-Torque::Torque();
 
 int Torque::ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	int TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
@@ -89,12 +85,9 @@ class Angle:public NegativeValues{
 private:
 
 public:
-	Angle();
 	int ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte);
 };
 
-
-Angle::Angle();
 
 int Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
@@ -112,11 +105,8 @@ class AngleVelocity:public NegativeValues{
 private:
 
 public:
-	AngleVelocity();
 	int ProcessAngleVelocity(unsigned char*, int MSByte, int LSByte);
 };
-
-AngleVelocity::AngleVelocity();
 
 int AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte){
 

@@ -56,12 +56,10 @@ class NegativeValues{
 private:
 
 public:
-	NegativeValues();
-	int NegativeValuesTwoBytes(int Value);
+	static int NegativeValuesTwoBytes(int Value);
 
 };
 
-NegativeValues::NegativeValues();
 
 int NegativeValues::NegativeValuesTwoBytes(int Value){
 		if(Value >= 32768){
@@ -76,14 +74,16 @@ class Torque:public NegativeValues{
 private:
 
 public:
+<<<<<<< Updated upstream
 	Torque();
 	int ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte);
 	int ProcessTorqueInvMSB(int Value); 
 	int ProcessTorqueInvLSB(int Value);
+=======
+	static int ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte);
+>>>>>>> Stashed changes
 
 };
-
-Torque::Torque();
 
 int Torque::ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	int TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
@@ -104,12 +104,9 @@ class Angle:public NegativeValues{
 private:
 
 public:
-	Angle();
 	int ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte);
 };
 
-
-Angle::Angle();
 
 int Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
@@ -127,11 +124,9 @@ class AngleVelocity:public NegativeValues{
 private:
 
 public:
-	AngleVelocity();
 	int ProcessAngleVelocity(unsigned char*, int MSByte, int LSByte);
 };
 
-AngleVelocity::AngleVelocity();
 
 int AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
@@ -150,13 +145,22 @@ private:
 	int DeltaResolverFiltered;
 
 public:
-
+	MotorPosInfo();
 	MotorPosInfo(unsigned char*);
 	int GetMotorAngle();
 	int GetMotorSpeed();
 	int GetElectricalOutFreq();
 	int GetDeltaResolverFiltered();
 
+};
+
+MotorPosInfo::MotorPosInfo(){
+	MotorAngle             = 0;
+	MotorAngle             = 0;
+	MotorSpeed             = 0;
+	MotorSpeed             = 0;
+	ElectricalOutFreq      = 0;
+	DeltaResolverFiltered  = 0;
 };
 
 MotorPosInfo::MotorPosInfo(unsigned char* CAN_DATA){
@@ -193,15 +197,24 @@ private:
 
 
 public:
+	TorqueTimerInfo();
 	TorqueTimerInfo(unsigned char*);
-
 	int GetCommandedTorque();
 	int GetTorqueFeedback();
 	int GetPowerOnTime();
 
 };
 
-TorqueTimerInfoInfo::TorqueTimerInfo(unsigned char* CAN_DATA){
+TorqueTimerInfo::TorqueTimerInfo(){
+	CommandedTorque     = 0;
+	CommandedTorque     = 0;
+	TorqueFeedback      = 0;
+	TorqueFeedback      = 0;
+	PowerOnTime         = 0;
+
+}
+
+TorqueTimerInfo::TorqueTimerInfo(unsigned char* CAN_DATA){
 	CommandedTorque     = 0;
 	CommandedTorque     = ProcessTorque(CAN_DATA, 1, 0);
 	TorqueFeedback      = 0;
@@ -359,7 +372,7 @@ void CommandMessage::SetParameter(int Value, signed short int flag){ //
 
 }
 
-void CommandMessage::SendFrame(struct canFrame);
+void CommandMessage::SendFrame(struct canFrame); //TODO eu coloco o frame como variavel global?
 	int nbytes = write(s, &frame, sizeof(struct can_frame));
 
 
@@ -374,7 +387,7 @@ int main(){
 
 
 	//Configuração do CAN
-	int s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	int SocketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
 	struct sockaddr_can addr;
 
@@ -382,13 +395,13 @@ int main(){
 
 	strcpy(ifr.ifr_name, "can1");
 
-	ioctl(s, SIOCGIFINDEX, &ifr);
+	ioctl(SocketCan, SIOCGIFINDEX, &ifr);
 
 	addr.can_family = AF_CAN;
 
 	addr.can_ifindex = ifr.ifr_ifindex;
 
-	bind(s, (struct sockaddr *) &addr, sizeof(addr));
+	bind(SocketCan, (struct sockaddr *) &addr, sizeof(addr));
 
 	struct can_frame frame;
 
@@ -413,7 +426,7 @@ int main(){
 		return 0;
 	}
 
-	int MessageSend = write(s, &frame, sizeof(struct can_frame));
+	int MessageSend = write(SocketCan, &frame, sizeof(struct can_frame));
 
 	MessageSend = 0;
 
@@ -424,6 +437,8 @@ int main(){
 			return 0;
 		}
 	}
+
+	close (SocketCan);
 
 
 	close(s);

@@ -331,7 +331,7 @@ int main(){
 
 
 	//Configuração do CAN
-	int s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	/*int SocketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
 	struct sockaddr_can addr;
 
@@ -339,13 +339,13 @@ int main(){
 
 	strcpy(ifr.ifr_name, "can1");
 
-	ioctl(s, SIOCGIFINDEX, &ifr);
+	ioctl(SocketCan, SIOCGIFINDEX, &ifr);
 
 	addr.can_family = AF_CAN;
 
 	addr.can_ifindex = ifr.ifr_ifindex;
 
-	bind(s, (struct sockaddr *) &addr, sizeof(addr));
+	bind(SocketCan, (struct sockaddr *) &addr, sizeof(addr));
 
 	struct can_frame frame;
 
@@ -361,7 +361,7 @@ int main(){
 	int CounterTorqueTimerInfo = 0;
 
 	while (MsgCounter < NUM_MSG) {
-		nbytes = read(s, &frame, sizeof(struct can_frame));
+		nbytes = read(SocketCan, &frame, sizeof(struct can_frame));
 		if(nbytes != 0){ // se realmente leu msg...
 			for(j = 0; j < frame.can_dlc; j++){
 				DataLog[MsgCounter][j] = frame.data[j];
@@ -400,7 +400,9 @@ int main(){
 
 	}
 
-	close(s);
+
+
+	close(SocketCan);*/
 
 	return 0;
 }
