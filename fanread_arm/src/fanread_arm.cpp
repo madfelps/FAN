@@ -51,7 +51,7 @@ class NegativeValues{
 private:
 
 public:
-	static int NegativeValuesTwoBytes(int Value);
+	static float NegativeValuesTwoBytes(int Value);
 
 };
 
