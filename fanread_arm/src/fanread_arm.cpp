@@ -56,7 +56,7 @@ public:
 };
 
 
-int NegativeValues::NegativeValuesTwoBytes(int Value){ // segundo o manual, se o valor for maior que 32768, isso indica um numero negativo; logo, deve-se fazer a conversao apropriada
+float NegativeValues::NegativeValuesTwoBytes(float Value){ // segundo o manual, se o valor for maior que 32768, isso indica um numero negativo; logo, deve-se fazer a conversao apropriada
 		if(Value >= 32768){
 			Value = Value - 65536;
 		}
@@ -73,8 +73,8 @@ public:
 
 };
 
-int Torque::ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte){
-	int TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
+float Torque::ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte){
+	float TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	TorqueValue = NegativeValuesTwoBytes(TorqueValue);
 	TorqueValue = TorqueValue/10;
 	return TorqueValue;
@@ -89,9 +89,9 @@ public:
 
 
 
-int Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
+float Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
-	int AngleValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
+	float AngleValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	AngleValue = NegativeValuesTwoBytes(AngleValue);
 	AngleValue = AngleValue/10;
 	return AngleValue;
@@ -108,9 +108,9 @@ public:
 	static int ProcessAngleVelocity(unsigned char*, int MSByte, int LSByte);
 };
 
-int AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte){
+float AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
-	int AngleVelocityValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
+	float AngleVelocityValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	AngleVelocityValue = NegativeValuesTwoBytes(AngleVelocityValue);
 	AngleVelocityValue = AngleVelocityValue/10;
 	return AngleVelocityValue;
@@ -124,14 +124,19 @@ private:
 	int ElectricalOutFreq;
 	int DeltaResolverFiltered;
 
+	float MotorAngleProcessed;
+	float MotorSpeedProcessed;
+	float ElectricalOutFreqProcessed;
+	float DeltaResolverFilteredProcessed;	
+
 public:
 
 	MotorPosInfo(unsigned char*);
 	MotorPosInfo();
-	int GetMotorAngle();
-	int GetMotorSpeed();
-	int GetElectricalOutFreq();
-	int GetDeltaResolverFiltered();
+	int GetMotorAngleProcessed();
+	int GetMotorSpeedProcessed();
+	int GetElectricalOutFreqProcessed();
+	int GetDeltaResolverFilteredProcessed();
 
 };
 
@@ -145,27 +150,27 @@ MotorPosInfo::MotorPosInfo(){
 };
 
 MotorPosInfo::MotorPosInfo(unsigned char* CAN_DATA){
-	MotorAngle             = 0;
-	MotorAngle             = ProcessAngle(CAN_DATA, 1, 0);
-	MotorSpeed             = 0;
-	MotorSpeed             = ProcessAngleVelocity(CAN_DATA, 3, 2);
-	ElectricalOutFreq      = 0;
-	DeltaResolverFiltered  = 0;
+	MotorAngle             			= 0;
+	MotorAngleProcessed             = ProcessAngle(CAN_DATA, 1, 0);
+	MotorSpeed            			= 0;
+	MotorSpeedProcessed             = ProcessAngleVelocity(CAN_DATA, 3, 2);
+	ElectricalOutFreq      			= 0;
+	DeltaResolverFiltered  			= 0;
 };
 
-int MotorPosInfo::GetMotorAngle(){
+int MotorPosInfo::GetMotorAngleProcessed(){
 	return MotorAngle;
 }
 
-int MotorPosInfo::GetMotorSpeed(){
+int MotorPosInfo::GetMotorSpeedProcessed(){
 	return MotorSpeed;
 }
 
-int MotorPosInfo::GetElectricalOutFreq(){
+int MotorPosInfo::GetElectricalOutFreqProcessed(){
 	return ElectricalOutFreq;
 }
 
-int MotorPosInfo::GetDeltaResolverFiltered(){
+int MotorPosInfo::GetDeltaResolverFilteredProcessed(){
 	return DeltaResolverFiltered;
 }
 
@@ -176,14 +181,18 @@ private:
 	int TorqueFeedback;
 	int PowerOnTime;
 
+	float CommandedTorqueProcessed;
+	float TorqueFeedbackProcessed;
+	float PowerOnTimeProcessed;
+
 
 public:
 	TorqueTimerInfo(unsigned char*);
 	TorqueTimerInfo();
 
-	int GetCommandedTorque();
-	int GetTorqueFeedback();
-	int GetPowerOnTime();
+	int GetCommandedTorqueProcessed();
+	int GetTorqueFeedbackProcessed();
+	int GetPowerOnTimeProcessed();
 
 };
 
@@ -195,22 +204,22 @@ TorqueTimerInfo::TorqueTimerInfo(){
 }
 
 TorqueTimerInfo::TorqueTimerInfo(unsigned char* CAN_DATA){
-	CommandedTorque     = ProcessTorque(CAN_DATA, 1, 0);
-	TorqueFeedback      = ProcessTorque(CAN_DATA, 3, 2);
-	PowerOnTime         = 0;
+	CommandedTorqueProcessed     = ProcessTorque(CAN_DATA, 1, 0);
+	TorqueFeedbackProcessed      = ProcessTorque(CAN_DATA, 3, 2);
+	PowerOnTimeProcessed         = 0;
 
 }
 
-int TorqueTimerInfo::GetCommandedTorque(){
-	return CommandedTorque;
+int TorqueTimerInfo::GetCommandedTorqueProcessed(){
+	return CommandedTorqueProcessed;
 }
 
-int TorqueTimerInfo::GetTorqueFeedback(){
-	return TorqueFeedback;
+int TorqueTimerInfo::GetTorqueFeedbackProcessed(){
+	return TorqueFeedbackProcessed;
 }
 
-int TorqueTimerInfo::GetPowerOnTime(){
-	return PowerOnTime;
+int TorqueTimerInfo::GetPowerOnTimeProcessed(){
+	return PowerOnTimePRocessed;
 }
 
 class CommandMessage{
@@ -386,8 +395,8 @@ int main(){
 					CounterTorqueTimerInfo++;
 					//if(CounterTorqueTimerInfo == 100){
 						ObjTorqueTimerInfo = TorqueTimerInfo(frame.data);
-						std::cout << "Torque Feedback: " << ObjTorqueTimerInfo.GetTorqueFeedback() << " ";
-						std::cout << "Commanded Torque: " << ObjTorqueTimerInfo.GetCommandedTorque() << std::endl;
+						std::cout << "Torque Feedback: " << ObjTorqueTimerInfo.GetTorqueFeedbackProcessed() << " ";
+						std::cout << "Commanded Torque: " << ObjTorqueTimerInfo.GetCommandedTorqueProcessed() << std::endl;
 						CounterTorqueTimerInfo = 0;
 					//}
 				}
