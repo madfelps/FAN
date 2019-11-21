@@ -69,7 +69,7 @@ class Torque:public NegativeValues{
 private:
 
 public:
-	static int ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte);
+	static float ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte);
 
 };
 
@@ -84,7 +84,7 @@ class Angle:public NegativeValues{
 private:
 
 public:
-	static int ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte);
+	static float ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte);
 };
 
 
@@ -105,7 +105,7 @@ class AngleVelocity:public NegativeValues{
 private:
 
 public:
-	static int ProcessAngleVelocity(unsigned char*, int MSByte, int LSByte);
+	static float ProcessAngleVelocity(unsigned char*, int MSByte, int LSByte);
 };
 
 float AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte){
@@ -133,17 +133,16 @@ public:
 
 	MotorPosInfo(unsigned char*);
 	MotorPosInfo();
-	int GetMotorAngleProcessed();
-	int GetMotorSpeedProcessed();
-	int GetElectricalOutFreqProcessed();
-	int GetDeltaResolverFilteredProcessed();
+
+	float GetMotorAngleProcessed();
+	float GetMotorSpeedProcessed();
+	float GetElectricalOutFreqProcessed();
+	float GetDeltaResolverFilteredProcessed();
 
 };
 
 MotorPosInfo::MotorPosInfo(){
 	MotorAngle             = 0;
-	MotorAngle             = 0;
-	MotorSpeed             = 0;
 	MotorSpeed             = 0;
 	ElectricalOutFreq      = 0;
 	DeltaResolverFiltered  = 0;
@@ -158,19 +157,19 @@ MotorPosInfo::MotorPosInfo(unsigned char* CAN_DATA){
 	DeltaResolverFiltered  			= 0;
 };
 
-int MotorPosInfo::GetMotorAngleProcessed(){
+float MotorPosInfo::GetMotorAngleProcessed(){
 	return MotorAngle;
 }
 
-int MotorPosInfo::GetMotorSpeedProcessed(){
+float MotorPosInfo::GetMotorSpeedProcessed(){
 	return MotorSpeed;
 }
 
-int MotorPosInfo::GetElectricalOutFreqProcessed(){
+float MotorPosInfo::GetElectricalOutFreqProcessed(){
 	return ElectricalOutFreq;
 }
 
-int MotorPosInfo::GetDeltaResolverFilteredProcessed(){
+float MotorPosInfo::GetDeltaResolverFilteredProcessed(){
 	return DeltaResolverFiltered;
 }
 
@@ -210,15 +209,15 @@ TorqueTimerInfo::TorqueTimerInfo(unsigned char* CAN_DATA){
 
 }
 
-int TorqueTimerInfo::GetCommandedTorqueProcessed(){
+float TorqueTimerInfo::GetCommandedTorqueProcessed(){
 	return CommandedTorqueProcessed;
 }
 
-int TorqueTimerInfo::GetTorqueFeedbackProcessed(){
+float TorqueTimerInfo::GetTorqueFeedbackProcessed(){
 	return TorqueFeedbackProcessed;
 }
 
-int TorqueTimerInfo::GetPowerOnTimeProcessed(){
+float TorqueTimerInfo::GetPowerOnTimeProcessed(){
 	return PowerOnTimePRocessed;
 }
 
