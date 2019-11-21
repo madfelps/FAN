@@ -51,7 +51,7 @@ class NegativeValues{
 private:
 
 public:
-	static float NegativeValuesTwoBytes(int Value);
+	static float NegativeValuesTwoBytes(float Value);
 
 };
 
@@ -158,19 +158,19 @@ MotorPosInfo::MotorPosInfo(unsigned char* CAN_DATA){
 };
 
 float MotorPosInfo::GetMotorAngleProcessed(){
-	return MotorAngle;
+	return MotorAngleProcessed;
 }
 
 float MotorPosInfo::GetMotorSpeedProcessed(){
-	return MotorSpeed;
+	return MotorSpeedProcessed;
 }
 
 float MotorPosInfo::GetElectricalOutFreqProcessed(){
-	return ElectricalOutFreq;
+	return ElectricalOutFreqProcessed;
 }
 
 float MotorPosInfo::GetDeltaResolverFilteredProcessed(){
-	return DeltaResolverFiltered;
+	return DeltaResolverFilteredProcessed;
 }
 
 
@@ -189,9 +189,9 @@ public:
 	TorqueTimerInfo(unsigned char*);
 	TorqueTimerInfo();
 
-	int GetCommandedTorqueProcessed();
-	int GetTorqueFeedbackProcessed();
-	int GetPowerOnTimeProcessed();
+	float GetCommandedTorqueProcessed();
+	float GetTorqueFeedbackProcessed();
+	float GetPowerOnTimeProcessed();
 
 };
 
@@ -218,7 +218,7 @@ float TorqueTimerInfo::GetTorqueFeedbackProcessed(){
 }
 
 float TorqueTimerInfo::GetPowerOnTimeProcessed(){
-	return PowerOnTimePRocessed;
+	return PowerOnTimeProcessed;
 }
 
 class CommandMessage{
@@ -385,8 +385,8 @@ int main(){
 					CounterMotorPosition++;
 					//if(CounterMotorPosition == 100){
 						ObjMotorPosInfo = MotorPosInfo(frame.data); //TODO reseta os parametros para zero e depois processa os de interesse
-						std::cout << "Angle: " << ObjMotorPosInfo.GetMotorAngle() << " ";
-						std::cout << "Speed: " << ObjMotorPosInfo.GetMotorSpeed() << std::endl;
+						std::cout << "Angle: " << ObjMotorPosInfo.GetMotorAngleProcessed() << " ";
+						std::cout << "Speed: " << ObjMotorPosInfo.GetMotorSpeedProcessed() << std::endl;
 						CounterMotorPosition = 0;
 					//}
 				}
