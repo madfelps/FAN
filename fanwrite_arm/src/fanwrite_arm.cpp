@@ -268,6 +268,8 @@ int main(){
 	bool Question;
 	float TorqueValue;
 	float TorqueLimitValue;
+	float SpeedValue;
+
 	int sentBytes;
 	// Setar torque
 	while (1){
@@ -278,7 +280,9 @@ int main(){
 			std::cin >> TorqueLimitValue;
 			std::cout << "Qual o valor para o torque? " << std::endl;
 			std::cin >> TorqueValue;
-			CommandMessage ObjCommandMessage(TorqueValue, 0, 1, 0, 0, 0, TorqueLimitValue); //
+			std::cout << "Qual o valor da velocidade? " << std::endl;
+			std::cin >> SpeedValue;
+			CommandMessage ObjCommandMessage(TorqueValue, SpeedValue, 1, 0, 0, 0, TorqueLimitValue); //
 			sentBytes = ObjCommandMessage.SendFrame(&SocketCan);
 		}
 		else{ // Programa será fechado
