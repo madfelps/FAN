@@ -50,13 +50,21 @@
 class NegativeValues{
 private:
 
+
+/* Conforme o manual RMS Can Protocol na página 12, algumas grandezas cujos valores ocupam 2 (dois) bytes devem passar por processamento para distinguirmos os números positivos e os negativos.  */
+
 public:
 	static float NegativeValuesTwoBytes(float Value);
 
 };
 
+/* Como 2^16 = 65536, dividimos pela metade, e, valores abaixo de 65536/2 = 32768 são convencionados como positivos, enquanto valores acima de 32768 (até 65536) são negativos.  */
+/* Para entender a conversão, ver anexo 1 da documentação desse projeto.  */
 
-float NegativeValues::NegativeValuesTwoBytes(float Value){ // segundo o manual, se o valor for maior que 32768, isso indica um numero negativo; logo, deve-se fazer a conversao apropriada
+// Função: Processar determinado dado para verificar se é positivo ou negativo
+// Parâmetros: Valor a ser verificado e processado.
+// Retorno: Valor processado (com correta indicação se é positivo ou negativo).
+float NegativeValues::NegativeValuesTwoBytes(float Value){
 		if(Value >= 32768){
 			Value = Value - 65536;
 		}
@@ -64,6 +72,8 @@ float NegativeValues::NegativeValuesTwoBytes(float Value){ // segundo o manual, 
 		}
 		return Value;
 }
+
+/* Em grandezas compostas de dois bytes temos que o valor referido é a soma do valor do byte menos significativo (LSB) com o byte mais significativo (MSB) multiplicado por 256. (Ver Manual)  */
 
 class Torque:public NegativeValues{
 private:
@@ -73,6 +83,9 @@ public:
 
 };
 
+// Função: Processar determinado dado para seguir o padrão do Torque, conforme manual(lembrando que o valor recebido é multiplicado por 10).
+// Parâmetros: Payload do CAN e o número do byte mais significativo e menos significativo para extrair o valor.
+// Retorno: Valor processado.
 float Torque::ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	float TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	TorqueValue = NegativeValuesTwoBytes(TorqueValue);
@@ -88,7 +101,9 @@ public:
 };
 
 
-
+// Função: Processar determinado dado para seguir o padrão do Angle, conforme manual(lembrando que o valor recebido é multiplicado por 10).
+// Parâmetros: Payload do CAN e o número do byte mais significativo e menos significativo para extrair o valor.
+// Retorno: Valor processado.
 float Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
 	float AngleValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
@@ -108,6 +123,9 @@ public:
 	static float ProcessAngleVelocity(unsigned char*, int MSByte, int LSByte);
 };
 
+// Função: Processar determinado dado para seguir o padrão do AngleVelocity, conforme manual(lembrando que o valor recebido é multiplicado por 10).
+// Parâmetros: Payload do CAN e o número do byte mais significativo e menos significativo para extrair o valor.
+// Retorno: Valor processado.
 float AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
 	float AngleVelocityValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
@@ -115,6 +133,9 @@ float AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, i
 	AngleVelocityValue = AngleVelocityValue/10;
 	return AngleVelocityValue;
 }
+
+/* Todas as classes com respectiva seção no manual possui objetos que guardam os valores respectivos "crus", advindo do envio de dados pelo motor. Esses dados são armazenados no objeto de nome com a grandeza relacionada. */
+/* Finalizado o processamento do dado (para numeros negativos e peso dos bytes), o valor "real" é armazenado no objetivo com terminação Processed.  */
 
 class MotorPosInfo:public Angle, public AngleVelocity{
 private:
@@ -197,7 +218,7 @@ public:
 
 TorqueTimerInfo::TorqueTimerInfo(){
 	CommandedTorque     = 0;
-	TorqueFeedback     = 0;
+	TorqueFeedback      = 0;
 	PowerOnTime         = 0;
 
 }
@@ -221,108 +242,23 @@ float TorqueTimerInfo::GetPowerOnTimeProcessed(){
 	return PowerOnTimeProcessed;
 }
 
-class CommandMessage{
-private:
-	int TorqueCommand;  //FLAG 0
-	int SpeedCommand; //FLAG 1
-	bool DirectionCommand; //FLAG 2
-	bool InverterEnable; //FLAG 3
-	bool InverterDischarge; //FLAG 4
-	bool SpeedMode; //FLAG 5
-	int CommandedTorqueLimit; //FLAG 6
-	struct can_frame frame;
+void SetupCanInterface(int* socketCan)
+{
+	*socketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
-public:
-	CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit);
-	void SetParameter(int, signed short int);
-};
+	struct sockaddr_can addr;
 
-CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit){
-	frame.can_id = COMMAND_MESSAGE;
+	struct ifreq ifr;
 
-	this->TorqueCommand = TorqueCommand;
-	this->SpeedCommand = SpeedCommand;
-	this->DirectionCommand = DirectionCommand;
-	this->InverterEnable = InverterEnable;
-	this->InverterDischarge = InverterDischarge;
-	this->SpeedMode = SpeedMode;
-	this->CommandedTorqueLimit = CommandedTorqueLimit;
+	strcpy(ifr.ifr_name, "can1");
 
-	//TorqueCommand
-	frame.data[0] = TorqueCommand & 0xFF;
-	frame.data[1] = TorqueCommand >> 8;
+	ioctl(*socketCan, SIOCGIFINDEX, &ifr);
 
+	addr.can_family = AF_CAN;
 
-	 //SpeedCommand
-	frame.data[2] = SpeedCommand;
-	frame.data[3] = SpeedCommand;
+	addr.can_ifindex = ifr.ifr_ifindex;
 
-
-	{//DirectionCommand
-	frame.data[4] = (unsigned char)Direction;
-
-
-	//InverterEnable and InverterDischarge
-	frame.data[5] = ((unsigned char)InverterEnable) & 0x1;
-
-
-	//InverterDischarge
-	frame.data[5] = ((unsigned char)InverterDischarge) & 0x1 << 1;
-
-
-	 //SpeedMode
-	frame.data[6] = SpeedMode;
-
-
-	//CommandedTorqueLimit
-	frame.data[7] = CommandedTorqueLimit;
-
-
-}
-
-
-};
-
-void CommandMessage::SetParameter(int Value, signed short int flag){ // TODO A DESENVOLVER
-	frame.can_id = COMMAND_MESSAGE;
-	if(flag == 0){ //TorqueCommand
-		TorqueCommand = Value;
-		frame.data[0] = TorqueCommand & 0xFF;
-		frame.data[1] = TorqueCommand >> 8;
-
-	}
-	if(flag == 1){ //SpeedCommand
-		SpeedCommand = Value;
-		frame.data[2] = SpeedCommand;
-		frame.data[3] = SpeedCommand;
-		
-	}
-	if(flag == 2){//DirectionCommand
-		DirectionCommand = (unsigned char)Value;
-		frame.data[4] = DirectionCommand;
-		
-	}
-	if(flag == 3){ //InverterEnable and InverterDischarge
-		InverterEnable = ((unsigned char)Value) & 0x1;
-		frame.data[5] = ((unsigned char)Value) & 0x1;
-		
-	}
-	if(flag == 4){ //InverterDischarge
-		InverterDischarge = ((unsigned char)Value) & 0x1 << 1;
-		frame.data[5] = ((unsigned char)Value) & 0x1 << 1;
-		
-	}
-	if(flag == 5){ //SpeedMode
-		SpeedMode = Value;
-		frame.data[6] = SpeedMode;
-		
-	}
-	if(flag == 6){ //CommandedTorqueLimit
-		CommandedTorqueLimit = Value;
-		frame.data[7] = CommandedTorqueLimit;
-		
-	}
-
+	bind(*socketCan, (struct sockaddr *) &addr, sizeof(addr));
 }
 
 
@@ -365,9 +301,9 @@ int main(){
 	int CounterTorqueTimerInfo = 0;
 
 	while (MsgCounter < NUM_MSG) {
-		nbytes = read(SocketCan, &frame, sizeof(struct can_frame));
+		nbytes = read(SocketCan, &frame, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
 		printf("qtdd msgs: %d\n", MsgCounter);
-		if(nbytes != 0){ // se realmente leu msg...
+		if(nbytes != 0){ // Verifica se a mensagem foi lida
 			for(j = 0; j < frame.can_dlc; j++){
 				DataLog[MsgCounter][j] = frame.data[j];
 			}
@@ -384,7 +320,7 @@ int main(){
 				if(frame.can_id == MOTOR_POSITION){
 					CounterMotorPosition++;
 					//if(CounterMotorPosition == 100){
-						ObjMotorPosInfo = MotorPosInfo(frame.data); //TODO reseta os parametros para zero e depois processa os de interesse
+						ObjMotorPosInfo = MotorPosInfo(frame.data);
 						std::cout << "Angle: " << ObjMotorPosInfo.GetMotorAngleProcessed() << " ";
 						std::cout << "Speed: " << ObjMotorPosInfo.GetMotorSpeedProcessed() << std::endl;
 						CounterMotorPosition = 0;
