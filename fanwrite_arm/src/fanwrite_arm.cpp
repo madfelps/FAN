@@ -62,10 +62,10 @@ public:
 
 
 int NegativeValues::WriteNegativeValuesTwoBytes(int Value){
-		if(-32768 <= Value <= -1){
+		if((-32768 <= Value) && (Value <= -1)){
 			Value = Value + 65536;
 		}
-		else(0 <= Value <= 32767){
+		if((0 <= Value) && (Value <= 32767)){
 			Value = Value;
 		}
 		return Value;
@@ -80,73 +80,71 @@ private:
 	bool InverterDischarge; //FLAG 4
 	bool SpeedMode; //FLAG 5
 	int CommandedTorqueLimit; //FLAG 6
+public:
 	struct can_frame frame;
 
 public:
-	CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit);
+	CommandMessage(float TorqueCommand, float SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, float CommandedTorqueLimit);
 	void SetParameter(int, signed short int);
-	void SendFrame(int, struct can_frame);
+	int SendFrame(int*);
 };
 
-CommandMessage::CommandMessage(int TorqueCommand, int SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, int CommandedTorqueLimit){
+CommandMessage::CommandMessage(float TorqueCommand, float SpeedCommand, bool Direction, bool InverterEnable, bool InverterDischarge, bool SpeedMode, float CommandedTorqueLimit){
 	frame.can_id = COMMAND_MESSAGE;
+	frame.can_dlc = 8;
+	//TODO avaliar se os argumentos estão dentro de seus respectivos limites numéricos
 
-	this->TorqueCommand = TorqueCommand * 10;
-	this->SpeedCommand = SpeedCommand;
+	this->TorqueCommand = static_cast<int>(10*TorqueCommand);
+	this->SpeedCommand = static_cast<int>(10*SpeedCommand);
 	this->DirectionCommand = Direction;
 	this->InverterEnable = InverterEnable;
 	this->InverterDischarge = InverterDischarge;
 	this->SpeedMode = SpeedMode;
-	this->CommandedTorqueLimit = CommandedTorqueLimit * 10;
+	this->CommandedTorqueLimit = static_cast<int>(10*CommandedTorqueLimit);
 
 	//TorqueCommand
-	frame.data[0] = TorqueCommand & 0xFF;
-	frame.data[1] = TorqueCommand >> 8;
+	frame.data[0] = (__u8) (this->TorqueCommand & 0xFF);
+	frame.data[1] = (__u8) (this->TorqueCommand >> 8);
 
 
 	 //SpeedCommand
-	frame.data[2] = SpeedCommand;
-	frame.data[3] = SpeedCommand;
+	frame.data[2] = (__u8) (this->SpeedCommand & 0xFF);
+	frame.data[3] = (__u8) (this->SpeedCommand >> 8);
 
 
-	{//DirectionCommand
-	frame.data[4] = (unsigned char)Direction;
+	//DirectionCommand
+	frame.data[4] = (__u8)Direction;
 
 
 	//InverterEnable 
 	if(InverterEnable){
-		frame.data[5] = frame.data[5] | 0b00000001;
+		frame.data[5] = (__u8) (frame.data[5] | 0b00000001);
 	}
 	if(!InverterEnable){
-		frame.data[5] = frame.data[5] & 0b11111110;
+		frame.data[5] = (__u8) (frame.data[5] & 0b11111110);
 	}
 	
 	
 	//InverterDischarge
 	if(InverterDischarge){
-		frame.data[5] = frame.data[5] | 0b00000010;
+		frame.data[5] = (__u8) (frame.data[5] | 0b00000010);
 	}
 	if(!InverterDischarge){
-		frame.data[5] = frame.data[5] & 0b11111101;
+		frame.data[5] = (__u8) (frame.data[5] & 0b11111101);
 	}
 
 
 	 //SpeedMode
 	if(SpeedMode){ //TODO usar volatile nesse caso?
-		frame.data[5] = frame.data[5] | 0b00000010;
+		frame.data[5] = (__u8) (frame.data[5] | 0b00000010);
 	}
 	if(!SpeedMode){
-		frame.data[5] = frame.data[5] & 0b11111101;
+		frame.data[5] = (__u8) (frame.data[5] & 0b11111101);
 	}
 
-
 	//CommandedTorqueLimit
-	frame.data[6] = CommandedTorqueLimit & 0xFF;
-	frame.data[7] = CommandedTorqueLimit >> 8;
-
-
-}
-
+	frame.data[6] = (__u8) (this->CommandedTorqueLimit & 0xFF);
+	frame.data[7] = (__u8) (this->CommandedTorqueLimit >> 8);
 
 };
 
@@ -207,14 +205,16 @@ void CommandMessage::SetParameter(int Value, signed short int flag){ //
 
 }
 
-void CommandMessage::SendFrame(int socketCan, struct can_frame frame){
-	int nbytes = write(socketCan, &frame, sizeof(struct can_frame));
+int CommandMessage::SendFrame(int* socketCan){
+	int nbytes = write(*socketCan, &frame, sizeof(struct can_frame));
+	return nbytes;
 }
 
 
 
 void SetupCanInterface(int* socketCan)
 {
+	printf("debugging!\n");
 	*socketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
 	struct sockaddr_can addr;
@@ -234,12 +234,6 @@ void SetupCanInterface(int* socketCan)
 
 
 int main(){
-
-	int MessageSend;
-	char DataLog[NUM_MSG][8];
-	unsigned int DataID[NUM_MSG];
-	TorqueTimerInfo ObjTorqueTimerInfo;
-	MotorPosInfo ObjMotorPosInfo;
 
 
 	//Configuração do CAN
@@ -272,8 +266,9 @@ int main(){
 	//
 
 	bool Question;
-	int TorqueValue;
-	int TorqueLimitValue;
+	float TorqueValue;
+	float TorqueLimitValue;
+	int sentBytes;
 	// Setar torque
 	while (1){
 		std::cout <<"\nVoce deseja configurar o torque limite? Digite (1) para prosseguir com a configuração ou (0) para fechar o software. "<< std::endl;
@@ -284,7 +279,7 @@ int main(){
 			std::cout << "Qual o valor para o torque? " << std::endl;
 			std::cin >> TorqueValue;
 			CommandMessage ObjCommandMessage(TorqueValue, 0, 1, 0, 0, 0, TorqueLimitValue); //
-			SendFrame(SocketCan, frame); //TODO revisar isso aqui
+			sentBytes = ObjCommandMessage.SendFrame(&SocketCan);
 		}
 		else{ // Programa será fechado
 			close(SocketCan);
