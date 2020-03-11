@@ -140,10 +140,10 @@ float AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, i
 class MotorPosInfo:public Angle, public AngleVelocity{
 private:
 
-	int MotorAngle;
-	int MotorSpeed;
-	int ElectricalOutFreq;
-	int DeltaResolverFiltered;
+	float MotorAngle;
+	float MotorSpeed;
+	float ElectricalOutFreq;
+	float DeltaResolverFiltered;
 
 	float MotorAngleProcessed;
 	float MotorSpeedProcessed;
