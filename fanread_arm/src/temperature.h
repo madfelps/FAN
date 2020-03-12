@@ -1,4 +1,32 @@
-#include "temperature.h"
+class Temperature1:public Torque{
+
+private:
+	float ModuleA;
+	float ModuleAProcessed;
+	float ModuleB;
+	float ModuleBProcessed;
+	float ModuleC;
+	float ModuleCProcessed;
+	float GateDriverBoard;
+	float GateDriverBoardProcessed;
+
+public:
+	Temperature1();
+	Temperature1(Temperature1 Object);
+
+	void UpdateObject(unsigned char*);
+	float GetModuleAProcessed();
+	float GetModuleBProcessed();
+	float GetModuleCProcessed();
+	float GetGateDriverBoardProcessed();
+
+
+//  A grandeza física temperatura se processa de modo igual ao Torque, ou seja, essa classe também usa a classe mãe Torque
+	void  IfID_Temperature1();
+	void ShowAllValuesProcessed();
+
+
+};
 
 Temperature1::Temperature1(){
 	ModuleA 					= 0;
