@@ -48,6 +48,8 @@
 #include <linux/can/raw.h>
 #include <ncurses.h>
 
+void rectangle(int y1, int x1, int y2, int x2);
+
 class NegativeValues{
 private:
 
@@ -208,8 +210,11 @@ void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 }
 
 void MotorPosInfo::ShowAllValuesProcessed(){
-	std::cout << "Angle: " << this->GetMotorAngleProcessed() << " ";
-	std::cout << "Speed: " << this->GetMotorSpeedProcessed() << std::endl;
+	move(14, 60);
+	printw("Angle: " ); this->GetMotorAngleProcessed() << " ";
+	move(15, 60);
+	printw("Speed: " ); this->GetMotorSpeedProcessed() << std::endl;
+	refresh();
 }
 
 void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame){
@@ -276,9 +281,13 @@ void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
 
 
 void TorqueTimerInfo::ShowAllValuesProcessed(){
-		std::cout << "Commanded Torque: " << this->GetCommandedTorqueProcessed() << std::endl;
-		std::cout << "Torque Feedback: " << this->GetTorqueFeedbackProcessed() << std::endl;
-		std::cout << "Power On Time: " << this->GetPowerOnTimeProcessed() << std::endl;
+		move(11, 60);
+		printw("TorqueCommand: " ); this->GetCommandedTorqueProcessed() << std::endl;
+		move(12, 60);
+		printw("Torque Feedback: "); this->GetTorqueFeedbackProcessed() << std::endl;
+		move(13, 60);
+		printw("Power On Time: " ); this->GetPowerOnTimeProcessed() << std::endl;
+		refresh();
 }
 
 void TorqueTimerInfo::IfID_TorqueTimerInfo(struct can_frame* frame){
@@ -365,10 +374,15 @@ float Temperature1::GetGateDriverBoardProcessed(){
 }
 
 void Temperature1::ShowAllValuesProcessed(){
-		std::cout << "Temperatura do MóduloA: " << this->GetModuleAProcessed() << std::endl;
-		std::cout << "Temperatura do MóduloB: " << this->GetModuleBProcessed() << std::endl;
-		std::cout << "Temperatura do MóduloC: " << this->GetModuleCProcessed() << std::endl;
-		std::cout << "Temperatura do Gate Driver Board: " << this->GetGateDriverBoardProcessed() << std::endl;
+		move(10, 5);
+		printw("Temperatura do MóduloA: "); this->GetModuleAProcessed() << std::endl;
+		move(11, 5);
+		printw("Temperatura do MóduloB: "); this->GetModuleBProcessed() << std::endl;
+		move(12, 5);
+		printw("Temperatura do MóduloC: "); this->GetModuleCProcessed() << std::endl;
+		move(13, 5);
+		printw("Temperatura do Gate Driver Board: " ); this->GetGateDriverBoardProcessed() << std::endl;
+		refresh();
 }
 
 void  Temperature1::IfID_Temperature1(struct can_frame* frame){
@@ -406,6 +420,8 @@ void SetupCanInterface(int* socketCan)
 int main(){
 
 	initscr();
+	rectangle(9, 4, 14, 50);
+	rectangle(9, 55, 15, 85);
 
 	char DataLog[NUM_MSG][8];
 	unsigned int DataID[NUM_MSG];
@@ -471,8 +487,22 @@ int main(){
 
 	}
 
+	endwin();
+
 	close(SocketCan);
 
 	return 0;
+}
+
+void rectangle(int y1, int x1, int y2, int x2)
+{
+    mvhline(y1, x1, 0, x2-x1);
+    mvhline(y2, x1, 0, x2-x1);
+    mvvline(y1, x1, 0, y2-y1);
+    mvvline(y1, x2, 0, y2-y1);
+    mvaddch(y1, x1, ACS_ULCORNER);
+    mvaddch(y2, x1, ACS_LLCORNER);
+    mvaddch(y1, x2, ACS_URCORNER);
+    mvaddch(y2, x2, ACS_LRCORNER);
 }
 
