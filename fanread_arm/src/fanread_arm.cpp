@@ -46,6 +46,7 @@
 #include <sys/socket.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
+#include <ncurses.h>
 
 class NegativeValues{
 private:
@@ -89,7 +90,7 @@ public:
 float Torque::ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	float TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	TorqueValue = NegativeValuesTwoBytes(TorqueValue);
-	TorqueValue = TorqueValue/10;
+	TorqueValue = TorqueValue/10; //todo O problema do multiplicador
 	return TorqueValue;
 }
 
@@ -154,6 +155,9 @@ public:
 
 	MotorPosInfo(unsigned char*);
 	MotorPosInfo();
+	void UpdateObject(unsigned char* CAN_DATA);
+	void ShowAllValuesProcessed();
+	void IfID_MotorPosInfo(struct can_frame* frame);
 
 	float GetMotorAngleProcessed();
 	float GetMotorSpeedProcessed();
@@ -194,6 +198,31 @@ float MotorPosInfo::GetDeltaResolverFilteredProcessed(){
 	return DeltaResolverFilteredProcessed;
 }
 
+void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
+	MotorAngle             			= 0;
+	MotorAngleProcessed             = this->ProcessAngle(CAN_DATA, 1, 0);
+	MotorSpeed            			= 0;
+	MotorSpeedProcessed             = this->ProcessAngleVelocity(CAN_DATA, 3, 2);
+	ElectricalOutFreq      			= 0;
+	DeltaResolverFiltered  			= 0;
+}
+
+void MotorPosInfo::ShowAllValuesProcessed(){
+	std::cout << "Angle: " << this->GetMotorAngleProcessed() << " ";
+	std::cout << "Speed: " << this->GetMotorSpeedProcessed() << std::endl;
+}
+
+void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame){
+	if(frame->can_id == TORQUE_TIMER_INFO){
+
+
+		this->UpdateObject(frame->data);
+
+		this->ShowAllValuesProcessed();
+
+
+	}
+}
 
 class TorqueTimerInfo: public Torque{
 private:
@@ -207,8 +236,10 @@ private:
 
 
 public:
-	TorqueTimerInfo(unsigned char*);
 	TorqueTimerInfo();
+	void UpdateObject(unsigned char*);
+	void ShowAllValuesProcessed();
+	void IfID_TorqueTimerInfo(struct can_frame* frame);
 
 	float GetCommandedTorqueProcessed();
 	float GetTorqueFeedbackProcessed();
@@ -223,12 +254,7 @@ TorqueTimerInfo::TorqueTimerInfo(){
 
 }
 
-TorqueTimerInfo::TorqueTimerInfo(unsigned char* CAN_DATA){
-	CommandedTorqueProcessed     = ProcessTorque(CAN_DATA, 1, 0);
-	TorqueFeedbackProcessed      = ProcessTorque(CAN_DATA, 3, 2);
-	PowerOnTimeProcessed         = 0;
 
-}
 
 float TorqueTimerInfo::GetCommandedTorqueProcessed(){
 	return CommandedTorqueProcessed;
@@ -240,6 +266,121 @@ float TorqueTimerInfo::GetTorqueFeedbackProcessed(){
 
 float TorqueTimerInfo::GetPowerOnTimeProcessed(){
 	return PowerOnTimeProcessed;
+}
+
+void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
+	CommandedTorqueProcessed     = this->ProcessTorque(CAN_DATA, 1, 0);
+	TorqueFeedbackProcessed      = this->ProcessTorque(CAN_DATA, 3, 2);
+	PowerOnTimeProcessed         = 0;
+}
+
+
+void TorqueTimerInfo::ShowAllValuesProcessed(){
+		std::cout << "Commanded Torque: " << this->GetCommandedTorqueProcessed() << std::endl;
+		std::cout << "Torque Feedback: " << this->GetTorqueFeedbackProcessed() << std::endl;
+		std::cout << "Power On Time: " << this->GetPowerOnTimeProcessed() << std::endl;
+}
+
+void TorqueTimerInfo::IfID_TorqueTimerInfo(struct can_frame* frame){
+	if(frame->can_id == MOTOR_POSITION){
+
+
+		this->UpdateObject(frame->data);
+
+		this->ShowAllValuesProcessed();
+
+
+	}
+}
+
+class Temperature1:public Torque{
+
+private:
+	float ModuleA;
+	float ModuleAProcessed;
+	float ModuleB;
+	float ModuleBProcessed;
+	float ModuleC;
+	float ModuleCProcessed;
+	float GateDriverBoard;
+	float GateDriverBoardProcessed;
+
+public:
+	Temperature1();
+	Temperature1(unsigned char* CAN_DATA);
+
+	void UpdateObject(unsigned char*);
+	float GetModuleAProcessed();
+	float GetModuleBProcessed();
+	float GetModuleCProcessed();
+	float GetGateDriverBoardProcessed();
+
+
+//  A grandeza física temperatura se processa de modo igual ao Torque, ou seja, essa classe também usa a classe mãe Torque
+	void  IfID_Temperature1(struct can_frame* frame);
+	void ShowAllValuesProcessed();
+
+
+};
+
+Temperature1::Temperature1(){
+	ModuleA 					= 0;
+	ModuleAProcessed 			= 0;
+	ModuleB 					= 0;
+	ModuleBProcessed 			= 0;
+	ModuleC 					= 0;
+	ModuleCProcessed 			= 0;
+	GateDriverBoard 			= 0;
+	GateDriverBoardProcessed 	= 0;
+}
+
+Temperature1::Temperature1(unsigned char* CAN_DATA){
+	ModuleAProcessed 			= ProcessTorque(CAN_DATA, 1, 0);
+	ModuleBProcessed 			= ProcessTorque(CAN_DATA, 3, 2);
+	ModuleCProcessed 			= ProcessTorque(CAN_DATA, 5, 4);
+	GateDriverBoardProcessed 	= ProcessTorque(CAN_DATA, 7, 6);
+}
+
+void Temperature1::UpdateObject(unsigned char* CAN_DATA){
+		ModuleAProcessed 			= this->ProcessTorque(CAN_DATA, 1, 0);
+		ModuleBProcessed 			= this->ProcessTorque(CAN_DATA, 3, 2);
+		ModuleCProcessed 			= this->ProcessTorque(CAN_DATA, 5, 4);
+		GateDriverBoardProcessed 	= this->ProcessTorque(CAN_DATA, 7, 6);
+}
+
+float Temperature1::GetModuleAProcessed(){
+	return ModuleAProcessed;
+}
+
+float Temperature1::GetModuleBProcessed(){
+	return ModuleBProcessed;
+}
+
+float Temperature1::GetModuleCProcessed(){
+	return ModuleCProcessed;
+}
+
+float Temperature1::GetGateDriverBoardProcessed(){
+	return GateDriverBoardProcessed;
+}
+
+void Temperature1::ShowAllValuesProcessed(){
+		std::cout << "Temperatura do MóduloA: " << this->GetModuleAProcessed() << std::endl;
+		std::cout << "Temperatura do MóduloB: " << this->GetModuleBProcessed() << std::endl;
+		std::cout << "Temperatura do MóduloC: " << this->GetModuleCProcessed() << std::endl;
+		std::cout << "Temperatura do Gate Driver Board: " << this->GetGateDriverBoardProcessed() << std::endl;
+}
+
+void  Temperature1::IfID_Temperature1(struct can_frame* frame){
+	if(frame->can_id == TEMPERATURES_1){
+
+
+		this->UpdateObject(frame->data);
+
+		this->ShowAllValuesProcessed();
+
+
+	}
 }
 
 void SetupCanInterface(int* socketCan)
@@ -264,12 +405,15 @@ void SetupCanInterface(int* socketCan)
 
 int main(){
 
+	initscr();
+
 	char DataLog[NUM_MSG][8];
 	unsigned int DataID[NUM_MSG];
 	TorqueTimerInfo ObjTorqueTimerInfo;
 	MotorPosInfo ObjMotorPosInfo;
+	Temperature1 ObjTemperature1;
 
-
+	int a;
 	//Configuração do CAN
 	int SocketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
@@ -302,7 +446,7 @@ int main(){
 
 	while (MsgCounter < NUM_MSG) {
 		nbytes = read(SocketCan, &frame, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
-		printf("qtdd msgs: %d\n", MsgCounter);
+		//printf("qtdd msgs: %d\n", MsgCounter);
 		if(nbytes != 0){ // Verifica se a mensagem foi lida
 			for(j = 0; j < frame.can_dlc; j++){
 				DataLog[MsgCounter][j] = frame.data[j];
@@ -311,30 +455,15 @@ int main(){
 			DataID[MsgCounter] = frame.can_id;
 
 			//if(MsgCounter%100 == 0){ // imprime a cada 100 mensagens
-				for (i = 0; i < 8; i++) {
+				/*for (i = 0; i < 8; i++) {
 					printf("%5d", DataLog[MsgCounter][i]);
-				}
+				}*/
 
-				std::cout << "  |  ";
+				//std::cout << "  |  ";
 
-				if(frame.can_id == MOTOR_POSITION){
-					CounterMotorPosition++;
-					//if(CounterMotorPosition == 100){
-						ObjMotorPosInfo = MotorPosInfo(frame.data);
-						std::cout << "Angle: " << ObjMotorPosInfo.GetMotorAngleProcessed() << " ";
-						std::cout << "Speed: " << ObjMotorPosInfo.GetMotorSpeedProcessed() << std::endl;
-						CounterMotorPosition = 0;
-					//}
-				}
-				else if(frame.can_id == TORQUE_TIMER_INFO){
-					CounterTorqueTimerInfo++;
-					//if(CounterTorqueTimerInfo == 100){
-						ObjTorqueTimerInfo = TorqueTimerInfo(frame.data);
-						std::cout << "Torque Feedback: " << ObjTorqueTimerInfo.GetTorqueFeedbackProcessed() << " ";
-						std::cout << "Commanded Torque: " << ObjTorqueTimerInfo.GetCommandedTorqueProcessed() << std::endl;
-						CounterTorqueTimerInfo = 0;
-					//}
-				}
+				ObjMotorPosInfo.IfID_MotorPosInfo(&frame);
+				ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frame);
+				ObjTemperature1.IfID_Temperature1(&frame);
 			//}
 
 			MsgCounter++;
