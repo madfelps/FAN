@@ -47,8 +47,25 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <ncurses.h>
+#include <time.h>
 
 void rectangle(int y1, int x1, int y2, int x2);
+
+void DescreveSensor(){
+	strcpy(StringDescreveSensor[0], "Angle: ");
+	strcpy(StringDescreveSensor[1], "Speed: ");
+	strcpy(StringDescreveSensor[2], "Torque Command: ");
+	strcpy(StringDescreveSensor[3], "TorqueFeedback: ");
+	strcpy(StringDescreveSensor[4], "PowerOnTime: ");
+	strcpy(StringDescreveSensor[5], "Temperatura do MóduloA: ");
+	strcpy(StringDescreveSensor[6], "Temeperatura do MóduloB: ");
+	strcpy(StringDescreveSensor[7], "Temperatura do MóduloC: ");
+	strcpy(StringDescreveSensor[8], "Temperatura do GateDriverBoard: ");
+}
+
+void ColocaDadosSensoresEmString(){
+
+}
 
 class NegativeValues{
 private:
@@ -419,6 +436,9 @@ void SetupCanInterface(int* socketCan)
 
 int main(){
 
+
+	char StringDescreveSensor[10][50];
+	char StringGuardaDadosSensor[10][10];
 	initscr();
 	rectangle(9, 4, 14, 50);
 	rectangle(9, 55, 15, 85);
@@ -480,6 +500,8 @@ int main(){
 				ObjMotorPosInfo.IfID_MotorPosInfo(&frame);
 				ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frame);
 				ObjTemperature1.IfID_Temperature1(&frame);
+				//Guarda dados dos sensores na string
+				sprintf(numero[0], "%i", );
 			//}
 
 			MsgCounter++;
