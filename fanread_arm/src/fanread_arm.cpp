@@ -51,7 +51,7 @@
 
 void rectangle(int y1, int x1, int y2, int x2);
 
-void DescreveSensor(){
+void DescreveSensor(char StringDescreveSensor[][50]){
 	strcpy(StringDescreveSensor[0], "Angle: ");
 	strcpy(StringDescreveSensor[1], "Speed: ");
 	strcpy(StringDescreveSensor[2], "Torque Command: ");
@@ -61,6 +61,7 @@ void DescreveSensor(){
 	strcpy(StringDescreveSensor[6], "Temeperatura do MóduloB: ");
 	strcpy(StringDescreveSensor[7], "Temperatura do MóduloC: ");
 	strcpy(StringDescreveSensor[8], "Temperatura do GateDriverBoard: ");
+	strcpy(StringDescreveSensor[9], "Instante da geração dos dados: ");
 }
 
 void ColocaDadosSensoresEmString(){
@@ -436,8 +437,15 @@ void SetupCanInterface(int* socketCan)
 
 int main(){
 
+	char TempoEmString[10];
 
-	char StringDescreveSensor[10][50];
+	clock_t GuardaIntervaloTempo;
+	clock_t Temporaria;
+
+	FILE* Arquivo;
+	Arquivo = fopen("log.txt", "a");
+
+	char StringDescreveSensor[11][50];
 	char StringGuardaDadosSensor[10][10];
 	initscr();
 	rectangle(9, 4, 14, 50);
@@ -496,13 +504,59 @@ int main(){
 				}*/
 
 				//std::cout << "  |  ";
-
+				GuardaIntervaloTempo = clock();
 				ObjMotorPosInfo.IfID_MotorPosInfo(&frame);
 				ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frame);
 				ObjTemperature1.IfID_Temperature1(&frame);
 				//Guarda dados dos sensores na string
-				sprintf(numero[0], "%i", );
+				sprintf(StringGuardaDadosSensor[0], "%f", ObjMotorPosInfo.GetMotorAngleProcessed());
+				sprintf(StringGuardaDadosSensor[1], "%f", ObjMotorPosInfo.GetMotorSpeedProcessed());
+
+				sprintf(StringGuardaDadosSensor[2], "%f", ObjTorqueTimerInfo.GetCommandedTorqueProcessed());
+				sprintf(StringGuardaDadosSensor[3], "%f", ObjTorqueTimerInfo.GetTorqueFeedbackProcessed());
+				sprintf(StringGuardaDadosSensor[4], "%f", ObjTorqueTimerInfo.GetPowerOnTimeProcessed());
+
+				sprintf(StringGuardaDadosSensor[5], "%f", ObjTemperature1.GetModuleAProcessed());
+				sprintf(StringGuardaDadosSensor[6], "%f", ObjTemperature1.GetModuleBProcessed());
+				sprintf(StringGuardaDadosSensor[7], "%f", ObjTemperature1.GetModuleCProcessed());
+				sprintf(StringGuardaDadosSensor[8], "%f", ObjTemperature1.GetGateDriverBoardProcessed());
 			//}
+
+
+				//Pega o instante de tempo da geração dos dados, transforma em string e guarda na variável StringDescreveSensor.
+				Temporaria = clock() - GuardaIntervaloTempo;
+				strcpy(StringDescreveSensor[9], "Instante da geração dos dados (em segundos): ");
+				sprintf(TempoEmString, "%lf", (double) Temporaria*10000/CLOCKS_PER_SEC);
+				strcat(StringDescreveSensor[9], TempoEmString);
+
+				//Concatena os valores na string
+				strcat(StringDescreveSensor[0], StringGuardaDadosSensor[0]);
+				strcat(StringDescreveSensor[1], StringGuardaDadosSensor[1]);
+				strcat(StringDescreveSensor[2], StringGuardaDadosSensor[2]);
+				strcat(StringDescreveSensor[3], StringGuardaDadosSensor[3]);
+				strcat(StringDescreveSensor[4], StringGuardaDadosSensor[4]);
+				strcat(StringDescreveSensor[5], StringGuardaDadosSensor[5]);
+				strcat(StringDescreveSensor[6], StringGuardaDadosSensor[6]);
+				strcat(StringDescreveSensor[7], StringGuardaDadosSensor[7]);
+				strcat(StringDescreveSensor[8], StringGuardaDadosSensor[8]);
+				
+
+				//Gera e escreve o log
+				fprintf(arq, "%s\n", StringDescreveSensor[0]);
+				fprintf(arq, "%s\n", StringDescreveSensor[1]);
+				fprintf(arq, "%s\n", StringDescreveSensor[2]);
+				fprintf(arq, "%s\n", StringDescreveSensor[3]);
+				fprintf(arq, "%s\n", StringDescreveSensor[4]);
+				fprintf(arq, "%s\n", StringDescreveSensor[5]);
+				fprintf(arq, "%s\n", StringDescreveSensor[6]);
+				fprintf(arq, "%s\n", StringDescreveSensor[7]);
+				fprintf(arq, "%s\n", StringDescreveSensor[8]);
+				fprintf(arq, "%s\n", StringDescreveSensor[9]);
+
+				fprintf(arq, "%s\n", "-----------------------------------------------------------------------");
+
+
+
 
 			MsgCounter++;
 		}
@@ -512,6 +566,7 @@ int main(){
 	endwin();
 
 	close(SocketCan);
+	fclose(Arquivo);
 
 	return 0;
 }
