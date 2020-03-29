@@ -11,7 +11,7 @@
  *
  *
  *
- * */
+ * */ teste
 
 
 #define NUM_MSG 100
@@ -100,14 +100,14 @@ class Torque:public NegativeValues{
 private:
 
 public:
-	static float ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte);
+	static float ProcessTorqueReceive(unsigned char* CAN_DATA, int MSByte, int LSByte);
 
 };
 
 // Função: Processar determinado dado para seguir o padrão do Torque, conforme manual(lembrando que o valor recebido é multiplicado por 10).
 // Parâmetros: Payload do CAN e o número do byte mais significativo e menos significativo para extrair o valor.
 // Retorno: Valor processado.
-float Torque::ProcessTorque(unsigned char* CAN_DATA, int MSByte, int LSByte){
+float Torque::ProcessTorqueReceive(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	float TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	TorqueValue = NegativeValuesTwoBytes(TorqueValue);
 	TorqueValue = TorqueValue/10; //todo O problema do multiplicador
@@ -292,15 +292,15 @@ float TorqueTimerInfo::GetPowerOnTimeProcessed(){
 }
 
 void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
-	CommandedTorqueProcessed     = this->ProcessTorque(CAN_DATA, 1, 0);
-	TorqueFeedbackProcessed      = this->ProcessTorque(CAN_DATA, 3, 2);
+	CommandedTorqueProcessed     = this->ProcessTorqueReceive(CAN_DATA, 1, 0);
+	TorqueFeedbackProcessed      = this->ProcessTorqueReceive(CAN_DATA, 3, 2);
 	PowerOnTimeProcessed         = 0;
 }
 
 
 void TorqueTimerInfo::ShowAllValuesProcessed(){
 		move(11, 60);
-		printw("TorqueCommand: " ); this->GetCommandedTorqueProcessed() << std::endl;
+		printw("Commanded Torque: " ); this->GetCommandedTorqueProcessed() << std::endl;
 		move(12, 60);
 		printw("Torque Feedback: "); this->GetTorqueFeedbackProcessed() << std::endl;
 		move(13, 60);
@@ -362,17 +362,17 @@ Temperature1::Temperature1(){
 }
 
 Temperature1::Temperature1(unsigned char* CAN_DATA){
-	ModuleAProcessed 			= ProcessTorque(CAN_DATA, 1, 0);
-	ModuleBProcessed 			= ProcessTorque(CAN_DATA, 3, 2);
-	ModuleCProcessed 			= ProcessTorque(CAN_DATA, 5, 4);
-	GateDriverBoardProcessed 	= ProcessTorque(CAN_DATA, 7, 6);
+	ModuleAProcessed 			= ProcessTorqueReceive(CAN_DATA, 1, 0);
+	ModuleBProcessed 			= ProcessTorqueReceive(CAN_DATA, 3, 2);
+	ModuleCProcessed 			= ProcessTorqueReceive(CAN_DATA, 5, 4);
+	GateDriverBoardProcessed 	= ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
 void Temperature1::UpdateObject(unsigned char* CAN_DATA){
-		ModuleAProcessed 			= this->ProcessTorque(CAN_DATA, 1, 0);
-		ModuleBProcessed 			= this->ProcessTorque(CAN_DATA, 3, 2);
-		ModuleCProcessed 			= this->ProcessTorque(CAN_DATA, 5, 4);
-		GateDriverBoardProcessed 	= this->ProcessTorque(CAN_DATA, 7, 6);
+		ModuleAProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
+		ModuleBProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
+		ModuleCProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 5, 4);
+		GateDriverBoardProcessed 	= this->ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
 float Temperature1::GetModuleAProcessed(){
@@ -412,6 +412,40 @@ void  Temperature1::IfID_Temperature1(struct can_frame* frame){
 		this->ShowAllValuesProcessed();
 
 
+	}
+}
+
+//Por hora, focaremos no desenvolvimento do TorqueCommand e do CommandedTorqueLimit;
+class CommandMessage{
+private:
+	float TorqueCommand;
+	float TorqueCommandMSByte;
+	float TorqueCommandLSByte;
+	float SpeedCommand;
+	float DirectionCommand;
+	float InverterEnable;
+	float InverterDischarge;
+	float SpeedModeEnable;
+	float CommandedTorqueLimit;
+public:
+	CommandMessage();
+	void ProcessTorqueSend(float TorqueCommand);
+
+};
+
+CommandMessage::CommandMessage(){
+
+}
+
+void CommandMessage::ProcessTorqueSend(float* Torque){
+	TorqueCommand = Torque*10;
+	if(TorqueCommand < 32768){
+		TorqueCommandMSByte = 0;
+		TorqueCommandLSByte = TorqueCommand;
+	}
+	else(TorqueCommand >= 32768){
+		TorqueCommandLSByte = (TorqueCommand & 0b0000000011111111); //faz sentido isso?
+		TorqueCommandMSByte = (TorqueCommand >> 8); //e isso?
 	}
 }
 
