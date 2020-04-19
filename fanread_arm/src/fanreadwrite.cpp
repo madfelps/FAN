@@ -11,7 +11,7 @@
  *
  *
  *
- * */ teste
+ * */ 
 
 
 #define NUM_MSG 100
@@ -110,6 +110,7 @@ float Torque::ProcessTorqueReceive(unsigned char* CAN_DATA, int MSByte, int LSBy
 	TorqueValue = TorqueValue/10; //todo O problema do multiplicador
 	return TorqueValue;
 }
+
 
 class Angle:public NegativeValues{
 private:
@@ -447,7 +448,11 @@ void CommandMessage::ProcessTorqueSend(float* Torque){
 	}
 }
 
-void CommandMessage::UpdateFrame();
+void CommandMessage::UpdateFrame(struct can_frame* frame){
+	frame->data[0] = TorqueCommandLSByte;
+	frame->data[1] = TorqueCommandMSByte;
+
+}
 
 void SetupCanInterface(int* socketCan)
 {
@@ -472,7 +477,7 @@ void SetupCanInterface(int* socketCan)
 int main()
 {
 
-	float auxiliar;
+	float TorquePretendido;
 
 	char TempoEmString[10];
 
@@ -527,6 +532,8 @@ int main()
 
 		 	#pragma omp section //TASK READ 
 		 	{ 
+		 		#pragma omp critical 
+		 		{
 
 				while (MsgCounter < NUM_MSG) {
 				nbytes = read(SocketCan, &frame, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
@@ -588,15 +595,20 @@ int main()
 					}
 
 				}
+
+				}
 			}
 
 			#pragma omp section //TASK WRITE
 			{ 
 				printf("Digite o valor desejado de Torque\n");
-				scanf("%f", auxiliar);
-				ObjCommandMessage.ProcessTorqueSend(auxiliar);
-
-
+				scanf("%f", TorquePretendido);
+				#pragma omp critical
+				{
+				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido);
+				ObjCommandMessage.UpdateFrame(&frame);
+				nbytes = write(SocketCan, &frame, sizeof(struct can_frame));
+				}
 
 
 
