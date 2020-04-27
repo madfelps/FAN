@@ -443,7 +443,7 @@ void CommandMessage::ProcessTorqueSend(float* Torque){
 		TorqueCommandLSByte = TorqueCommand;
 	}
 	else(TorqueCommand >= 32768){
-		TorqueCommandLSByte = (TorqueCommand & 0b0000000011111111); //faz sentido isso?
+		TorqueCommandLSByte = (TorqueCommand & 0xFF); //faz sentido isso?
 		TorqueCommandMSByte = (TorqueCommand >> 8); //e isso?
 	}
 }
@@ -532,7 +532,7 @@ int main()
 
 		 	#pragma omp section //TASK READ 
 		 	{ 
-		 		#pragma omp critical 
+		 		#pragma omp critical (mutex)
 		 		{
 
 				while (MsgCounter < NUM_MSG) {
@@ -603,7 +603,7 @@ int main()
 			{ 
 				printf("Digite o valor desejado de Torque\n");
 				scanf("%f", TorquePretendido);
-				#pragma omp critical
+				#pragma omp critical (mutex)
 				{
 				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido);
 				ObjCommandMessage.UpdateFrame(&frame);
