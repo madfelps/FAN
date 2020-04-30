@@ -511,7 +511,7 @@ int main()
 	addr.can_family = AF_CAN;
 	addr.can_ifindex = ifr.ifr_ifindex;
 	bind(SocketCan, (struct sockaddr *) &addr, sizeof(addr));
-	struct can_frame frame;
+	struct can_frame frameRead, frameWrite; //Criação dos frames
 	frame.can_dlc = 8;
 	//
 
@@ -532,18 +532,21 @@ int main()
 
 		 	#pragma omp section //TASK READ 
 		 	{ 
-		 		#pragma omp critical (mutex)
-		 		{
+		 		MsgCounter++; //faz sentido colocar o MsgCounter aqui?
 
-				while (MsgCounter < NUM_MSG) {
-				nbytes = read(SocketCan, &frame, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
+				while (MsgCounter < NUM_MSG) 
+				{
+				#pragma omp critical (mutex)
+				{	
+				nbytes = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
+				}
 					if(nbytes != 0){ // Verifica se a mensagem foi lida
 
 
 						GuardaIntervaloTempo = clock();
-						ObjMotorPosInfo.IfID_MotorPosInfo(&frame);
-						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frame);
-						ObjTemperature1.IfID_Temperature1(&frame);
+						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead);
+						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead);
+						ObjTemperature1.IfID_Temperature1(&frameRead);
 						//Guarda dados dos sensores na string
 						sprintf(StringGuardaDadosSensor[0], "%f", ObjMotorPosInfo.GetMotorAngleProcessed());
 						sprintf(StringGuardaDadosSensor[1], "%f", ObjMotorPosInfo.GetMotorSpeedProcessed());
@@ -590,12 +593,8 @@ int main()
 						fprintf(arq, "%s\n", StringDescreveSensor[9]);
 						fprintf(arq, "%s\n", "-----------------------------------------------------------------------");
 
-						MsgCounter++;
-
+						MsgCounter = 0;
 					}
-
-				}
-
 				}
 			}
 
@@ -603,11 +602,11 @@ int main()
 			{ 
 				printf("Digite o valor desejado de Torque\n");
 				scanf("%f", TorquePretendido);
+				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido);
+				ObjCommandMessage.UpdateFrame(&frameWrite);
 				#pragma omp critical (mutex)
 				{
-				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido);
-				ObjCommandMessage.UpdateFrame(&frame);
-				nbytes = write(SocketCan, &frame, sizeof(struct can_frame));
+				nbytes = write(SocketCan, &frameWrite, sizeof(struct can_frame));
 				}
 
 
