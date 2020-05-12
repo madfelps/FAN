@@ -1,6 +1,6 @@
 //============================================================================
 // Name        : main.cpp
-// Author      : Felipe Madureira e Henrique Borges Garcia
+// Author      : Felipe Moura Madureira e Henrique Borges Garcia
 // Version     : 0.0
 // Copyright   : Your copyright notice
 // Description : main FAN project
@@ -227,9 +227,9 @@ void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 
 void MotorPosInfo::ShowAllValuesProcessed(){
 	move(14, 60);
-	printw("Angle: " ); this->GetMotorAngleProcessed() << " ";
+	printw("Angle: %f\n", this->GetMotorAngleProcessed());
 	move(15, 60);
-	printw("Speed: " ); this->GetMotorSpeedProcessed() << std::endl;
+	printw("Speed: %f\n", this->GetMotorSpeedProcessed());
 	refresh();
 }
 
@@ -298,11 +298,11 @@ void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
 
 void TorqueTimerInfo::ShowAllValuesProcessed(){
 		move(11, 60);
-		printw("Commanded Torque: " ); this->GetCommandedTorqueProcessed() << std::endl;
+		printw("Commanded Torque: %f\n", this->GetCommandedTorqueProcessed());
 		move(12, 60);
-		printw("Torque Feedback: "); this->GetTorqueFeedbackProcessed() << std::endl;
+		printw("Torque Feedback: %f\n", this->GetTorqueFeedbackProcessed());
 		move(13, 60);
-		printw("Power On Time: " ); this->GetPowerOnTimeProcessed() << std::endl;
+		printw("Power On Time: %f\n", this->GetPowerOnTimeProcessed());
 		refresh();
 }
 
@@ -391,13 +391,13 @@ float Temperature1::GetGateDriverBoardProcessed(){
 
 void Temperature1::ShowAllValuesProcessed(){
 		move(10, 5);
-		printw("Temperatura do MóduloA: "); this->GetModuleAProcessed() << std::endl;
+		printw("Temperatura do MóduloA: %f\n", this->GetModuleAProcessed());
 		move(11, 5);
-		printw("Temperatura do MóduloB: "); this->GetModuleBProcessed() << std::endl;
+		printw("Temperatura do MóduloB: %f\n", this->GetModuleBProcessed()); 
 		move(12, 5);
-		printw("Temperatura do MóduloC: "); this->GetModuleCProcessed() << std::endl;
+		printw("Temperatura do MóduloC: %f\n", this->GetModuleCProcessed());
 		move(13, 5);
-		printw("Temperatura do Gate Driver Board: " ); this->GetGateDriverBoardProcessed() << std::endl;
+		printw("Temperatura do Gate Driver Board: %f\n", this->GetGateDriverBoardProcessed());
 		refresh();
 }
 
@@ -416,9 +416,9 @@ void  Temperature1::IfID_Temperature1(struct can_frame* frame){
 //Desenvolver o método pra dar update no frame
 class CommandMessage{
 private:
-	float TorqueCommand;
-	float TorqueCommandMSByte;
-	float TorqueCommandLSByte;
+	int TorqueCommand;
+	int TorqueCommandMSByte;
+	int TorqueCommandLSByte;
 	float SpeedCommand;
 	float DirectionCommand;
 	float InverterEnable;
@@ -428,7 +428,8 @@ private:
 public:
 	CommandMessage();
 	void UpdateFrame();
-	void ProcessTorqueSend(float TorqueCommand);
+	void ProcessTorqueSend(float* TorqueCommand);
+	void UpdateFrame(struct can_frame* frame);
 
 };
 
@@ -437,12 +438,12 @@ CommandMessage::CommandMessage(){
 }
 
 void CommandMessage::ProcessTorqueSend(float* Torque){
-	TorqueCommand = Torque*10;
+	TorqueCommand =  (int) (*Torque)*10;
 	if(TorqueCommand < 32768){
 		TorqueCommandMSByte = 0;
 		TorqueCommandLSByte = TorqueCommand;
 	}
-	else(TorqueCommand >= 32768){
+	if(TorqueCommand >= 32768){
 		TorqueCommandLSByte = (TorqueCommand & 0xFF); //faz sentido isso?
 		TorqueCommandMSByte = (TorqueCommand >> 8); //e isso?
 	}
@@ -512,7 +513,8 @@ int main()
 	addr.can_ifindex = ifr.ifr_ifindex;
 	bind(SocketCan, (struct sockaddr *) &addr, sizeof(addr));
 	struct can_frame frameRead, frameWrite; //Criação dos frames
-	frame.can_dlc = 8;
+	frameRead.can_dlc = 8;
+	frameWrite.can_dlc = 8;
 	//
 
 
@@ -581,17 +583,17 @@ int main()
 				
 
 						//Gera e escreve o log
-						fprintf(arq, "%s\n", StringDescreveSensor[0]);
-						fprintf(arq, "%s\n", StringDescreveSensor[1]);
-						fprintf(arq, "%s\n", StringDescreveSensor[2]);
-						fprintf(arq, "%s\n", StringDescreveSensor[3]);
-						fprintf(arq, "%s\n", StringDescreveSensor[4]);
-						fprintf(arq, "%s\n", StringDescreveSensor[5]);
-						fprintf(arq, "%s\n", StringDescreveSensor[6]);
-						fprintf(arq, "%s\n", StringDescreveSensor[7]);
-						fprintf(arq, "%s\n", StringDescreveSensor[8]);
-						fprintf(arq, "%s\n", StringDescreveSensor[9]);
-						fprintf(arq, "%s\n", "-----------------------------------------------------------------------");
+						fprintf(Arquivo, "%s\n", StringDescreveSensor[0]);
+						fprintf(Arquivo, "%s\n", StringDescreveSensor[1]);
+						fprintf(Arquivo, "%s\n", StringDescreveSensor[2]);
+						fprintf(Arquivo, "%s\n", StringDescreveSensor[3]);
+						fprintf(Arquivo, "%s\n", StringDescreveSensor[4]);
+						fprintf(Arquivo, "%s\n", StringDescreveSensor[5]);
+						fprintf(Arquivo, "%s\n", StringDescreveSensor[6]);
+						fprintf(Arquivo, "%s\n", StringDescreveSensor[7]);
+						fprintf(Arquivo, "%s\n", StringDescreveSensor[8]);
+						fprintf(Arquivo, "%s\n", StringDescreveSensor[9]);
+						fprintf(Arquivo, "%s\n", "-----------------------------------------------------------------------");
 
 						MsgCounter = 0;
 					}
@@ -600,8 +602,9 @@ int main()
 
 			#pragma omp section //TASK WRITE
 			{ 
-				printf("Digite o valor desejado de Torque\n");
-				scanf("%f", TorquePretendido);
+				move(25, 5); //Aqui altera o cursor para setar o valor do torque
+				printw("Digite o valor desejado de Torque\n");
+				scanf("%f", &TorquePretendido);
 				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido);
 				ObjCommandMessage.UpdateFrame(&frameWrite);
 				#pragma omp critical (mutex)
