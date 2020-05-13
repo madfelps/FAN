@@ -605,6 +605,7 @@ int main()
 				move(25, 5); //Aqui altera o cursor para setar o valor do torque
 				printw("Digite o valor desejado de Torque\n");
 				scanf("%f", &TorquePretendido);
+				refresh();
 				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido);
 				ObjCommandMessage.UpdateFrame(&frameWrite);
 				#pragma omp critical (mutex)
