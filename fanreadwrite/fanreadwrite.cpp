@@ -52,16 +52,16 @@
 void rectangle(int y1, int x1, int y2, int x2);
 
 void DescreveSensor(char StringDescreveSensor[][50]){
-	strcpy(StringDescreveSensor[0], "Angle: ");
-	strcpy(StringDescreveSensor[1], "Speed: ");
-	strcpy(StringDescreveSensor[2], "Torque Command: ");
-	strcpy(StringDescreveSensor[3], "TorqueFeedback: ");
-	strcpy(StringDescreveSensor[4], "PowerOnTime: ");
-	strcpy(StringDescreveSensor[5], "Temperatura do MóduloA: ");
-	strcpy(StringDescreveSensor[6], "Temeperatura do MóduloB: ");
-	strcpy(StringDescreveSensor[7], "Temperatura do MóduloC: ");
-	strcpy(StringDescreveSensor[8], "Temperatura do GateDriverBoard: ");
-	strcpy(StringDescreveSensor[9], "Instante da geração dos dados: ");
+	strcpy(StringDescreveSensor[0], "Angle, ");
+	strcpy(StringDescreveSensor[1], "Speed, ");
+	strcpy(StringDescreveSensor[2], "Torque Command, ");
+	strcpy(StringDescreveSensor[3], "TorqueFeedback, ");
+	strcpy(StringDescreveSensor[4], "PowerOnTime, ");
+	strcpy(StringDescreveSensor[5], "Temperatura do MóduloA, ");
+	strcpy(StringDescreveSensor[6], "Temeperatura do MóduloB, ");
+	strcpy(StringDescreveSensor[7], "Temperatura do MóduloC, ");
+	strcpy(StringDescreveSensor[8], "Temperatura do GateDriverBoard, ");
+	strcpy(StringDescreveSensor[9], "Instante da geração dos dados, ");
 }
 
 
@@ -566,36 +566,36 @@ int main()
 
 						//Pega o instante de tempo da geração dos dados, transforma em string e guarda na variável StringDescreveSensor.
 						Temporaria = clock() - GuardaIntervaloTempo;
-						strcpy(StringDescreveSensor[9], "Instante da geração dos dados (em segundos): ");
+						strcpy(StringDescreveSensor[9], "Time, ");
 						sprintf(TempoEmString, "%lf", (double) Temporaria*10000/CLOCKS_PER_SEC);
 						strcat(StringDescreveSensor[9], TempoEmString);
 
-						//Concatena os valores na string
-						strcat(StringDescreveSensor[0], StringGuardaDadosSensor[0]);
-						strcat(StringDescreveSensor[1], StringGuardaDadosSensor[1]);
-						strcat(StringDescreveSensor[2], StringGuardaDadosSensor[2]);
-						strcat(StringDescreveSensor[3], StringGuardaDadosSensor[3]);
-						strcat(StringDescreveSensor[4], StringGuardaDadosSensor[4]);
-						strcat(StringDescreveSensor[5], StringGuardaDadosSensor[5]);
-						strcat(StringDescreveSensor[6], StringGuardaDadosSensor[6]);
-						strcat(StringDescreveSensor[7], StringGuardaDadosSensor[7]);
-						strcat(StringDescreveSensor[8], StringGuardaDadosSensor[8]);
-				
+						/*//Concatena os valores na string
+						for(int i = 0; i < 8; i++){
+							strcat(StringDescreveSensor[i], StringGuardaDadosSensor[i]);
+						}*/
 
-						//Gera e escreve o log
-						fprintf(Arquivo, "%s\n", StringDescreveSensor[0]);
-						fprintf(Arquivo, "%s\n", StringDescreveSensor[1]);
-						fprintf(Arquivo, "%s\n", StringDescreveSensor[2]);
-						fprintf(Arquivo, "%s\n", StringDescreveSensor[3]);
-						fprintf(Arquivo, "%s\n", StringDescreveSensor[4]);
-						fprintf(Arquivo, "%s\n", StringDescreveSensor[5]);
-						fprintf(Arquivo, "%s\n", StringDescreveSensor[6]);
-						fprintf(Arquivo, "%s\n", StringDescreveSensor[7]);
-						fprintf(Arquivo, "%s\n", StringDescreveSensor[8]);
-						fprintf(Arquivo, "%s\n", StringDescreveSensor[9]);
-						fprintf(Arquivo, "%s\n", "-----------------------------------------------------------------------");
+						//
+
+
+						//Gera e escreve as descrições das grandezas no log, em formato csv obs: modularizar dps
+						for(int i = 0; i < 9; i++){
+							fprintf(Arquivo, "%s\n", StringDescreveSensor[i]);
+						}
+						fprintf(Arquivo, "%s", "\n");
 
 						MsgCounter = 0;
+
+						//Coloca os números no log, em formato csv obs: modularizar dps
+						fprintf(arq, "%s", "\n");
+						for(int i = 0; i < 9; i++){							//Quebra linha após a descrição das grandezas no arquivo
+							fprintf(arq, "%s, ", StringGuardaDadosSensor[i]);
+						}
+						fprintf(arq,"%s","\n");
+
+				
+
+
 					}
 				}
 			}
@@ -604,10 +604,10 @@ int main()
 			{ 
 				move(25, 5); //Aqui altera o cursor para setar o valor do torque
 				printw("Digite o valor desejado de Torque\n");
-				scanf("%f", &TorquePretendido);
-				refresh();
+				scanw("%f", &TorquePretendido);
 				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido);
 				ObjCommandMessage.UpdateFrame(&frameWrite);
+				refresh();
 				#pragma omp critical (mutex)
 				{
 				nbytes = write(SocketCan, &frameWrite, sizeof(struct can_frame));
