@@ -91,8 +91,46 @@ float NegativeValues::NegativeValuesTwoBytes(float Value){
 		return Value;
 }
 
-/* Em grandezas compostas de dois bytes temos que o valor referido é a soma do valor do byte menos significativo (LSB) com o byte mais significativo (MSB) multiplicado por 256. (Ver Manual)  */
+class CutBytes{
+private:
 
+public:
+	int CutByteInterval(int Byte, int MS, int LS);
+};
+
+int CutBytes::CutByteInterval(unsigned char* CAN_DATA, int CanDataPosition, int MS_Position, int LS_Position, int CuttedByte){
+	CuttedByte = CAN_DATA[CanDataPosition]; //verificar a questão da tipagem
+
+	if(MS_Position == 7){
+		CuttedByte = CuttedByte & 0b11111111;
+	}
+	if(MS_Position == 6){
+		CuttedByte = CuttedByte & 0b01111111;
+	}
+	if(MS_Position == 5){
+		CuttedByte = CuttedByte & 0b00111111;
+	}
+	if(MS_Position == 4){
+		CuttedByte = CuttedByte & 0b00011111;
+	}
+	if(MS_Position == 3){
+		CuttedByte = CuttedByte & 0b00001111;
+	}
+	if(MS_Position == 2){
+		CuttedByte = CuttedByte & 0b00000111;
+	}
+	if(MS_Position == 1){
+		CuttedByte = CuttedByte & 0b00000011;
+	}
+	if(MS_Position == 0){
+		CuttedByte = CuttedByte & 0b00000001;
+	}
+	printf("%d\n", CuttedByte);
+	CuttedByte = (CuttedByte >> LS_Position);
+	return CuttedByte;
+}
+
+/* Em grandezas compostas de dois bytes temos que o valor referido é a soma do valor do byte menos significativo (LSB) com o byte mais significativo (MSB) multiplicado por 256. (Ver Manual)  */
 class Torque:public NegativeValues{
 private:
 
@@ -425,6 +463,8 @@ private:
 	float InverterDischarge;
 	float SpeedModeEnable;
 	float CommandedTorqueLimit;
+	float CommandedTorqueLimitMSB;
+	float CommandedTorqueLimitLSB;
 public:
 	CommandMessage();
 	void UpdateFrame();
@@ -437,23 +477,132 @@ CommandMessage::CommandMessage(){
 
 }
 
-void CommandMessage::ProcessTorqueSend(float* Torque){
-	TorqueCommand =  (int) (*Torque)*10;
-	if(TorqueCommand < 32768){
-		TorqueCommandMSByte = 0;
-		TorqueCommandLSByte = TorqueCommand;
+void CommandMessage::ProcessTorqueSend(float* Torque, char flag){
+	if(flag == 0){ //Commanded Torque
+		TorqueCommand =  (int) (*Torque)*10;
+		if(TorqueCommand < 32768){
+			TorqueCommandMSByte = 0;
+			TorqueCommandLSByte = TorqueCommand;
+		}
+		if(TorqueCommand >= 32768){
+			TorqueCommandLSByte = (TorqueCommand & 0xFF); //faz sentido isso?
+			TorqueCommandMSByte = (TorqueCommand >> 8); //e isso?
+		}
 	}
-	if(TorqueCommand >= 32768){
-		TorqueCommandLSByte = (TorqueCommand & 0xFF); //faz sentido isso?
-		TorqueCommandMSByte = (TorqueCommand >> 8); //e isso?
+	if(flag == 1){ //Torque Limit
+		CommandedTorqueLimit =  (int) (*Torque)*10;
+		if(CommandedTorqueLimit < 32768){
+			CommandedTorqueLimitMSB = 0;
+			CommandedTorqueLimitLSB = CommandedTorqueLimit;
+		}
+		if(CommandedTorqueLimit >= 32768){
+			CommandedTorqueLimitMSB = (CommandedTorqueLimit & 0xFF); 
+			CommandedTorqueLimitLSB = (CommandedTorqueLimit >> 8); 
+		}
+
 	}
 }
 
-void CommandMessage::UpdateFrame(struct can_frame* frame){
+void CommandMessage::UpdateFrame(struct can_frame* frame){ //TODO O QUE É ISSO
 	frame->data[0] = TorqueCommandLSByte;
+	frame->data[1] = TorqueCommandMSByte;
+	frame->data[6] = TorqueCommandLSByte;
 	frame->data[1] = TorqueCommandMSByte;
 
 }
+
+class InternalStates: public CutBytes{
+private:
+	int VSM_State;
+	int InverterState;
+	int RelayState;
+	int InverterRunMode;
+	int InverterActiveDischargeState;
+	int InverterCommandMode;
+	int InverterEnableState;
+	int InverterEnableLockout;
+	int DirectionCommand;
+	int BMS_Active;
+	int BMS_LimitingTorque;
+
+	int AuxByteCut;
+
+public:
+	int GetVSM_State();
+	int GetInverterState();
+	int GetRelayState();
+	int GetInverterRunMode();
+	int GetInverterActiveDischargeState();
+	int GetInverterCommandMode();
+	int GetInverterEnableState();
+	int GetInverterEnableLockout();
+	int GetDirectionCommand();
+	int GetBMS_Active();
+	int GetBMS_LimitingTorque();
+
+};
+
+void InternalStates::UpdateFrame(struct can_frame* frame){
+	VSM_State 							= frame->data[0];
+	InverterState 						= frame->data[2];
+	RelayState 							= frame->data[3];
+	InverterRunMode 					= CutByteInterval(&frameRead, 4, 0, 0, AuxByteCut);
+	InverterActiveDischargeState 		= CutByteInterval(&frameRead, 4, 5, 7, AuxByteCut);
+	InverterCommandMode 				= frame->data[5];
+	InverterEnableState 				= CutByteInterval(&frameRead, 6, 0, 0, AuxByteCut);
+	InverterEnableLockout 				= CutByteInterval(&frameRead, 6, 7, 7, AuxByteCut);
+	DirectionCommand 					= CutByteInterval(&frameRead, 7, 0, 0, AuxByteCut);
+	BMS_Active 							= CutByteInterval(&frameRead, 7, 1, 1, AuxByteCut);
+	BMS_LimitingTorque 					= CutByteInterval(&frameRead, 7, 2, 2, AuxByteCut);
+
+}
+
+int InternalStates::GetVSM_State(){
+	return VSM_State;
+}
+
+int InternalStates::GetInverterState(){
+	return InverterState;
+}
+
+int InternalStates::GetRelayState(){
+	return RelayState;
+}
+
+int InternalStates::GetInverterRunMode(){
+	return InverterRunMode;
+}
+
+int InternalStates::GetInverterActiveDischargeState(){
+	return InverterActiveDischargeState;
+}
+
+int InternalStates::GetInverterCommandMode(){
+	return InverterCommandMode;
+}
+
+int InternalStates::GetInverterEnableState(){
+	return InverterEnableState;
+}
+
+int InternalStates::GetInverterEnableLockout(){
+	return InverterEnableLockout;
+}
+
+int InternalStates::GetDirectionCommand(){
+	return DirectionCommand;
+}
+
+int InternalStates::GetBMS_Active(){
+	return BMS_Active;
+}
+
+int InternalStates::GetBMS_LimitingTorque(){
+	return BMS_LimitingTorque;
+}
+
+
+
 
 void SetupCanInterface(int* socketCan)
 {
@@ -479,6 +628,7 @@ int main()
 {
 
 	float TorquePretendido;
+	float TorqueLimit;
 
 	char TempoEmString[10];
 
@@ -606,7 +756,11 @@ int main()
 				printw("Digite o valor desejado de Torque\n");
 				scanf("%f", &TorquePretendido);
 				refresh();
-				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido);
+				printw("Digite o valor desejado de TorqueLimit\n");
+				scanf("%f", &TorqueLimit)
+				refresh();
+				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido, 0);
+				ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
 				ObjCommandMessage.UpdateFrame(&frameWrite);
 				#pragma omp critical (mutex)
 				{
