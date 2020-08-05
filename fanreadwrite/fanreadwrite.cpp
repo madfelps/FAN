@@ -542,7 +542,7 @@ public:
 
 };
 
-void InternalStates::UpdateFrame(struct can_frame* frame){
+void InternalStates::UpdateObject(struct can_frame* frame){
 	VSM_State 							= frame->data[0];
 	InverterState 						= frame->data[2];
 	RelayState 							= frame->data[3];
@@ -601,6 +601,14 @@ int InternalStates::GetBMS_LimitingTorque(){
 	return BMS_LimitingTorque;
 }
 
+void InternalStates::IfID_InternalStates(struct can_frame* frame){
+	if(frame->can_id == INTERN_STATES){
+
+
+		this->UpdateObject(frame->data);
+
+	}
+}
 
 
 
@@ -652,6 +660,7 @@ int main()
 	MotorPosInfo ObjMotorPosInfo;
 	Temperature1 ObjTemperature1;
 	CommandMessage ObjCommandMessage;
+	InternalStates ObjInternalStates;
 
 	//Configuração do CAN
 	int SocketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
@@ -699,6 +708,8 @@ int main()
 						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead);
 						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead);
 						ObjTemperature1.IfID_Temperature1(&frameRead);
+						ObjInternalStates.IfID_InternalStates(&frameRead);
+						
 						//Guarda dados dos sensores na string
 						sprintf(StringGuardaDadosSensor[0], "%f", ObjMotorPosInfo.GetMotorAngleProcessed());
 						sprintf(StringGuardaDadosSensor[1], "%f", ObjMotorPosInfo.GetMotorSpeedProcessed());
