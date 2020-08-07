@@ -49,7 +49,6 @@
 #include <ncurses.h>
 #include <time.h>
 
-void rectangle(int y1, int x1, int y2, int x2);
 
 void DescreveSensor(char StringDescreveSensor[][50]){
 	strcpy(StringDescreveSensor[0], "Angle: ");
@@ -91,8 +90,46 @@ float NegativeValues::NegativeValuesTwoBytes(float Value){
 		return Value;
 }
 
-/* Em grandezas compostas de dois bytes temos que o valor referido é a soma do valor do byte menos significativo (LSB) com o byte mais significativo (MSB) multiplicado por 256. (Ver Manual)  */
+class CutBytes{
+private:
 
+public:
+	int CutByteInterval(int Byte, int MS, int LS);
+};
+
+int CutBytes::CutByteInterval(unsigned char* CAN_DATA, int CanDataPosition, int MS_Position, int LS_Position, int CuttedByte){
+	CuttedByte = CAN_DATA[CanDataPosition]; //verificar a questão da tipagem
+
+	if(MS_Position == 7){
+		CuttedByte = CuttedByte & 0b11111111;
+	}
+	if(MS_Position == 6){
+		CuttedByte = CuttedByte & 0b01111111;
+	}
+	if(MS_Position == 5){
+		CuttedByte = CuttedByte & 0b00111111;
+	}
+	if(MS_Position == 4){
+		CuttedByte = CuttedByte & 0b00011111;
+	}
+	if(MS_Position == 3){
+		CuttedByte = CuttedByte & 0b00001111;
+	}
+	if(MS_Position == 2){
+		CuttedByte = CuttedByte & 0b00000111;
+	}
+	if(MS_Position == 1){
+		CuttedByte = CuttedByte & 0b00000011;
+	}
+	if(MS_Position == 0){
+		CuttedByte = CuttedByte & 0b00000001;
+	}
+	printf("%d\n", CuttedByte);
+	CuttedByte = (CuttedByte >> LS_Position);
+	return CuttedByte;
+}
+
+/* Em grandezas compostas de dois bytes temos que o valor referido é a soma do valor do byte menos significativo (LSB) com o byte mais significativo (MSB) multiplicado por 256. (Ver Manual)  */
 class Torque:public NegativeValues{
 private:
 
@@ -226,10 +263,8 @@ void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 }
 
 void MotorPosInfo::ShowAllValuesProcessed(){
-	move(14, 60);
-	printw("Angle: %f\n", this->GetMotorAngleProcessed());
-	move(15, 60);
-	printw("Speed: %f\n", this->GetMotorSpeedProcessed());
+	print("Angle: %f\n", this->GetMotorAngleProcessed());
+	print("Speed: %f\n", this->GetMotorSpeedProcessed());
 	refresh();
 }
 
@@ -297,12 +332,9 @@ void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
 
 
 void TorqueTimerInfo::ShowAllValuesProcessed(){
-		move(11, 60);
-		printw("Commanded Torque: %f\n", this->GetCommandedTorqueProcessed());
-		move(12, 60);
-		printw("Torque Feedback: %f\n", this->GetTorqueFeedbackProcessed());
-		move(13, 60);
-		printw("Power On Time: %f\n", this->GetPowerOnTimeProcessed());
+		print("Commanded Torque: %f\n", this->GetCommandedTorqueProcessed());
+		print("Torque Feedback: %f\n", this->GetTorqueFeedbackProcessed());
+		print("Power On Time: %f\n", this->GetPowerOnTimeProcessed());
 		refresh();
 }
 
@@ -390,15 +422,10 @@ float Temperature1::GetGateDriverBoardProcessed(){
 }
 
 void Temperature1::ShowAllValuesProcessed(){
-		move(10, 5);
-		printw("Temperatura do MóduloA: %f\n", this->GetModuleAProcessed());
-		move(11, 5);
-		printw("Temperatura do MóduloB: %f\n", this->GetModuleBProcessed()); 
-		move(12, 5);
-		printw("Temperatura do MóduloC: %f\n", this->GetModuleCProcessed());
-		move(13, 5);
-		printw("Temperatura do Gate Driver Board: %f\n", this->GetGateDriverBoardProcessed());
-		refresh();
+		print("Temperatura do MóduloA: %f\n", this->GetModuleAProcessed());
+		print("Temperatura do MóduloB: %f\n", this->GetModuleBProcessed()); 
+		print("Temperatura do MóduloC: %f\n", this->GetModuleCProcessed());
+		print("Temperatura do Gate Driver Board: %f\n", this->GetGateDriverBoardProcessed());
 }
 
 void  Temperature1::IfID_Temperature1(struct can_frame* frame){
@@ -425,6 +452,8 @@ private:
 	float InverterDischarge;
 	float SpeedModeEnable;
 	float CommandedTorqueLimit;
+	float CommandedTorqueLimitMSB;
+	float CommandedTorqueLimitLSB;
 public:
 	CommandMessage();
 	void UpdateFrame();
@@ -437,24 +466,141 @@ CommandMessage::CommandMessage(){
 
 }
 
-void CommandMessage::ProcessTorqueSend(float* Torque){
-	TorqueCommand =  (int) (*Torque)*10;
-	if(TorqueCommand < 32768){
-		TorqueCommandMSByte = 0;
-		TorqueCommandLSByte = TorqueCommand;
+void CommandMessage::ProcessTorqueSend(float* Torque, char flag){
+	if(flag == 0){ //Commanded Torque
+		TorqueCommand =  (int) (*Torque)*10;
+		if(TorqueCommand < 32768){
+			TorqueCommandMSByte = 0;
+			TorqueCommandLSByte = TorqueCommand;
+		}
+		if(TorqueCommand >= 32768){
+			TorqueCommandLSByte = (TorqueCommand & 0xFF); //faz sentido isso?
+			TorqueCommandMSByte = (TorqueCommand >> 8); //e isso?
+		}
 	}
-	if(TorqueCommand >= 32768){
-		TorqueCommandLSByte = (TorqueCommand & 0xFF); //faz sentido isso?
-		TorqueCommandMSByte = (TorqueCommand >> 8); //e isso?
+	if(flag == 1){ //Torque Limit
+		CommandedTorqueLimit =  (int) (*Torque)*10;
+		if(CommandedTorqueLimit < 32768){
+			CommandedTorqueLimitMSB = 0;
+			CommandedTorqueLimitLSB = CommandedTorqueLimit;
+		}
+		if(CommandedTorqueLimit >= 32768){
+			CommandedTorqueLimitMSB = (CommandedTorqueLimit & 0xFF); 
+			CommandedTorqueLimitLSB = (CommandedTorqueLimit >> 8); 
+		}
+
 	}
 }
 
-void CommandMessage::UpdateFrame(struct can_frame* frame){
+void CommandMessage::UpdateFrame(struct can_frame* frame){ //TODO O QUE É ISSO
 	frame->data[0] = TorqueCommandLSByte;
+	frame->data[1] = TorqueCommandMSByte;
+	frame->data[6] = TorqueCommandLSByte;
 	frame->data[1] = TorqueCommandMSByte;
 
 }
 
+class InternalStates: public CutBytes{
+private:
+	int VSM_State;
+	int InverterState;
+	int RelayState;
+	int InverterRunMode;
+	int InverterActiveDischargeState;
+	int InverterCommandMode;
+	int InverterEnableState;
+	int InverterEnableLockout;
+	int DirectionCommand;
+	int BMS_Active;
+	int BMS_LimitingTorque;
+
+	int AuxByteCut;
+
+public:
+	int GetVSM_State();
+	int GetInverterState();
+	int GetRelayState();
+	int GetInverterRunMode();
+	int GetInverterActiveDischargeState();
+	int GetInverterCommandMode();
+	int GetInverterEnableState();
+	int GetInverterEnableLockout();
+	int GetDirectionCommand();
+	int GetBMS_Active();
+	int GetBMS_LimitingTorque();
+
+};
+
+void InternalStates::UpdateObject(struct can_frame* frame){
+	VSM_State 							= frame->data[0];
+	InverterState 						= frame->data[2];
+	RelayState 							= frame->data[3];
+	InverterRunMode 					= CutByteInterval(&frameRead, 4, 0, 0, AuxByteCut);
+	InverterActiveDischargeState 		= CutByteInterval(&frameRead, 4, 5, 7, AuxByteCut);
+	InverterCommandMode 				= frame->data[5];
+	InverterEnableState 				= CutByteInterval(&frameRead, 6, 0, 0, AuxByteCut);
+	InverterEnableLockout 				= CutByteInterval(&frameRead, 6, 7, 7, AuxByteCut);
+	DirectionCommand 					= CutByteInterval(&frameRead, 7, 0, 0, AuxByteCut);
+	BMS_Active 							= CutByteInterval(&frameRead, 7, 1, 1, AuxByteCut);
+	BMS_LimitingTorque 					= CutByteInterval(&frameRead, 7, 2, 2, AuxByteCut);
+
+}
+
+int InternalStates::GetVSM_State(){
+	return VSM_State;
+}
+
+int InternalStates::GetInverterState(){
+	return InverterState;
+}
+
+int InternalStates::GetRelayState(){
+	return RelayState;
+}
+
+int InternalStates::GetInverterRunMode(){
+	return InverterRunMode;
+}
+
+int InternalStates::GetInverterActiveDischargeState(){
+	return InverterActiveDischargeState;
+}
+
+int InternalStates::GetInverterCommandMode(){
+	return InverterCommandMode;
+}
+
+int InternalStates::GetInverterEnableState(){
+	return InverterEnableState;
+}
+
+int InternalStates::GetInverterEnableLockout(){
+	return InverterEnableLockout;
+}
+
+int InternalStates::GetDirectionCommand(){
+	return DirectionCommand;
+}
+
+int InternalStates::GetBMS_Active(){
+	return BMS_Active;
+}
+
+int InternalStates::GetBMS_LimitingTorque(){
+	return BMS_LimitingTorque;
+}
+
+void InternalStates::IfID_InternalStates(struct can_frame* frame){
+	if(frame->can_id == INTERN_STATES){
+
+
+		this->UpdateObject(frame->data);
+
+	}
+}
+
+
+/*
 void SetupCanInterface(int* socketCan)
 {
 	*socketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
@@ -473,12 +619,13 @@ void SetupCanInterface(int* socketCan)
 
 	bind(*socketCan, (struct sockaddr *) &addr, sizeof(addr));
 }
-
+*/
 
 int main()
 {
 
 	float TorquePretendido;
+	float TorqueLimit;
 
 	char TempoEmString[10];
 
@@ -502,8 +649,10 @@ int main()
 	MotorPosInfo ObjMotorPosInfo;
 	Temperature1 ObjTemperature1;
 	CommandMessage ObjCommandMessage;
+	InternalStates ObjInternalStates;
 
 	//Configuração do CAN
+	/*
 	int SocketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 	struct sockaddr_can addr;
 	struct ifreq ifr;
@@ -515,7 +664,21 @@ int main()
 	struct can_frame frameRead, frameWrite; //Criação dos frames
 	frameRead.can_dlc = 8;
 	frameWrite.can_dlc = 8;
+	*/
 	//
+
+	//Configuração do arquivo para teste
+	std::ifstream listaCAN("listaCAN.txt");
+	std::string auxStr;
+	int wordCounter = 0;
+
+	struct can_teste{
+		int can_id;
+		int[8] data; 
+	};
+
+	struct can_teste frameRead;
+
 
 
 	int nbytes = 0;
@@ -524,6 +687,8 @@ int main()
 	int i, j;
 	int CounterMotorPosition = 0;
 	int CounterTorqueTimerInfo = 0;
+
+
 	
 
 	#pragma omp parallel
@@ -540,15 +705,34 @@ int main()
 				{
 				#pragma omp critical (mutex)
 				{	
-				nbytes = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
+				//nbytes = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
 				}
-					if(nbytes != 0){ // Verifica se a mensagem foi lida
+					//if(nbytes != 0){ // Verifica se a mensagem foi lida
+
+						while(wordCounter < 9)
+						{
+							if(wordCounter == 0)
+							{
+								frameRead.can_id = stoi(auxStr, 0, 16);
+							}
+							else
+							{
+								frameRead.data[wordCounter-1] = stoi(auxStr, 0, 16);
+							}
+
+							wordCounter++;
+						}
+
+						wordCounter = 0;
+
 
 
 						GuardaIntervaloTempo = clock();
 						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead);
 						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead);
 						ObjTemperature1.IfID_Temperature1(&frameRead);
+						ObjInternalStates.IfID_InternalStates(&frameRead);
+						
 						//Guarda dados dos sensores na string
 						sprintf(StringGuardaDadosSensor[0], "%f", ObjMotorPosInfo.GetMotorAngleProcessed());
 						sprintf(StringGuardaDadosSensor[1], "%f", ObjMotorPosInfo.GetMotorSpeedProcessed());
@@ -596,48 +780,34 @@ int main()
 						fprintf(Arquivo, "%s\n", "-----------------------------------------------------------------------");
 
 						MsgCounter = 0;
-					}
 				}
 			}
-
+			
+		
+			/*
 			#pragma omp section //TASK WRITE
 			{ 
-				move(25, 5); //Aqui altera o cursor para setar o valor do torque
-				printw("Digite o valor desejado de Torque\n");
+				print("Digite o valor desejado de Torque\n");
 				scanf("%f", &TorquePretendido);
-				refresh();
-				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido);
+				print("Digite o valor desejado de TorqueLimit\n");
+				scanf("%f", &TorqueLimit)
+				ObjCommandMessage.ProcessTorqueSend(&TorquePretendido, 0);
+				ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
 				ObjCommandMessage.UpdateFrame(&frameWrite);
 				#pragma omp critical (mutex)
 				{
 				nbytes = write(SocketCan, &frameWrite, sizeof(struct can_frame));
 				}
-
-
-
 			}
+			*/
 
 		}
 	}
 
-	endwin();
-
-	close(SocketCan);
+	//close(SocketCan);
 	fclose(Arquivo);
 
 	return 0;
 }
 
-
-void rectangle(int y1, int x1, int y2, int x2)
-{
-    mvhline(y1, x1, 0, x2-x1);
-    mvhline(y2, x1, 0, x2-x1);
-    mvvline(y1, x1, 0, y2-y1);
-    mvvline(y1, x2, 0, y2-y1);
-    mvaddch(y1, x1, ACS_ULCORNER);
-    mvaddch(y2, x1, ACS_LLCORNER);
-    mvaddch(y1, x2, ACS_URCORNER);
-    mvaddch(y2, x2, ACS_LRCORNER);
-}
 
