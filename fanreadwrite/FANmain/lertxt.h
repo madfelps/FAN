@@ -5,6 +5,14 @@
 #ifndef PROJECTFAN_LE_TXT_H
 
 #define PROJECTFAN_LE_TXT_H
+#include "string.h"
+#include "stdio.h"
+#include <net/if.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <linux/can.h>
+#include <linux/can/raw.h>
+#include <string>
 
 void DescreveSensor(char StringDescreveSensor[][50]);
 
@@ -137,9 +145,9 @@ private:
 	int TorqueCommand;
 	int TorqueCommandMSByte;
 	int TorqueCommandLSByte;
-	float SpeedCommand;
-	float SpeedCommandMSByte;
-	float SpeedCommandLSByte;
+	int SpeedCommand;
+	int SpeedCommandMSByte;
+	int SpeedCommandLSByte;
 	float DirectionCommand;
 	float InverterEnable;
 	float InverterDischarge;
@@ -151,7 +159,7 @@ public:
 	CommandMessage();
 	void UpdateFrame();
 	void ProcessTorqueSend(float* TorqueCommand, int flag);
-	void ProcessAngleVelocity(float* SpeedCommand);
+	void ProcessAngleVelocity(float* Speed);
 	void UpdateFrame(struct can_frame* frame);
 
 

@@ -1,6 +1,6 @@
 //============================================================================
 // Name        : main.cpp
-// Author      : Felipe Moura Madureira e Henrique Borges Garcia
+// Author      : Felipe Moura Madureira, Henrique Borges Garcia e Gaspar Henrique
 // Version     : 0.0
 // Copyright   : Your copyright notice
 // Description : main FAN project
@@ -26,7 +26,6 @@
 #include <sys/socket.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
-#include <ncurses.h>
 #include <time.h>
 #include <fstream>
 #include <omp.h>
@@ -34,6 +33,7 @@
 #include <vector>
 #include <string>
 
+#define NUM_MSG 4
 
 int main()
 {
@@ -98,8 +98,8 @@ int main()
 
 	omp_set_num_threads(2);
 	
-		#pragma omp parallel
-		{
+	#pragma omp parallel
+	{
 
 		#pragma omp sections
 		{
@@ -114,7 +114,7 @@ int main()
 				{	
 				//FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
 				}
-					if(FlagRead != 0){ // Verifica se a mensagem foi lida
+					//if(FlagRead != 0){ // Verifica se a mensagem foi lida
 
 						while(wordCounter < 9)
 						{
@@ -195,8 +195,11 @@ int main()
 						fprintf(Arquivo, "%s\n", "-----------------------------------------------------------------------");
 
 						MsgCounter = 0;
+				//}
 				}
 			}
+		}
+	}
 			
 		
 			
@@ -216,8 +219,8 @@ int main()
 				}
 			}*/
 
-		}
-	}
+		
+	
 
 	//close(SocketCan);
 	fclose(Arquivo);

@@ -1,6 +1,6 @@
 //============================================================================
 // Name        : main.cpp
-// Author      : Felipe Moura Madureira e Henrique Borges Garcia
+// Author      : Felipe Moura Madureira, Henrique Borges Garcia e Gaspar Henrique
 // Version     : 0.0
 // Copyright   : Your copyright notice
 // Description : main FAN project
@@ -14,7 +14,7 @@
  * */ 
 
 
-#define NUM_MSG 4
+
 
 #define    UNDEFINED		         0
 #define    TEMPERATURES_1 	         0x0A0	//CHECK
@@ -35,10 +35,26 @@
 #define    DIAGNOSTIC_DATA	         0x0AF
 #define    COMMAND_MESSAGE           0x0C0	//CHECK
 
+
+
 #include "lertxt.h"
 
 
 void DescreveSensor(char StringDescreveSensor[][50]){
+	/*
+	StringDescreveSensor[0] = "Angle: ";
+	StringDescreveSensor[1] = "Speed: ";
+	StringDescreveSensor[2] = "Torque Command: ";
+	StringDescreveSensor[3] = "TorqueFeedback: ";
+	StringDescreveSensor[4] = "PowerOnTime: ";
+	StringDescreveSensor[5] = "Temperatura do MóduloA: ";
+	StringDescreveSensor[6] = "Temeperatura do MóduloB: ";
+	StringDescreveSensor[7] = "Temperatura do MóduloC: ";
+	StringDescreveSensor[8] = "Temperatura do GateDriverBoard: ";
+	StringDescreveSensor[9] = "Instante da geração dos dados: ";
+
+	*/
+
 	strcpy(StringDescreveSensor[0], "Angle: ");
 	strcpy(StringDescreveSensor[1], "Speed: ");
 	strcpy(StringDescreveSensor[2], "Torque Command: ");
@@ -317,7 +333,8 @@ void CommandMessage::UpdateFrame(struct can_frame* frame){
 
 }
 
-void CommandMessage::ProcessAngleVelocity(float* SpeedCommand){
+void CommandMessage::ProcessAngleVelocity(float* Speed){
+	SpeedCommand = (int) *Speed;
 	if(SpeedCommand < 32768){
 		SpeedCommandMSByte = 0;
 		SpeedCommandLSByte = SpeedCommand;
