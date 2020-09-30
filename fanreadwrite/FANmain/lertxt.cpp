@@ -14,7 +14,7 @@
  * */ 
 
 
-
+#define NUM_MSG 4
 
 #define    UNDEFINED		         0
 #define    TEMPERATURES_1 	         0x0A0	//CHECK
@@ -34,8 +34,6 @@
 #define    FIRM_INFO	             0x0AE
 #define    DIAGNOSTIC_DATA	         0x0AF
 #define    COMMAND_MESSAGE           0x0C0	//CHECK
-
-
 
 #include "lertxt.h"
 
@@ -163,13 +161,17 @@ float MotorPosInfo::GetDeltaResolverFilteredProcessed(){
 	return DeltaResolverFilteredProcessed;
 }
 
-void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
+void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA, vector<string>&DataUDP){
 	MotorAngle             			= 0;
 	MotorAngleProcessed             = this->ProcessAngle(CAN_DATA, 1, 0);
 	MotorSpeed            			= 0;
 	MotorSpeedProcessed             = this->ProcessAngleVelocity(CAN_DATA, 3, 2);
 	ElectricalOutFreq      			= 0;
 	DeltaResolverFiltered  			= 0;
+
+	DataUDP[0] = "0AC" + "X" + "0" + "Y" + std::to_string(MotorAngleProcessed);
+	DataUDP[1] = "0AC" + "X" + "1" + "Y" + std::to_string(MotorSpeedProcessed);
+
 }
 
 void MotorPosInfo::ShowAllValuesProcessed(){
@@ -178,7 +180,7 @@ void MotorPosInfo::ShowAllValuesProcessed(){
 }
 
 void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame){
-	if(frame->can_id == TORQUE_TIMER_INFO){
+	if(frame->can_id == MOTOR_POSITION){
 
 
 		this->UpdateObject(frame->data);
@@ -210,10 +212,13 @@ float TorqueTimerInfo::GetPowerOnTimeProcessed(){
 	return PowerOnTimeProcessed;
 }
 
-void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
+void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA, vector<string>&DataUDP){
 	CommandedTorqueProcessed     = this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 	TorqueFeedbackProcessed      = this->ProcessTorqueReceive(CAN_DATA, 3, 2);
 	PowerOnTimeProcessed         = 0;
+
+	DataUDP[0] = "0A5" + "X" + "0" + "Y" + std::to_string(CommandedTorqueProcessed);
+	DataUDP[1] = "0A5" + "X" + "1" + "Y" + std::to_string(TorqueFeedbackProcessed);
 }
 
 
@@ -224,7 +229,7 @@ void TorqueTimerInfo::ShowAllValuesProcessed(){
 }
 
 void TorqueTimerInfo::IfID_TorqueTimerInfo(struct can_frame* frame){
-	if(frame->can_id == MOTOR_POSITION){
+	if(frame->can_id == TORQUE_TIMER_INFO){
 
 
 		this->UpdateObject(frame->data);
@@ -253,11 +258,16 @@ Temperature1::Temperature1(unsigned char* CAN_DATA){
 	GateDriverBoardProcessed 	= ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
-void Temperature1::UpdateObject(unsigned char* CAN_DATA){
+void Temperature1::UpdateObject(unsigned char* CAN_DATA, vector<string>DataUDP){
 		ModuleAProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 		ModuleBProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
 		ModuleCProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 5, 4);
 		GateDriverBoardProcessed 	= this->ProcessTorqueReceive(CAN_DATA, 7, 6);
+
+		DataUDP[0] = "0A0" + "X" + "0" + "Y" + std::to_string(ModuleAProcessed);
+		DataUDP[1] = "0A0" + "X" + "1" + "Y" + std::to_string(ModuleBProcessed);
+		DataUDP[2] = "0A0" + "X" + "2" + "Y" + std::to_string(ModuleCProcessed);
+		DataUDP[3] = "0A0" + "X" + "3" + "Y" + std::to_string(GateDriverBoardProcessed);
 }
 
 float Temperature1::GetModuleAProcessed(){
@@ -335,6 +345,7 @@ void CommandMessage::UpdateFrame(struct can_frame* frame){
 
 void CommandMessage::ProcessAngleVelocity(float* Speed){
 	SpeedCommand = (int) *Speed;
+void CommandMessage::ProcessAngleVelocity(float* SpeedCommand){
 	if(SpeedCommand < 32768){
 		SpeedCommandMSByte = 0;
 		SpeedCommandLSByte = SpeedCommand;

@@ -78,7 +78,13 @@ int main()
 	frameRead.can_dlc = 8;
 	frameWrite.can_dlc = 8;*/
 	
-	//
+
+	//Configuração do protocolo UDP
+
+
+
+	//Criação do vector string para envio das mensagens por UDP
+	vector<string> DataUDPSendQt;
 
 	struct can_frame frameRead, frameWrite; //Criação dos frames
 	frameRead.can_dlc = 8;
@@ -106,10 +112,6 @@ int main()
 	#pragma omp parallel
 	{
 
-		#pragma omp parallel
-		{
-
-
 		#pragma omp sections
 		{
 
@@ -121,7 +123,7 @@ int main()
 				{
 				#pragma omp critical (mutex)
 				{	
-				//FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
+				FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
 				}
 
 					//if(FlagRead != 0){ // Verifica se a mensagem foi lida
@@ -148,10 +150,14 @@ int main()
 
 
 						GuardaIntervaloTempo = clock();
-						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead);
-						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead);
-						ObjTemperature1.IfID_Temperature1(&frameRead);
-						ObjInternalStates.IfID_InternalStates(&frameRead);
+						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead, DataUDPSendQt);
+						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, DataUDPSendQt);
+						ObjTemperature1.IfID_Temperature1(&frameRead, DataUDPSendQt);
+						ObjInternalStates.IfID_InternalStates(&frameRead, DataUDPSendQt);
+
+						//Rotina para envio via UDP pro PC
+
+
 						
 						//Guarda dados dos sensores na string PARA VECTOR STRING, USAR PUSH BACK
 						sprintf(StringGuardaDadosSensor[0], "%f", ObjMotorPosInfo.GetMotorAngleProcessed());
@@ -210,40 +216,29 @@ int main()
 						MsgCounter = 0;
 
 				//}
+					}
 				}
 			}
 		}
+		
 	}
 
-				}
-			}
-
 			
-		
-			
-			/*#pragma omp section //TASK WRITE
-			{ 
-				print("Digite o valor desejado de Speed (RPM)\n");
-				scanf("%f", &SpeedPretendida);
-				print("Digite o valor desejado de TorqueLimit\n");
-				scanf("%f", &TorqueLimit)
+	/*#pragma omp section //TASK WRITE
+	{ 
+		print("Digite o valor desejado de Speed (RPM)\n");
+		scanf("%f", &SpeedPretendida);
+		print("Digite o valor desejado de TorqueLimit\n");
+		scanf("%f", &TorqueLimit)
 
-				ObjCommandMessage.ProcessAngleVelocity(&SpeedPretendida)
-				ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
-				ObjCommandMessage.UpdateFrame(&frameWrite);
-				#pragma omp critical (mutex)
-				{
-				FlagWrite = write(SocketCan, &frameWrite, sizeof(struct can_frame));
-				}
-			}*/
-
-
-		
-	
-
+		ObjCommandMessage.ProcessAngleVelocity(&SpeedPretendida)
+		ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
+		ObjCommandMessage.UpdateFrame(&frameWrite);
+		#pragma omp critical (mutex)
+		{
+			FlagWrite = write(SocketCan, &frameWrite, sizeof(struct can_frame));
 		}
-	}
-
+	}*/
 
 	//close(SocketCan);
 	fclose(Arquivo);

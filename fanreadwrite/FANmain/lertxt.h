@@ -75,7 +75,7 @@ public:
 
 	MotorPosInfo(unsigned char*);
 	MotorPosInfo();
-	void UpdateObject(unsigned char* CAN_DATA);
+	void UpdateObject(unsigned char* CAN_DATA, vector<string>&DataUDP);
 	void ShowAllValuesProcessed();
 	void IfID_MotorPosInfo(struct can_frame* frame);
 
@@ -148,6 +148,9 @@ private:
 	int SpeedCommand;
 	int SpeedCommandMSByte;
 	int SpeedCommandLSByte;
+	float SpeedCommand;
+	float SpeedCommandMSByte;
+	float SpeedCommandLSByte;
 	float DirectionCommand;
 	float InverterEnable;
 	float InverterDischarge;
@@ -160,6 +163,7 @@ public:
 	void UpdateFrame();
 	void ProcessTorqueSend(float* TorqueCommand, int flag);
 	void ProcessAngleVelocity(float* Speed);
+	void ProcessAngleVelocity(float* SpeedCommand);
 	void UpdateFrame(struct can_frame* frame);
 
 
