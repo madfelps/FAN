@@ -33,10 +33,12 @@
 #include "lertxt.h"
 #include <vector>
 #include <string>
-
+#include "nlohmann/json.hpp"
 
 #define NUM_MSG 4
+#define MAXLINE 50
 
+using json = nlohmann::json;
 
 
 int main()
@@ -80,11 +82,48 @@ int main()
 	
 
 	//Configuração do protocolo UDP
+	int sockfd; 
+	char MsgToClient[MAXLINE];
+	char MsgFromClient[MAXLINE]; 
+	struct sockaddr_in servaddr, cliaddr; 
+	
+	// Creating socket file descriptor 
+	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
+		perror("socket creation failed"); 
+		exit(EXIT_FAILURE); 
+	} 
+	memset(&servaddr, 0, sizeof(servaddr)); 
+	memset(&cliaddr, 0, sizeof(cliaddr)); 
+	
+	// Filling server information 
+	servaddr.sin_family = AF_INET; // IPv4 
+	inet_aton("192.168.15.18" , &servaddr.sin_addr); 
+	//servaddr.sin_addr.s_addr = INADDR_ANY; 
+	servaddr.sin_port = htons(8080); 
+	// Bind the socket with the server address 
+	if ( bind(sockfd, (const struct sockaddr *)&servaddr, 
+			sizeof(servaddr)) < 0 ) 
+	{ 
+		perror("bind failed"); 
+		exit(EXIT_FAILURE); 
+	}
+	socklen_t len;
+	len = sizeof(cliaddr); //len is value/resuslt 
 
 
-
-	//Criação do vector string para envio das mensagens por UDP
-	vector<string> DataUDPSendQt;
+	//Inicialização e Configuração do Pacote por JSON
+	json UDP_Package;
+	std::string UDP_Package_String;
+	UDP_Package["ID"] 							= "X";
+	UDP_Package["Angle"] 						= 0;
+	UDP_Package["Speed"] 						= 0;
+	UDP_Package["CommandedTorque"] 				= 0;
+	UDP_Package["TorqueFeedback"] 				= 0;
+	UDP_Package["TemperatureModuleA"] 			= 0;
+	UDP_Package["TemperatureModuleB"] 			= 0;
+	UDP_Package["TemperatureModuleC"] 			= 0;
+	UDP_Package["TemperatureGateDriverBoard"] 	= 0;
+	
 
 	struct can_frame frameRead, frameWrite; //Criação dos frames
 	frameRead.can_dlc = 8;
@@ -155,8 +194,11 @@ int main()
 						ObjTemperature1.IfID_Temperature1(&frameRead, DataUDPSendQt);
 						ObjInternalStates.IfID_InternalStates(&frameRead, DataUDPSendQt);
 
-						//Rotina para envio via UDP pro PC
-
+						//Envio do pacote UDP para o computador
+						UDP_Package_String = UDP_Package.dump(); 
+						sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient), 
+						MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
+						len); 
 
 						
 						//Guarda dados dos sensores na string PARA VECTOR STRING, USAR PUSH BACK

@@ -75,9 +75,9 @@ public:
 
 	MotorPosInfo(unsigned char*);
 	MotorPosInfo();
-	void UpdateObject(unsigned char* CAN_DATA, vector<string>&DataUDP);
+	void UpdateObject(unsigned char* CAN_DATA);
 	void ShowAllValuesProcessed();
-	void IfID_MotorPosInfo(struct can_frame* frame);
+	void IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UDP_Package);
 
 	float GetMotorAngleProcessed();
 	float GetMotorSpeedProcessed();
@@ -101,7 +101,7 @@ public:
 	TorqueTimerInfo();
 	void UpdateObject(unsigned char*);
 	void ShowAllValuesProcessed();
-	void IfID_TorqueTimerInfo(struct can_frame* frame);
+	void IfID_TorqueTimerInfo(struct can_frame* frame, nlohmann::json& UDP_Package);
 
 	float GetCommandedTorqueProcessed();
 	float GetTorqueFeedbackProcessed();
@@ -133,7 +133,7 @@ public:
 
 
 //  A grandeza física temperatura se processa de modo igual ao Torque, ou seja, essa classe também usa a classe mãe Torque
-	void  IfID_Temperature1(struct can_frame* frame);
+	void  IfID_Temperature1(struct can_frame* frame, nlohmann::json& UDP_Package);
 	void ShowAllValuesProcessed();
 
 

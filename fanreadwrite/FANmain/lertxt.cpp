@@ -161,16 +161,13 @@ float MotorPosInfo::GetDeltaResolverFilteredProcessed(){
 	return DeltaResolverFilteredProcessed;
 }
 
-void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA, vector<string>&DataUDP){
+void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 	MotorAngle             			= 0;
 	MotorAngleProcessed             = this->ProcessAngle(CAN_DATA, 1, 0);
 	MotorSpeed            			= 0;
 	MotorSpeedProcessed             = this->ProcessAngleVelocity(CAN_DATA, 3, 2);
 	ElectricalOutFreq      			= 0;
 	DeltaResolverFiltered  			= 0;
-
-	DataUDP[0] = "0AC" + "X" + "0" + "Y" + std::to_string(MotorAngleProcessed);
-	DataUDP[1] = "0AC" + "X" + "1" + "Y" + std::to_string(MotorSpeedProcessed);
 
 }
 
@@ -179,7 +176,7 @@ void MotorPosInfo::ShowAllValuesProcessed(){
 	//printf("Speed: %f\n", this->GetMotorSpeedProcessed());
 }
 
-void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame){
+void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == MOTOR_POSITION){
 
 
@@ -187,6 +184,9 @@ void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame){
 
 		this->ShowAllValuesProcessed();
 
+		UDP_Package["ID"]	 = "MOTOR_POSITION";
+		UDP_Package["Angle"] = MotorAngleProcessed;
+		UDP_Package["Speed"] = MotorSpeedProcessed;
 
 	}
 }
@@ -212,13 +212,10 @@ float TorqueTimerInfo::GetPowerOnTimeProcessed(){
 	return PowerOnTimeProcessed;
 }
 
-void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA, vector<string>&DataUDP){
+void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
 	CommandedTorqueProcessed     = this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 	TorqueFeedbackProcessed      = this->ProcessTorqueReceive(CAN_DATA, 3, 2);
 	PowerOnTimeProcessed         = 0;
-
-	DataUDP[0] = "0A5" + "X" + "0" + "Y" + std::to_string(CommandedTorqueProcessed);
-	DataUDP[1] = "0A5" + "X" + "1" + "Y" + std::to_string(TorqueFeedbackProcessed);
 }
 
 
@@ -228,11 +225,14 @@ void TorqueTimerInfo::ShowAllValuesProcessed(){
 		//printf("Power On Time: %f\n", this->GetPowerOnTimeProcessed());
 }
 
-void TorqueTimerInfo::IfID_TorqueTimerInfo(struct can_frame* frame){
+void TorqueTimerInfo::IfID_TorqueTimerInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == TORQUE_TIMER_INFO){
 
-
 		this->UpdateObject(frame->data);
+
+		UDP_Package["ID"]	 			= "TORQUE_TIMER_INFO";
+		UDP_Package["CommandedTorque"] 	= CommandedTorqueProcessed;
+		UDP_Package["TorqueFeedback"]  	= TorqueFeedbackProcessed;
 
 		this->ShowAllValuesProcessed();
 
@@ -258,16 +258,12 @@ Temperature1::Temperature1(unsigned char* CAN_DATA){
 	GateDriverBoardProcessed 	= ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
-void Temperature1::UpdateObject(unsigned char* CAN_DATA, vector<string>DataUDP){
+void Temperature1::UpdateObject(unsigned char* CAN_DATA){
 		ModuleAProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 		ModuleBProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
 		ModuleCProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 5, 4);
 		GateDriverBoardProcessed 	= this->ProcessTorqueReceive(CAN_DATA, 7, 6);
 
-		DataUDP[0] = "0A0" + "X" + "0" + "Y" + std::to_string(ModuleAProcessed);
-		DataUDP[1] = "0A0" + "X" + "1" + "Y" + std::to_string(ModuleBProcessed);
-		DataUDP[2] = "0A0" + "X" + "2" + "Y" + std::to_string(ModuleCProcessed);
-		DataUDP[3] = "0A0" + "X" + "3" + "Y" + std::to_string(GateDriverBoardProcessed);
 }
 
 float Temperature1::GetModuleAProcessed(){
@@ -293,14 +289,18 @@ void Temperature1::ShowAllValuesProcessed(){
 		//printf("Temperatura do Gate Driver Board: %f\n", this->GetGateDriverBoardProcessed());
 }
 
-void  Temperature1::IfID_Temperature1(struct can_frame* frame){
+void  Temperature1::IfID_Temperature1(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == TEMPERATURES_1){
 
-
 		this->UpdateObject(frame->data);
-
+		
 		this->ShowAllValuesProcessed();
 
+		UDP_Package["ID"]							= "TEMPERATURES_1";
+		UDP_Package["TemperatureModuleA"] 			= ModuleAProcessed;
+		UDP_Package["TemperatureModuleB"]  			= ModuleBProcessed;
+		UDP_Package["TemperatureModuleC"]			= ModuleCProcessed;
+		UDP_Package["TemperatureGateDriverBoard"] 	= GateDriverBoardProcessed;
 
 	}
 }
@@ -403,7 +403,7 @@ int InternalStates::GetBMS_LimitingTorque(){
 	return BMS_LimitingTorque;
 }
 
-void InternalStates::IfID_InternalStates(struct can_frame* frame){
+void InternalStates::IfID_InternalStates(struct can_frame* frame, vector<string>&DataUDP){
 	if(frame->can_id == INTERN_STATES){
 
 
