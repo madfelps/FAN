@@ -83,7 +83,7 @@ int main()
 
 	//Configuração do protocolo UDP
 	int sockfd; 
-	char MsgToClient[MAXLINE];
+	char MsgToClient[100];
 	char MsgFromClient[MAXLINE]; 
 	struct sockaddr_in servaddr, cliaddr; 
 	
@@ -196,6 +196,7 @@ int main()
 
 						//Envio do pacote UDP para o computador
 						UDP_Package_String = UDP_Package.dump(); 
+						strcpy(MsgToClient, UDP_Package_String.c_str());
 						sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient), 
 						MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 						len); 
