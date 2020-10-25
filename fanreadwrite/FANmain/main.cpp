@@ -180,13 +180,13 @@ int main()
 						//ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
 
 						//Envio do pacote UDP para o computador
-<<<<<<< HEAD
+
 						UDP_Package_String = UDP_Package.dump(); 
 						strcpy(MsgToClient, UDP_Package_String.c_str());
 						sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient), 
 						MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 						len); 
-=======
+
 
 						
 						//UDP_Package_String = UDP_Package.dump(); 
@@ -194,7 +194,7 @@ int main()
 						//sendto(sockfd, (const char *)UDP_Package_String, strlen(UDP_Package_String), 
 						//MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 						//len); 
->>>>>>> master
+
 
 						
 						//Guarda dados dos sensores na string PARA VECTOR STRING, USAR PUSH BACK
