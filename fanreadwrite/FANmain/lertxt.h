@@ -1,18 +1,36 @@
-//
-// Created by felps on 16/08/2020.
-//
+//============================================================================
+// Name        : lertxt.h
+// Author      : Felipe Moura Madureira, Henrique Borges Garcia e Gaspar Henrique
+// Version     : 0.0
+// Copyright   : Your copyright notice
+// Description : main header
+//============================================================================
 
 #ifndef PROJECTFAN_LE_TXT_H
 
 #define PROJECTFAN_LE_TXT_H
-#include "string.h"
-#include "stdio.h"
+
+#include <iostream>
+#include <inttypes.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
+#include <arpa/inet.h> 
+#include <netinet/in.h> 
+#include <ncurses.h>
+#include <time.h>
+#include <fstream>
+#include <omp.h>
+#include "lertxt.h"
+#include <vector>
 #include <string>
+#include "nlohmann/json.hpp"
 
 void DescreveSensor(char StringDescreveSensor[][50]);
 
@@ -145,12 +163,7 @@ private:
 	int TorqueCommand;
 	int TorqueCommandMSByte;
 	int TorqueCommandLSByte;
-	int SpeedCommand;
-	int SpeedCommandMSByte;
-	int SpeedCommandLSByte;
 	float SpeedCommand;
-	float SpeedCommandMSByte;
-	float SpeedCommandLSByte;
 	float DirectionCommand;
 	float InverterEnable;
 	float InverterDischarge;
@@ -162,8 +175,7 @@ public:
 	CommandMessage();
 	void UpdateFrame();
 	void ProcessTorqueSend(float* TorqueCommand, int flag);
-	void ProcessAngleVelocity(float* Speed);
-	void ProcessAngleVelocity(float* SpeedCommand);
+	void ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte);
 	void UpdateFrame(struct can_frame* frame);
 
 
@@ -199,7 +211,7 @@ public:
 	int GetBMS_LimitingTorque();
 
 	void UpdateObject(unsigned char* CAN_DATA);
-	void IfID_InternalStates(struct can_frame* frame);
+	void IfID_InternalStates(struct can_frame* frame, nlohmann::json& UDP_Package);
 	void ShowAllValuesProcessed();
 
 };

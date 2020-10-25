@@ -3,7 +3,7 @@
 // Author      : Felipe Moura Madureira, Henrique Borges Garcia e Gaspar Henrique
 // Version     : 0.0
 // Copyright   : Your copyright notice
-// Description : main FAN project
+// Description : cpp file
 //============================================================================
 
 /*
@@ -13,6 +13,8 @@
  *
  * */ 
 
+
+#include "lertxt.h"
 
 #define NUM_MSG 4
 
@@ -35,7 +37,6 @@
 #define    DIAGNOSTIC_DATA	         0x0AF
 #define    COMMAND_MESSAGE           0x0C0	//CHECK
 
-#include "lertxt.h"
 
 
 void DescreveSensor(char StringDescreveSensor[][50]){
@@ -134,6 +135,15 @@ float AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, i
 	AngleVelocityValue = NegativeValuesTwoBytes(AngleVelocityValue);
 	AngleVelocityValue = AngleVelocityValue/10;
 	return AngleVelocityValue;
+}
+
+MotorPosInfo::MotorPosInfo(){
+	MotorAngle             			= 0;
+	MotorAngleProcessed             = 0;
+	MotorSpeed            			= 0;
+	MotorSpeedProcessed             = 0;
+	ElectricalOutFreq      			= 0;
+	DeltaResolverFiltered  			= 0;
 }
 
 MotorPosInfo::MotorPosInfo(unsigned char* CAN_DATA){
@@ -336,26 +346,12 @@ void CommandMessage::ProcessTorqueSend(float* Torque, int flag){
 }
 
 void CommandMessage::UpdateFrame(struct can_frame* frame){ 
-	frame->data[2] = SpeedCommandLSByte;
-	frame->data[3] = SpeedCommandMSByte;
+	frame->data[2] = TorqueCommandLSByte;
+	frame->data[3] = TorqueCommandMSByte;
 	frame->data[6] = CommandedTorqueLimitLSB;
 	frame->data[7] = CommandedTorqueLimitMSB;
 
 }
-
-void CommandMessage::ProcessAngleVelocity(float* Speed){
-	SpeedCommand = (int) *Speed;
-void CommandMessage::ProcessAngleVelocity(float* SpeedCommand){
-	if(SpeedCommand < 32768){
-		SpeedCommandMSByte = 0;
-		SpeedCommandLSByte = SpeedCommand;
-	}
-	if(SpeedCommand >= 32768){
-		SpeedCommandLSByte = (SpeedCommand & 0xFF); 
-		SpeedCommandMSByte = (SpeedCommand >> 8); 
-	}
-}
-
 
 
 
@@ -403,7 +399,7 @@ int InternalStates::GetBMS_LimitingTorque(){
 	return BMS_LimitingTorque;
 }
 
-void InternalStates::IfID_InternalStates(struct can_frame* frame, vector<string>&DataUDP){
+void InternalStates::IfID_InternalStates(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == INTERN_STATES){
 
 
