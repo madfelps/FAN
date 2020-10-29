@@ -155,10 +155,7 @@ int main()
 		 	#pragma omp section //TASK READ 
 		 	{ 
 
-				while(1)
-				{
-
-					while (listaCAN >> auxStr) 
+					while (1) 
 					{
 
 				//#pragma omp critical (mutex)
@@ -169,7 +166,7 @@ int main()
 					//if(FlagRead != 0){ // Verifica se a mensagem foi lida
 
 
-						while(wordCounter < 9)
+						while(listaCAN >> auxStr)
 						{
 							//printf("entrou no while \n");
 							if(wordCounter == 0)
@@ -186,11 +183,13 @@ int main()
 
 						wordCounter = 0;
 
+
 						//GuardaIntervaloTempo = clock();
 						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead, UDP_Package);
-						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
-						ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
-						ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
+						//ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
+						//ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
+						//ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
+						printf("Aloooooooooo");
 
 						//Envio do pacote UDP para o computador
 
@@ -265,15 +264,7 @@ int main()
 				//}
 					//}
 					}
-
-					scanf(" %[^\n]s", buffer2);
-					printf("\n");
-					printf("%s\n", buffer2);
-					sendto(sockfd, (const char *)buffer2, strlen(buffer2), 
-					MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
-					len);
-					
-				}
+				
 
 			}
 		
@@ -289,10 +280,10 @@ int main()
 					//ObjCommandMessage.ProcessAngleVelocity(&SpeedPretendida)
 					//ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
 					//ObjCommandMessage.UpdateFrame(&frameWrite);
-					#pragma omp critical (mutex)
-					{
+					//#pragma omp critical (mutex)
+					//{
 					//FlagWrite = write(SocketCan, &frameWrite, sizeof(struct can_frame));
-					}
+					//}
 				}
 			}
 		}

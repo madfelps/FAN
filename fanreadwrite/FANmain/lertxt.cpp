@@ -184,6 +184,7 @@ void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 
 void MotorPosInfo::ShowAllValuesProcessed(){
 	printf("Angle: %f\n", this->GetMotorAngleProcessed());
+	printf("Aloooooooooooo1");
 	printf("Speed: %f\n", this->GetMotorSpeedProcessed());
 }
 
@@ -231,9 +232,9 @@ void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
 
 
 void TorqueTimerInfo::ShowAllValuesProcessed(){
-		//printf("Commanded Torque: %f\n", this->GetCommandedTorqueProcessed());
-		//printf("Torque Feedback: %f\n", this->GetTorqueFeedbackProcessed());
-		//printf("Power On Time: %f\n", this->GetPowerOnTimeProcessed());
+		printf("Commanded Torque: %f\n", this->GetCommandedTorqueProcessed());
+		printf("Torque Feedback: %f\n", this->GetTorqueFeedbackProcessed());
+		printf("Power On Time: %f\n", this->GetPowerOnTimeProcessed());
 }
 
 void TorqueTimerInfo::IfID_TorqueTimerInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
