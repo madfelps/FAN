@@ -181,9 +181,10 @@ void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 
 }
 
+
 void MotorPosInfo::ShowAllValuesProcessed(){
-	//printf("Angle: %f\n", this->GetMotorAngleProcessed());
-	//printf("Speed: %f\n", this->GetMotorSpeedProcessed());
+	printf("Angle: %f\n", this->GetMotorAngleProcessed());
+	printf("Speed: %f\n", this->GetMotorSpeedProcessed());
 }
 
 void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
@@ -293,10 +294,10 @@ float Temperature1::GetGateDriverBoardProcessed(){
 }
 
 void Temperature1::ShowAllValuesProcessed(){
-		//printf("Temperatura do MóduloA: %f\n", this->GetModuleAProcessed());
-		//printf("Temperatura do MóduloB: %f\n", this->GetModuleBProcessed()); 
-		//printf("Temperatura do MóduloC: %f\n", this->GetModuleCProcessed());
-		//printf("Temperatura do Gate Driver Board: %f\n", this->GetGateDriverBoardProcessed());
+		printf("Temperatura do MóduloA: %f\n", this->GetModuleAProcessed());
+		printf("Temperatura do MóduloB: %f\n", this->GetModuleBProcessed()); 
+		printf("Temperatura do MóduloC: %f\n", this->GetModuleCProcessed());
+		printf("Temperatura do Gate Driver Board: %f\n", this->GetGateDriverBoardProcessed());
 }
 
 void  Temperature1::IfID_Temperature1(struct can_frame* frame, nlohmann::json& UDP_Package){
@@ -425,8 +426,8 @@ void InternalStates::UpdateObject(unsigned char* CAN_DATA){
 }
 
 void InternalStates::ShowAllValuesProcessed(){
-	//printf("DirectionCommand: %d\n", this->GetDirectionCommand());
-	//printf("BMS_Active: %d\n", this->GetBMS_Active());
+	printf("DirectionCommand: %d\n", this->GetDirectionCommand());
+	printf("BMS_Active: %d\n", this->GetBMS_Active());
 }
 
 

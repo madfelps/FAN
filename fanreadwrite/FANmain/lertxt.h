@@ -31,6 +31,7 @@
 #include <vector>
 #include <string>
 #include "nlohmann/json.hpp"
+#include <string.h>
 
 void DescreveSensor(char StringDescreveSensor[][50]);
 

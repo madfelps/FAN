@@ -67,13 +67,7 @@ int main()
 
 	//Configuração do protocolo UDP
 	int sockfd; 
-<<<<<<< HEAD
-	char MsgToClient[100];
-=======
-	char msg[MAXLINE];
-	char MsgToClient[MAXLINE];
->>>>>>> master
-	char MsgFromClient[MAXLINE]; 
+	char MsgToClient[400];
 	struct sockaddr_in servaddr, cliaddr; 
 	
 	// Creating socket file descriptor 
@@ -86,7 +80,7 @@ int main()
 	
 	// Filling server information 
 	servaddr.sin_family = AF_INET; // IPv4 
-	inet_aton("192.168.15.11" , &servaddr.sin_addr); 
+	inet_aton("192.168.15.13" , &servaddr.sin_addr); 
 	//servaddr.sin_addr.s_addr = INADDR_ANY; 
 	servaddr.sin_port = htons(8080); 
 	// Bind the socket with the server address 
@@ -101,8 +95,7 @@ int main()
 
 	//Inicialização e Configuração do Pacote por JSON
 	json UDP_Package;
-	char UDP_Package_String;
-	char teste[200];
+	std::string UDP_Package_StdString;
 	UDP_Package["ID"] 							= "X";
 	UDP_Package["Angle"] 						= 0;
 	UDP_Package["Speed"] 						= 0;
@@ -130,13 +123,29 @@ int main()
 	int FlagRead = 0;
 	int FlagWrite = 0;
 	int n = 0;
-	char buffer[50];
+	char buffer[200];
+	char buffer2[100];
+
+	int contador = 0;
 
 
 	int MsgCounter = 0;
 	int i, j;
 	int CounterMotorPosition = 0;
 	int CounterTorqueTimerInfo = 0;
+
+	n = recvfrom(sockfd, (char *)buffer, 100, 
+	MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
+	&len); 
+	buffer[n] = '\0'; 
+	printf("Client : %s\n", buffer); 
+
+
+	strcpy(buffer2, "Teste para o Qt..");
+	sendto(sockfd, (const char *)buffer2, strlen(buffer2), 
+	MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
+	len);
+
 	
 	#pragma omp parallel
 	{
@@ -145,10 +154,13 @@ int main()
 
 		 	#pragma omp section //TASK READ 
 		 	{ 
-		 		printf("TASK READ\n");
 
-				while (listaCAN >> auxStr) 
+				while(1)
 				{
+
+					while (listaCAN >> auxStr) 
+					{
+
 				//#pragma omp critical (mutex)
 				//{	
 				//FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
@@ -159,6 +171,7 @@ int main()
 
 						while(wordCounter < 9)
 						{
+							//printf("entrou no while \n");
 							if(wordCounter == 0)
 							{
 								frameRead.can_id = stoi(auxStr, 0, 16);
@@ -174,26 +187,21 @@ int main()
 						wordCounter = 0;
 
 						//GuardaIntervaloTempo = clock();
-						//ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead, UDP_Package);
-						//ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
-						//ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
-						//ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
+						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead, UDP_Package);
+						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
+						ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
+						ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
 
 						//Envio do pacote UDP para o computador
 
-						UDP_Package_String = UDP_Package.dump(); 
-						strcpy(MsgToClient, UDP_Package_String.c_str());
+						UDP_Package_StdString = UDP_Package.dump(); 
+						strcpy(MsgToClient, UDP_Package_StdString.c_str());
+						printf("%d\n", contador);
+						printf("%s\n", MsgToClient);
+						contador++;
 						sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient), 
 						MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 						len); 
-
-
-						
-						//UDP_Package_String = UDP_Package.dump(); 
-						//teste = &UDP_Package_String[0];
-						//sendto(sockfd, (const char *)UDP_Package_String, strlen(UDP_Package_String), 
-						//MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
-						//len); 
 
 
 						
@@ -256,14 +264,24 @@ int main()
 
 				//}
 					//}
+					}
+
+					scanf(" %[^\n]s", buffer2);
+					printf("\n");
+					printf("%s\n", buffer2);
+					sendto(sockfd, (const char *)buffer2, strlen(buffer2), 
+					MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
+					len);
+					
 				}
+
 			}
 		
 	
 			#pragma omp section //TASK WRITE
 			{ 
 				while(1){
-					n = recvfrom(sockfd, (char *)buffer, MAXLINE, 
+					n = recvfrom(sockfd, (char *)buffer, 100, 
 						MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
 						&len); 
 					buffer[n] = '\0'; 
