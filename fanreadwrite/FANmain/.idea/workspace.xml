@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="FANmain" targetName="FANmain" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="28d7889f-8469-4baf-93f4-6b44faf80d35" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../UDPTeste3Server/UDPTeste3Server.pro.user" beforeDir="false" afterPath="$PROJECT_DIR$/../../UDPTeste3Server/UDPTeste3Server.pro.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../UDPTeste3Server/mainwindow.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../UDPTeste3Server/mainwindow.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../UDPTeste3Server/mainwindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../../UDPTeste3Server/mainwindow.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../UDP_Communication/clienteudp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../UDP_Communication/clienteudp.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../UDP_Communication/serverudp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../UDP_Communication/serverudp.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lertxt.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lertxt.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TesteLeituraTxt/lertxt.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../TesteLeituraTxt/lertxt.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TesteLeituraTxt/lertxt.h" beforeDir="false" afterPath="$PROJECT_DIR$/../TesteLeituraTxt/lertxt.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TesteLeituraTxt/log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../TesteLeituraTxt/log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TesteLeituraTxt/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../TesteLeituraTxt/main.cpp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CMakeLists.txt" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="1jyST9eV9P5NhHgnNGVPA8VGBSR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+  </component>
+  <component name="RunManager">
+    <configuration name="FANmain" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="FANmain" TARGET_NAME="FANmain" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="FANmain" RUN_TARGET_NAME="FANmain">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="28d7889f-8469-4baf-93f4-6b44faf80d35" name="Default Changelist" comment="" />
+      <created>1604774844043</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1604774844043</updated>
+      <workItem from="1604774845156" duration="1627000" />
+      <workItem from="1604776604272" duration="10712000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1253" height="175" key="GridCell.Tab.0.bottom" timestamp="1604796286219">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1253" height="175" key="GridCell.Tab.0.bottom/67.27.1299.741@67.27.1299.741" timestamp="1604796286219" />
+    <state width="1253" height="175" key="GridCell.Tab.0.center" timestamp="1604796286219">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1253" height="175" key="GridCell.Tab.0.center/67.27.1299.741@67.27.1299.741" timestamp="1604796286219" />
+    <state width="1253" height="175" key="GridCell.Tab.0.left" timestamp="1604796286218">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1253" height="175" key="GridCell.Tab.0.left/67.27.1299.741@67.27.1299.741" timestamp="1604796286218" />
+    <state width="1253" height="175" key="GridCell.Tab.0.right" timestamp="1604796286219">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1253" height="175" key="GridCell.Tab.0.right/67.27.1299.741@67.27.1299.741" timestamp="1604796286219" />
+    <state width="1253" height="219" key="GridCell.Tab.1.bottom" timestamp="1604777659790">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1253" height="219" key="GridCell.Tab.1.bottom/67.27.1299.741@67.27.1299.741" timestamp="1604777659790" />
+    <state width="1253" height="219" key="GridCell.Tab.1.center" timestamp="1604777659788">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1253" height="219" key="GridCell.Tab.1.center/67.27.1299.741@67.27.1299.741" timestamp="1604777659788" />
+    <state width="1253" height="219" key="GridCell.Tab.1.left" timestamp="1604777659788">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1253" height="219" key="GridCell.Tab.1.left/67.27.1299.741@67.27.1299.741" timestamp="1604777659788" />
+    <state width="1253" height="219" key="GridCell.Tab.1.right" timestamp="1604777659788">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1253" height="219" key="GridCell.Tab.1.right/67.27.1299.741@67.27.1299.741" timestamp="1604777659788" />
+    <state x="379" y="89" width="672" height="678" key="search.everywhere.popup" timestamp="1604785856210">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="379" y="89" width="672" height="678" key="search.everywhere.popup/67.27.1299.741@67.27.1299.741" timestamp="1604785856210" />
+  </component>
+</project>

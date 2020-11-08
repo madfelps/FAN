@@ -184,6 +184,7 @@ void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 
 void MotorPosInfo::ShowAllValuesProcessed(){
 	printf("Angle: %f\n", this->GetMotorAngleProcessed());
+	printf("Aloooooooooooo1");
 	printf("Speed: %f\n", this->GetMotorSpeedProcessed());
 }
 
