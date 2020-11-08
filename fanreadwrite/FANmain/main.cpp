@@ -150,6 +150,7 @@ int main()
     std::ifstream fileCAN("listaCAN.txt");
     std::string auxStr;
 
+    //Verifica se o arquivo abriu
     if(fileCAN.is_open()){
         std::cout << "Arquivo aberto!" << std::endl;
     }
@@ -164,13 +165,13 @@ int main()
 		{
 
 		 	#pragma omp section //TASK READ 
-<<<<<<< HEAD
+
 		 	{
                 
-=======
+
 		 	{ 
 
->>>>>>> master
+
 					while (1) 
 					{
 
@@ -182,7 +183,7 @@ int main()
 					//if(FlagRead != 0){ // Verifica se a mensagem foi lida
 
 
-<<<<<<< HEAD
+
 						//while(fileCAN >> auxStr)
 						//{
 							//printf("wordCounter: %d \n", wordCounter);
@@ -201,7 +202,7 @@ int main()
 							//wordCounter++;
 						//}
 
-=======
+
 						while(listaCAN >> auxStr)
 						{
 							//printf("entrou no while \n");
@@ -213,13 +214,13 @@ int main()
 							{
 								frameRead.data[wordCounter-1] = stoi(auxStr, 0, 16);
 							}
->>>>>>> master
+
 
 						printf("2frameRead.can_id: %d \n", frameRead.can_id);
 
 						wordCounter = 0;
 
-<<<<<<< HEAD
+
 						frameRead.can_id = 245;
 						printf("%d \n", frameRead.can_id);
 						frameRead.data[0] = 2;
@@ -239,7 +240,7 @@ int main()
 						//ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
 						//ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
 						//printf("Aloooooooooo");
-=======
+
 
 						//GuardaIntervaloTempo = clock();
 						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead, UDP_Package);
@@ -247,7 +248,7 @@ int main()
 						//ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
 						//ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
 						printf("Aloooooooooo");
->>>>>>> master
+
 
 						//Envio do pacote UDP para o computador
 
