@@ -80,7 +80,7 @@ int main()
 	
 	// Filling server information 
 	servaddr.sin_family = AF_INET; // IPv4 
-	inet_aton("192.168.15.13" , &servaddr.sin_addr); 
+	inet_aton("192.168.15.12" , &servaddr.sin_addr); 
 	//servaddr.sin_addr.s_addr = INADDR_ANY; 
 	servaddr.sin_port = htons(8080); 
 	// Bind the socket with the server address 
@@ -95,16 +95,16 @@ int main()
 
 	//Inicialização e Configuração do Pacote por JSON
 	json UDP_Package;
-	std::string UDP_Package_StdString;
+	//std::string UDP_Package_StdString = "";
 	UDP_Package["ID"] 							= "X";
-	UDP_Package["Angle"] 						= 0;
-	UDP_Package["Speed"] 						= 0;
-	UDP_Package["CommandedTorque"] 				= 0;
-	UDP_Package["TorqueFeedback"] 				= 0;
-	UDP_Package["TemperatureModuleA"] 			= 0;
-	UDP_Package["TemperatureModuleB"] 			= 0;
-	UDP_Package["TemperatureModuleC"] 			= 0;
-	UDP_Package["TemperatureGateDriverBoard"] 	= 0;
+	UDP_Package["Angle"] 						= 0.0;
+	UDP_Package["Speed"] 						= 0.0;
+	UDP_Package["CommandedTorque"] 				= 0.0;
+	UDP_Package["TorqueFeedback"] 				= 0.0;
+	UDP_Package["TemperatureModuleA"] 			= 0.0;
+	UDP_Package["TemperatureModuleB"] 			= 0.0;
+	UDP_Package["TemperatureModuleC"] 			= 0.0;
+	UDP_Package["TemperatureGateDriverBoard"] 	= 0.0;
 	
 
 	struct can_frame frameRead, frameWrite; //Criação dos frames
@@ -112,12 +112,10 @@ int main()
 
 
 	//Configuração do arquivo para teste
-	std::ifstream listaCAN("listaCAN.txt");
-	std::string auxStr;
+
 
 	//std::ofstream Log("log.txt");
 	//vector<std::string> StringDescreveSensor, StringGuardaDadosSensor;
-	int wordCounter = 0;
 
 
 	int FlagRead = 0;
@@ -125,6 +123,7 @@ int main()
 	int n = 0;
 	char buffer[200];
 	char buffer2[100];
+    char buffer3[100];
 
 	int contador = 0;
 
@@ -146,61 +145,93 @@ int main()
 	MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 	len);
 
+    int wordCounter = 0;
+
+    std::ifstream fileCAN("listaCAN.txt");
+    std::string auxStr;
+
+    if(fileCAN.is_open()){
+        std::cout << "Arquivo aberto!" << std::endl;
+    }
+    else{
+        std::cout << "Arquivo nao aberto!" << std::endl;
+    }
+
 	
-	#pragma omp parallel
+	#pragma omp parallel default (none) shared(sockfd) firstprivate(wordCounter, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr)
 	{
 		#pragma omp sections
 		{
 
 		 	#pragma omp section //TASK READ 
-		 	{ 
-
+		 	{
+                
 					while (1) 
 					{
 
 				//#pragma omp critical (mutex)
-				//{	
+				//{
 				//FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
 				//}
 
 					//if(FlagRead != 0){ // Verifica se a mensagem foi lida
 
 
-						while(listaCAN >> auxStr)
-						{
-							//printf("entrou no while \n");
-							if(wordCounter == 0)
-							{
-								frameRead.can_id = stoi(auxStr, 0, 16);
-							}
-							else
-							{
-								frameRead.data[wordCounter-1] = stoi(auxStr, 0, 16);
-							}
+						//while(fileCAN >> auxStr)
+						//{
+							//printf("wordCounter: %d \n", wordCounter);
+							//std::cout << "auxStr: " << auxStr;
+							//if(wordCounter == 0)
+							//{
+								//frameRead.can_id = stoi(auxStr, nullptr, 16);
+								//printf("1frameRead.can_id: %d\n", frameRead.can_id);
 
-							wordCounter++;
-						}
+							//}
+							//else
+							//{
+								//frameRead.data[wordCounter-1] = stoi(auxStr, nullptr, 16);
+							//}
+
+							//wordCounter++;
+						//}
+
+
+						printf("2frameRead.can_id: %d \n", frameRead.can_id);
 
 						wordCounter = 0;
+
+						frameRead.can_id = 245;
+						printf("%d \n", frameRead.can_id);
+						frameRead.data[0] = 2;
+                        frameRead.data[1] = 51;
+                        frameRead.data[2] = 250;
+                        frameRead.data[3] = 8;
+                        frameRead.data[4] = 153;
+                        frameRead.data[5] = 51;
+                        frameRead.data[6] = 250;
+                        frameRead.data[7] = 8;
 
 
 						//GuardaIntervaloTempo = clock();
 						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead, UDP_Package);
+
 						//ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
 						//ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
 						//ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
-						printf("Aloooooooooo");
+						//printf("Aloooooooooo");
 
 						//Envio do pacote UDP para o computador
 
-						UDP_Package_StdString = UDP_Package.dump(); 
+						//UDP_Package_StdString = UDP_Package.dump();
+						std::string UDP_Package_StdString = UDP_Package.dump();
+
 						strcpy(MsgToClient, UDP_Package_StdString.c_str());
-						printf("%d\n", contador);
+						//printf("%d\n", contador);
 						printf("%s\n", MsgToClient);
-						contador++;
-						sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient), 
-						MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
-						len); 
+						//contador++;
+						sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
+						MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+						len);
 
 
 						
@@ -260,6 +291,10 @@ int main()
 						//fprintf(Arquivo, "%s\n", StringDescreveSensor[9]);
 						//fprintf(Arquivo, "%s\n", "-----------------------------------------------------------------------");
 
+                        scanf(" %s", buffer3);
+                        sendto(sockfd, ( char *)buffer3, strlen(buffer3),
+                               MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+                               len);
 
 				//}
 					//}

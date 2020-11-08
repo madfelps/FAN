@@ -184,12 +184,11 @@ void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 
 void MotorPosInfo::ShowAllValuesProcessed(){
 	printf("Angle: %f\n", this->GetMotorAngleProcessed());
-	printf("Aloooooooooooo1");
 	printf("Speed: %f\n", this->GetMotorSpeedProcessed());
 }
 
 void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
-	if(frame->can_id == MOTOR_POSITION){
+	if(frame->can_id == 245){
 
 
 		this->UpdateObject(frame->data);
