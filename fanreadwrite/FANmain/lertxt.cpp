@@ -181,7 +181,7 @@ void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 
 }
 
-
+//
 void MotorPosInfo::ShowAllValuesProcessed(){
 	printf("Angle: %f\n", this->GetMotorAngleProcessed());
 	printf("Aloooooooooooo1");
@@ -189,12 +189,12 @@ void MotorPosInfo::ShowAllValuesProcessed(){
 }
 
 void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
-	if(frame->can_id == 245){
+	if(frame->can_id == 165){
 
 
 		this->UpdateObject(frame->data);
 
-		this->ShowAllValuesProcessed();
+		//this->ShowAllValuesProcessed();
 
 		UDP_Package["ID"]	 = "MOTOR_POSITION";
 		UDP_Package["Angle"] = MotorAngleProcessed;
@@ -238,7 +238,7 @@ void TorqueTimerInfo::ShowAllValuesProcessed(){
 }
 
 void TorqueTimerInfo::IfID_TorqueTimerInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
-	if(frame->can_id == TORQUE_TIMER_INFO){
+	if(frame->can_id == 172){
 
 		this->UpdateObject(frame->data);
 
@@ -246,7 +246,7 @@ void TorqueTimerInfo::IfID_TorqueTimerInfo(struct can_frame* frame, nlohmann::js
 		UDP_Package["CommandedTorque"] 	= CommandedTorqueProcessed;
 		UDP_Package["TorqueFeedback"]  	= TorqueFeedbackProcessed;
 
-		this->ShowAllValuesProcessed();
+		//this->ShowAllValuesProcessed();
 
 
 	}
@@ -302,11 +302,11 @@ void Temperature1::ShowAllValuesProcessed(){
 }
 
 void  Temperature1::IfID_Temperature1(struct can_frame* frame, nlohmann::json& UDP_Package){
-	if(frame->can_id == TEMPERATURES_1){
+	if(frame->can_id == 160){
 
 		this->UpdateObject(frame->data);
 		
-		this->ShowAllValuesProcessed();
+		//this->ShowAllValuesProcessed();
 
 		UDP_Package["ID"]							= "TEMPERATURES_1";
 		UDP_Package["TemperatureModuleA"] 			= ModuleAProcessed;
@@ -402,11 +402,11 @@ int InternalStates::GetBMS_LimitingTorque(){
 }
 
 void InternalStates::IfID_InternalStates(struct can_frame* frame, nlohmann::json& UDP_Package){
-	if(frame->can_id == INTERN_STATES){
+	if(frame->can_id == 170){
 
 
 		this->UpdateObject(frame->data);
-		this->ShowAllValuesProcessed();
+		//this->ShowAllValuesProcessed();
 
 	}
 }

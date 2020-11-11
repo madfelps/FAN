@@ -79,8 +79,11 @@ int main()
 	memset(&cliaddr, 0, sizeof(cliaddr)); 
 	
 	// Filling server information 
+	
 	servaddr.sin_family = AF_INET; // IPv4 
-	inet_aton("192.168.15.12" , &servaddr.sin_addr); 
+
+	inet_aton("10.0.0.105" , &servaddr.sin_addr); 
+
 	//servaddr.sin_addr.s_addr = INADDR_ANY; 
 	servaddr.sin_port = htons(8080); 
 	// Bind the socket with the server address 
@@ -145,14 +148,39 @@ int main()
 	MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 	len);
 
-    int WordCounter = 0;
-    int WordCounter2 = 0;
+    int wordCounter = 0;
 
     std::ifstream fileCAN("listaCAN.txt");
-    std::string auxStr;
-    std::vector<int> GuardaDados;
-    int WordFlag;
+    std::string auxstr;
+	int matrx[4][9];
+    int lin = 0;
+    int col = 0;
+   
+	while(fileCAN>> auxstr)
+{
+    
+	 matrx[lin][col]  = stoi(auxstr, nullptr, 16);
+    
+	wordCounter++;
+    col++;
+    if(wordCounter == 9)
+    {
+        lin++;
+        col = 0;
+        wordCounter = 0;
+    }
+    
+}
+for(lin = 0; lin<4;lin++)
+{
+    for(col=0; col<9; col++)
+    {
+        printf("%d ",matrx[lin][col]);
+    }
+}
 
+fileCAN.close();
+/*
     //Verifica se o arquivo abriu
     if(fileCAN.is_open()){
         std::cout << "Arquivo aberto!" << std::endl;
@@ -166,14 +194,14 @@ int main()
 		GuardaDados.push_back(stoi(auxStr, nullptr, 16));
 
 	}
-
-
-    fileCAN.close();
+*/
+ 
+/**/
 
     int OpcaoTorqueLimit;
 
-	
-	#pragma omp parallel default (none) shared(sockfd) firstprivate(GuardaDados, WordCounter2, WordFlag, WordCounter, OpcaoTorqueLimit, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr)
+	lin = 0;
+	#pragma omp parallel default (none) shared(sockfd) firstprivate(matrx,lin,col,wordCounter, OpcaoTorqueLimit, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr)
 	{
 		#pragma omp sections
 		{
@@ -209,18 +237,16 @@ int main()
 
 							//wordCounter++;
 						//}
+		
+    for(col=0; col<9; col++)
+    {
+        if(col == 0) frameRead.can_id = matrx[lin][col];
+		else frameRead.data[col] = matrx[lin][col];
+		
+    }
 
-						frameRead.can_id = 245;
-						frameRead.data[0] = 2;
-                        frameRead.data[1] = 51;
-                        frameRead.data[2] = 250;
-                        frameRead.data[3] = 8;
-                        frameRead.data[4] = 153;
-                        frameRead.data[5] = 51;
-                        frameRead.data[6] = 250;
-                        frameRead.data[7] = 8;
-
-                        WordFlag = 1;
+	lin++;
+	if(lin == 4) lin = 0;
 
                         /* while(WordFlag){
                         	if(WordCounter2 == 0){
