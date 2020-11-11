@@ -31,19 +31,18 @@ MainWindow::MainWindow(QWidget *parent)
 
 
             //"Função" para pegar o valor de um campo do json
-//            Pos1 = Buffer.indexOf(":", Buffer.indexOf("ID"));
-//            qDebug() << Pos1;
-//            Pos1 = Pos1+1;
-//            Pos2 = Buffer.indexOf(",", Pos1);
-//            if(Pos2 == -1){
-//                Pos2 = Buffer.indexOf("}", Pos1);
-//            }
-//            qDebug() << Pos2;
-//            Word = Buffer.mid(Pos1, Pos2-Pos1);
-//            qDebug() << Word;
+            Pos1 = Buffer.indexOf(":", Buffer.indexOf("ID"));
+            qDebug() << Pos1;
+            Pos1 = Pos1+1;
+            Pos2 = Buffer.indexOf(",", Pos1);
+            if(Pos2 == -1){
+                Pos2 = Buffer.indexOf("}", Pos1);
+            }
+            qDebug() << Pos2;
+            Word = Buffer.mid(Pos1, Pos2-Pos1);
 
             Word = Word.mid(1,Word.length()-2);
-            qDebug() << Word;
+            qDebug() << "Alooooo" << Word;
 
             if(Word == "MOTOR_POSITION"){
                 Word = SliceJson(Buffer,"Speed");
@@ -58,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
 
             }
 
+            //Verifica o ID
             if(Word == "TEMPERATURES_1"){
                 Word = SliceJson(Buffer,"TemperatureModuleA");
                 qDebug() << "TemperatureModuleA: " << Word;
@@ -141,7 +141,7 @@ void MainWindow::on_sendButton_clicked()
     Data.append("Hello from UDP!");
     //auto datagrama = ui->msj->text().toLatin1();
     Data = ui->message->text().toLatin1();
-    socket->writeDatagram(Data, QHostAddress("192.168.15.13"), 8080);
+    socket->writeDatagram(Data, QHostAddress("192.168.15.12"), 8080);
 }
 
 
@@ -151,7 +151,7 @@ void MainWindow::on_ButtonSendTorque_clicked()
     MessageSendTorque = ui->textTorqueSend->toPlainText();
 
     QByteArray Data = MessageSendTorque.toUtf8();
-    socket->writeDatagram(Data, QHostAddress("192.168.15.13"), 8080);
+    socket->writeDatagram(Data, QHostAddress("192.168.15.12"), 8080);
 
 
 }
@@ -161,6 +161,6 @@ void MainWindow::on_ButtonSendTorqueLimite_clicked()
     MessageSendTorqueLimite = ui->textTorqueLimit->toPlainText();
 
     QByteArray Data = MessageSendTorqueLimite.toUtf8();
-    socket->writeDatagram(Data, QHostAddress("192.168.15.13"), 8080);
+    socket->writeDatagram(Data, QHostAddress("192.168.15.12"), 8080);
 
 }

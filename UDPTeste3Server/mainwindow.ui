@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>728</width>
-    <height>485</height>
+    <width>740</width>
+    <height>555</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,7 +41,7 @@
        <x>20</x>
        <y>40</y>
        <width>291</width>
-       <height>131</height>
+       <height>136</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -111,7 +111,7 @@
        <x>10</x>
        <y>30</y>
        <width>241</width>
-       <height>141</height>
+       <height>136</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
@@ -187,7 +187,7 @@
      <rect>
       <x>10</x>
       <y>270</y>
-      <width>361</width>
+      <width>370</width>
       <height>141</height>
      </rect>
     </property>
@@ -240,7 +240,7 @@
        <x>10</x>
        <y>30</y>
        <width>281</width>
-       <height>91</height>
+       <height>106</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -307,7 +307,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>728</width>
+     <width>740</width>
      <height>22</height>
     </rect>
    </property>
@@ -320,6 +320,24 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <layoutdefault spacing="10" margin="13"/>
  <resources/>
  <connections/>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>15</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>15</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
 </ui>
