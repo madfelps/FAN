@@ -145,10 +145,13 @@ int main()
 	MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 	len);
 
-    int wordCounter = 0;
+    int WordCounter = 0;
+    int WordCounter2 = 0;
 
     std::ifstream fileCAN("listaCAN.txt");
     std::string auxStr;
+    std::vector<int> GuardaDados;
+    int WordFlag;
 
     //Verifica se o arquivo abriu
     if(fileCAN.is_open()){
@@ -158,8 +161,19 @@ int main()
         std::cout << "Arquivo nao aberto!" << std::endl;
     }
 
+    while(fileCAN >> auxStr)
+	{
+		GuardaDados.push_back(stoi(auxStr, nullptr, 16));
+
+	}
+
+
+    fileCAN.close();
+
+    int OpcaoTorqueLimit;
+
 	
-	#pragma omp parallel default (none) shared(sockfd) firstprivate(wordCounter, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr)
+	#pragma omp parallel default (none) shared(sockfd) firstprivate(GuardaDados, WordCounter2, WordFlag, WordCounter, OpcaoTorqueLimit, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr)
 	{
 		#pragma omp sections
 		{
@@ -168,10 +182,6 @@ int main()
 
 		 	{
                 
-
-		 	{ 
-
-
 					while (1) 
 					{
 
@@ -186,8 +196,6 @@ int main()
 
 						//while(fileCAN >> auxStr)
 						//{
-							//printf("wordCounter: %d \n", wordCounter);
-							//std::cout << "auxStr: " << auxStr;
 							//if(wordCounter == 0)
 							//{
 								//frameRead.can_id = stoi(auxStr, nullptr, 16);
@@ -202,27 +210,7 @@ int main()
 							//wordCounter++;
 						//}
 
-
-						while(listaCAN >> auxStr)
-						{
-							//printf("entrou no while \n");
-							if(wordCounter == 0)
-							{
-								frameRead.can_id = stoi(auxStr, 0, 16);
-							}
-							else
-							{
-								frameRead.data[wordCounter-1] = stoi(auxStr, 0, 16);
-							}
-
-
-						printf("2frameRead.can_id: %d \n", frameRead.can_id);
-
-						wordCounter = 0;
-
-
 						frameRead.can_id = 245;
-						printf("%d \n", frameRead.can_id);
 						frameRead.data[0] = 2;
                         frameRead.data[1] = 51;
                         frameRead.data[2] = 250;
@@ -232,22 +220,49 @@ int main()
                         frameRead.data[6] = 250;
                         frameRead.data[7] = 8;
 
+                        WordFlag = 1;
+
+                        /* while(WordFlag){
+                        	if(WordCounter2 == 0){
+                        		frameRead.can_id = GuardaDados[WordCounter];
+
+                        	}
+                        	else{
+                        		frameRead.data[WordCounter2-1] = GuardaDados[WordCounter];
+                        	}
+
+                        	if(WordCounter2 == 9){
+                        		WordFlag = 0;
+                        	}
+
+                        	WordCounter++;
+                        	WordCounter2++;
+
+                        	
+                        }
+
+                        WordCounter2 == 0;
+
+                        for(int k = 0; k < 8; k++){
+                        	printf("%d ", frameRead.data[k]);
+                        }
+                        */
+
 
 						//GuardaIntervaloTempo = clock();
 						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead, UDP_Package);
 
-						//ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
-						//ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
-						//ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
+						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
+						ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
+						ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
 						//printf("Aloooooooooo");
 
 
 						//GuardaIntervaloTempo = clock();
-						ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead, UDP_Package);
+						//ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead, UDP_Package);
 						//ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
 						//ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
 						//ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
-						printf("Aloooooooooo");
 
 
 						//Envio do pacote UDP para o computador
@@ -257,7 +272,7 @@ int main()
 
 						strcpy(MsgToClient, UDP_Package_StdString.c_str());
 						//printf("%d\n", contador);
-						printf("%s\n", MsgToClient);
+						//printf("%s\n", MsgToClient);
 						//contador++;
 						sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
 						MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
@@ -321,10 +336,10 @@ int main()
 						//fprintf(Arquivo, "%s\n", StringDescreveSensor[9]);
 						//fprintf(Arquivo, "%s\n", "-----------------------------------------------------------------------");
 
-                        scanf(" %s", buffer3);
-                        sendto(sockfd, ( char *)buffer3, strlen(buffer3),
-                               MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
-                               len);
+                        //scanf(" %s", buffer3);
+                        //sendto(sockfd, ( char *)buffer3, strlen(buffer3),
+                               //MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+                               //len);
 
 				//}
 					//}
@@ -341,7 +356,8 @@ int main()
 						MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
 						&len); 
 					buffer[n] = '\0'; 
-					printf("Client : %s\n", buffer); 
+					TorqueLimit = atof(buffer);
+					
 					//ObjCommandMessage.ProcessAngleVelocity(&SpeedPretendida)
 					//ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
 					//ObjCommandMessage.UpdateFrame(&frameWrite);
