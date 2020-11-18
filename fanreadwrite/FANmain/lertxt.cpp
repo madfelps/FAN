@@ -183,9 +183,8 @@ void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 
 //
 void MotorPosInfo::ShowAllValuesProcessed(){
-	printf("Angle: %f\n", this->GetMotorAngleProcessed());
-	printf("Aloooooooooooo1");
-	printf("Speed: %f\n", this->GetMotorSpeedProcessed());
+	//printf("Angle: %f\n", this->GetMotorAngleProcessed());
+	//printf("Speed: %f\n", this->GetMotorSpeedProcessed());
 }
 
 void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
@@ -246,7 +245,7 @@ void TorqueTimerInfo::IfID_TorqueTimerInfo(struct can_frame* frame, nlohmann::js
 		UDP_Package["CommandedTorque"] 	= CommandedTorqueProcessed;
 		UDP_Package["TorqueFeedback"]  	= TorqueFeedbackProcessed;
 
-		//this->ShowAllValuesProcessed();
+		this->ShowAllValuesProcessed();
 
 
 	}
@@ -318,6 +317,7 @@ void  Temperature1::IfID_Temperature1(struct can_frame* frame, nlohmann::json& U
 }
 
 CommandMessage::CommandMessage(){
+	
 
 }
 
@@ -348,8 +348,9 @@ void CommandMessage::ProcessTorqueSend(float* Torque, int flag){
 }
 
 void CommandMessage::UpdateFrame(struct can_frame* frame){ 
-	frame->data[2] = TorqueCommandLSByte;
-	frame->data[3] = TorqueCommandMSByte;
+	frame->can_id = COMMAND_MESSAGE;
+	frame->data[0] = TorqueCommandLSByte;
+	frame->data[1] = TorqueCommandMSByte;
 	frame->data[6] = CommandedTorqueLimitLSB;
 	frame->data[7] = CommandedTorqueLimitMSB;
 

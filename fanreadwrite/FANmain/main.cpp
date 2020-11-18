@@ -52,7 +52,7 @@ int main()
 
 	//Configuração do CAN
 	
-	/*int SocketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	int SocketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 	struct sockaddr_can addr;
 	struct ifreq ifr;
 	strcpy(ifr.ifr_name, "can1");
@@ -62,7 +62,7 @@ int main()
 	bind(SocketCan, (struct sockaddr *) &addr, sizeof(addr));
 	struct can_frame frameRead, frameWrite; //Criação dos frames
 	frameRead.can_dlc = 8;
-	frameWrite.can_dlc = 8;*/
+	frameWrite.can_dlc = 8;
 	
 
 	//Configuração do protocolo UDP
@@ -82,7 +82,7 @@ int main()
 	
 	servaddr.sin_family = AF_INET; // IPv4 
 
-	inet_aton("10.0.0.105" , &servaddr.sin_addr); 
+	inet_aton("192.168.7.2" , &servaddr.sin_addr); 
 
 	//servaddr.sin_addr.s_addr = INADDR_ANY; 
 	servaddr.sin_port = htons(8080); 
@@ -110,8 +110,8 @@ int main()
 	UDP_Package["TemperatureGateDriverBoard"] 	= 0.0;
 	
 
-	struct can_frame frameRead, frameWrite; //Criação dos frames
-	frameRead.can_dlc = 8;
+	//struct can_frame frameRead, frameWrite; //Criação dos frames
+	//frameRead.can_dlc = 8;
 
 
 	//Configuração do arquivo para teste
@@ -156,6 +156,7 @@ int main()
     int lin = 0;
     int col = 0;
    
+/*
 	while(fileCAN>> auxstr)
 {
     
@@ -180,6 +181,8 @@ for(lin = 0; lin<4;lin++)
 }
 
 fileCAN.close();
+*/
+
 /*
     //Verifica se o arquivo abriu
     if(fileCAN.is_open()){
@@ -201,7 +204,7 @@ fileCAN.close();
     int OpcaoTorqueLimit;
 
 	lin = 0;
-	#pragma omp parallel default (none) shared(sockfd) firstprivate(matrx,lin,col,wordCounter, OpcaoTorqueLimit, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr)
+	#pragma omp parallel default (none) shared(sockfd) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr)
 	{
 		#pragma omp sections
 		{
@@ -213,10 +216,10 @@ fileCAN.close();
 					while (1) 
 					{
 
-				//#pragma omp critical (mutex)
-				//{
-				//FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
-				//}
+				#pragma omp critical (mutex)
+				{
+				FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
+				}
 
 					//if(FlagRead != 0){ // Verifica se a mensagem foi lida
 
@@ -237,7 +240,8 @@ fileCAN.close();
 
 							//wordCounter++;
 						//}
-		
+	
+	/*	
     for(col=0; col<9; col++)
     {
         if(col == 0) frameRead.can_id = matrx[lin][col];
@@ -247,6 +251,7 @@ fileCAN.close();
 
 	lin++;
 	if(lin == 4) lin = 0;
+	*/
 
                         /* while(WordFlag){
                         	if(WordCounter2 == 0){
@@ -385,18 +390,18 @@ fileCAN.close();
 					TorqueLimit = atof(buffer);
 					
 					//ObjCommandMessage.ProcessAngleVelocity(&SpeedPretendida)
-					//ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
-					//ObjCommandMessage.UpdateFrame(&frameWrite);
-					//#pragma omp critical (mutex)
-					//{
-					//FlagWrite = write(SocketCan, &frameWrite, sizeof(struct can_frame));
-					//}
+					ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
+					ObjCommandMessage.UpdateFrame(&frameWrite);
+					#pragma omp critical (mutex)
+					{
+					FlagWrite = write(SocketCan, &frameWrite, sizeof(struct can_frame));
+					}
 				}
 			}
 		}
 	}
 
-	//close(SocketCan);
+	close(SocketCan);
 	fclose(Arquivo);
 	close(sockfd);
 
