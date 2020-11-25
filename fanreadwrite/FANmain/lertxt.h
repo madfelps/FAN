@@ -158,6 +158,62 @@ public:
 
 };
 
+class Temperature2:public Torque{
+
+private:
+	float ControlBoardTemperature;
+	float ControlBoardTemperatureProcessed;
+	float RTD1_Temperature;
+	float RTD1_TemperatureProcessed;
+	float RTD2_Temperature;
+	float RTD2_TemperatureProcessed;
+	float RTD3_Temperature;
+	float RTD3_TemperatureProcessed;
+
+public:
+	Temperature2();
+	Temperature2(unsigned char* CAN_DATA);
+
+	void UpdateObject(unsigned char*);
+	float GetControlBoardTemperatureProcessed();
+	float GetRTD1Processed()();
+	float GetRTD2Processed();
+	float GetRTD3Processed();
+
+
+//  A grandeza física temperatura se processa de modo igual ao Torque, ou seja, essa classe também usa a classe mãe Torque
+	void  IfID_Temperature2(struct can_frame* frame, nlohmann::json& UDP_Package);
+	void ShowAllValuesProcessed();
+};
+
+class Temperature3:public Torque{
+
+private:
+	float RTD4_Temperature;
+	float RTD4_TemperatureProcessed;
+	float RTD5_Temperature;
+	float RTD5_TemperatureProcessed;
+	float MotorTemperature;
+	float MotorTemperatureProcessed;
+	float TorqueShudder;
+	float TorqueShudderProcessed;
+
+public:
+	Temperature3();
+	Temperature3(unsigned char* CAN_DATA);
+
+	void UpdateObject(unsigned char*);
+	float GetRTD4_TemperatureProcessed();
+	float GetRTD5_TemperatureProcessed()();
+	float GetMotorTemperatureProcessed();
+	float GetTorqueShudderProcessed();
+
+
+//  A grandeza física temperatura se processa de modo igual ao Torque, ou seja, essa classe também usa a classe mãe Torque
+	void  IfID_Temperature3(struct can_frame* frame, nlohmann::json& UDP_Package);
+	void ShowAllValuesProcessed();
+};
+
 //Desenvolver o método pra dar update no frame
 class CommandMessage{
 private:

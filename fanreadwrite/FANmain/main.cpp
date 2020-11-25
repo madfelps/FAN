@@ -108,6 +108,18 @@ int main()
 	UDP_Package["TemperatureModuleB"] 			= 0.0;
 	UDP_Package["TemperatureModuleC"] 			= 0.0;
 	UDP_Package["TemperatureGateDriverBoard"] 	= 0.0;
+	UDP_Package["ControlBoardTemperature"]		= 0.0;
+	UDP_Package["RTD1_Temperature"]				= 0.0;
+	UDP_Package["RTD2_Temperature"]				= 0.0;
+	UDP_Package["RTD3_Temperature"] 			= 0.0;
+	UDP_Package["RTD4_Temperature"]				= 0.0;
+	UDP_Package["MotorTemperature"]				= 0.0;
+	UDP_Package["Torque_Shudder"]	 			= 0.0;
+	UDP_Package["RTD4_Temperature"]				= 0.0;
+	UDP_Package["RTD5_Temperature"] 			= 0.0;
+	UDP_Package["MotorTemperature"]				= 0.0;
+	UDP_Package["Torque_Shudder"] 				= 0.0;
+
 	
 
 	//struct can_frame frameRead, frameWrite; //Criação dos frames

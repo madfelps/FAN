@@ -20,8 +20,8 @@
 
 #define    UNDEFINED		         0
 #define    TEMPERATURES_1 	         0x0A0	//CHECK
-#define    TEMPERATURES_2	         0x0A1
-#define    TEMPERATURES_3 	         0x0A2
+#define    TEMPERATURES_2	         0x0A1	//CHECK
+#define    TEMPERATURES_3 	         0x0A2	//CHECK
 #define    ANALOGIC_IN 	             0x0A3
 #define    DIGITAL_IN		         0x0A4
 #define    MOTOR_POSITION	         0x0A5	//CHECK
@@ -277,19 +277,19 @@ void Temperature1::UpdateObject(unsigned char* CAN_DATA){
 
 }
 
-float Temperature1::GetModuleAProcessed(){
+float Temperature1::GetControlBoardTemperatureProcessed(){
 	return ModuleAProcessed;
 }
 
-float Temperature1::GetModuleBProcessed(){
+float Temperature1::GetRTD1Processed(){
 	return ModuleBProcessed;
 }
 
-float Temperature1::GetModuleCProcessed(){
+float Temperature1::GetRTD1Processed(){
 	return ModuleCProcessed;
 }
 
-float Temperature1::GetGateDriverBoardProcessed(){
+float Temperature1::GetRTD1Processed(){
 	return GateDriverBoardProcessed;
 }
 
@@ -312,6 +312,136 @@ void  Temperature1::IfID_Temperature1(struct can_frame* frame, nlohmann::json& U
 		UDP_Package["TemperatureModuleB"]  			= ModuleBProcessed;
 		UDP_Package["TemperatureModuleC"]			= ModuleCProcessed;
 		UDP_Package["TemperatureGateDriverBoard"] 	= GateDriverBoardProcessed;
+
+	}
+}
+
+Temperature2::Temperature2(){
+	ControlBoardTemperature;
+	ControlBoardTemperatureProcessed;
+	RTD1_Temperature;
+	RTD1_TemperatureProcessed;
+	RTD2_Temperature;
+	RTD2_TemperatureProcessed;
+	RTD3_Temperature;
+	RTD3_TemperatureProcessed;
+}
+
+Temperature2::Temperature2(unsigned char* CAN_DATA){
+	ControlBoardTemperatureProcessed 	= ProcessTorqueReceive(CAN_DATA, 1, 0);
+	RTD1_TemperatureProcessed 			= ProcessTorqueReceive(CAN_DATA, 3, 2);
+	RTD2_TemperatureProcessed 			= ProcessTorqueReceive(CAN_DATA, 5, 4);
+	RTD3_TemperatureProcessed 			= ProcessTorqueReceive(CAN_DATA, 7, 6);
+}
+
+void Temperature2::UpdateObject(unsigned char* CAN_DATA){
+		ControlBoardTemperatureProcessed 	= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
+		RTD1_TemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
+		RTD2_TemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 5, 4);
+		RTD3_TemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 7, 6);
+
+}
+
+float Temperature2::GetControlBoardTemperatureProcessed(){
+	return ControlBoardTemperatureProcessed;
+}
+
+float Temperature2::GetRTD1Processed(){
+	return RTD1_TemperatureProcessed ;
+}
+
+float Temperature2::GetRTD2Processed(){
+	return RTD2_TemperatureProcessed ;
+}
+
+float Temperature2::GetRTD3Processed(){
+	return RTD3_TemperatureProcessed;
+}
+
+void Temperature2::ShowAllValuesProcessed(){
+		printf("Temperatura do ControlBoardTemperature: %f\n", this->GetControlBoardTemperatureProcessed());
+		printf("Temperatura do RTD1: %f\n", this->GetRTD1Processed()); 
+		printf("Temperatura do RTD2: %f\n", this->GetRTD2Processed());
+		printf("Temperatura do RTD3: %f\n", this->GetRTD3Processed());
+}
+
+void  Temperature2::IfID_Temperature2(struct can_frame* frame, nlohmann::json& UDP_Package){
+	if(frame->can_id == 161){
+
+		this->UpdateObject(frame->data);
+		
+		//this->ShowAllValuesProcessed();
+
+		UDP_Package["ID"]							= "TEMPERATURES_2";
+		UDP_Package["ControlBoardTemperature"] 		= ControlBoardTemperatureProcessed;
+		UDP_Package["RTD1_Temperature"]  			= RTD1_TemperatureProcessed;
+		UDP_Package["RTD2_Temperature"]				= RTD2_TemperatureProcessed;
+		UDP_Package["RTD3_Temperature"] 			= RTD3_TemperatureProcessed;
+
+	}
+}
+
+Temperature3::Temperature3(){
+	RTD4_Temperature;
+	RTD4_TemperatureProcessed;
+	RTD5_Temperature;
+	RTD5_TemperatureProcessed;
+	MotorTemperature;
+	MotorTemperatureProcessed;
+	TorqueShudder;
+	TorqueShudderProcessed;
+}
+
+Temperature3::Temperature3(unsigned char* CAN_DATA){
+	RTD4_TemperatureProcessed 			= ProcessTorqueReceive(CAN_DATA, 1, 0);
+	RTD5_TemperatureProcessed 			= ProcessTorqueReceive(CAN_DATA, 3, 2);
+	MotorTemperatureProcessed 			= ProcessTorqueReceive(CAN_DATA, 5, 4);
+	TorqueShudderProcessed 				= ProcessTorqueReceive(CAN_DATA, 7, 6);
+}
+
+void Temperature3::UpdateObject(unsigned char* CAN_DATA){
+		RTD4_TemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
+		RTD5_TemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
+		MotorTemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 5, 4);
+		TorqueShudderProcessed 				= this->ProcessTorqueReceive(CAN_DATA, 7, 6);
+
+}
+
+float Temperature3::GetRTD4_TemperatureProcessed(){
+	return RTD4_TemperatureProcessed;
+}
+
+float Temperature3::GetRTD5_TemperatureProcessed(){
+	return RTD5_TemperatureProcessed ;
+}
+
+float Temperature3::GetMotorTemperatureProcessed(){
+	return MotorTemperatureProcessed ;
+}
+
+float Temperature3::GetTorqueShudderProcessed(){
+	return TorqueShudderProcessed;
+}
+
+void Temperature3::ShowAllValuesProcessed(){
+		printf("Temperatura do RTD4: %f\n", this->GetRTD4_TemperatureProcessed());
+		printf("Temperatura do RTD5: %f\n", this->GetRTD5_TemperatureProcessed()); 
+		printf("Temperatura do Motor: %f\n", this->GetMotorTemperatureProcessed());
+		printf("Torque shudder: %f\n", this->GetTorqueShudderProcessed());
+}
+
+void  Temperature3::IfID_Temperature3(struct can_frame* frame, nlohmann::json& UDP_Package){
+	if(frame->can_id == 162){
+
+		this->UpdateObject(frame->data);
+		
+		//this->ShowAllValuesProcessed();
+
+		UDP_Package["ID"]							= "TEMPERATURES_3";
+		UDP_Package["RTD4_Temperature"] 			= GetRTD4_TemperatureProcessed;
+		UDP_Package["RTD5_Temperature"]  			= GetRTD5_TemperatureProcessed;
+		UDP_Package["MotorTemperature"]				= GetMotorTemperatureProcessed;
+		UDP_Package["TorqueShudder"] 				= GetTorqueShudderProcessed;
 
 	}
 }
