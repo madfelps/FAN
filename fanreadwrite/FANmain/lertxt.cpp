@@ -22,18 +22,18 @@
 #define    TEMPERATURES_1 	         0x0A0	//CHECK
 #define    TEMPERATURES_2	         0x0A1	//CHECK
 #define    TEMPERATURES_3 	         0x0A2	//CHECK
-#define    ANALOGIC_IN 	             0x0A3
-#define    DIGITAL_IN		         0x0A4
+#define    ANALOGIC_IN 	             0x0A3	//ALMOST CHECK
+#define    DIGITAL_IN		         0x0A4	//CHECK
 #define    MOTOR_POSITION	         0x0A5	//CHECK
-#define    CURRENT_INFO	             0x0A6
-#define    VOLTAGE_INFO	             0x0A7
-#define    FLUX_INFO   	             0x0A8
-#define    INTERN_VOLTS 	         0x0A9
+#define    CURRENT_INFO	             0x0A6	//CHECK
+#define    VOLTAGE_INFO	             0x0A7  //CHECK
+#define    FLUX_INFO   	             0x0A8	//CHECK
+#define    INTERN_VOLTS 	         0x0A9	//CHECK
 #define    INTERN_STATES	         0x0AA	//CHECK
 #define    FAULT_CODES 	             0x0AB
 #define    TORQUE_TIMER_INFO	     0x0AC	//CHECK
-#define    MOD_FLUX_WEAK_OUT_INFO	 0x0AD
-#define    FIRM_INFO	             0x0AE
+#define    MOD_FLUX_WEAK_OUT_INFO	 0x0AD	//CHECK
+#define    FIRM_INFO	             0x0AE	
 #define    DIAGNOSTIC_DATA	         0x0AF
 #define    COMMAND_MESSAGE           0x0C0	//CHECK
 
@@ -112,8 +112,15 @@ int CutBytes::CutByteInterval(unsigned char* CAN_DATA, int CanDataPosition, int 
 float Torque::ProcessTorqueReceive(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	float TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	TorqueValue = NegativeValuesTwoBytes(TorqueValue);
-	TorqueValue = TorqueValue/10; //todo O problema do multiplicador
+	TorqueValue = TorqueValue/10; 
 	return TorqueValue;
+}
+
+float Flux::ProcessFluxReceive(unsigned char* CAN_DATA, int MSByte, int LSByte){
+	float FluxValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
+	FluxValue = NegativeValuesTwoBytes(FluxValue);
+	FluxValue = FluxValue/1000; 
+	return FluxValue;
 }
 
 
@@ -133,8 +140,24 @@ float AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, i
 
 	float AngleVelocityValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	AngleVelocityValue = NegativeValuesTwoBytes(AngleVelocityValue);
-	AngleVelocityValue = AngleVelocityValue/10;
+	//AngleVelocityValue = AngleVelocityValue/10;
 	return AngleVelocityValue;
+}
+
+float LowVoltage::ProcessLowVoltage(unsigned char* CAN_DATA, int MSByte, int LSByte){
+
+	float LowVoltageValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
+	LowVoltageValue = NegativeValuesTwoBytes(LowVoltageValue);
+	LowVoltageValue = LowVoltageValue/100;
+	return LowVoltageValue;
+}
+
+float HighVoltage::ProcessHighVoltage(unsigned char* CAN_DATA, int MSByte, int LSByte){
+
+	float HighVoltageValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
+	HighVoltageValue = NegativeValuesTwoBytes(HighVoltageValue);
+	HighVoltageValue = HighVoltageValue/10;
+	return HighVoltageValue;
 }
 
 MotorPosInfo::MotorPosInfo(){
@@ -189,7 +212,6 @@ void MotorPosInfo::ShowAllValuesProcessed(){
 
 void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 165){
-
 
 		this->UpdateObject(frame->data);
 
@@ -317,14 +339,14 @@ void  Temperature1::IfID_Temperature1(struct can_frame* frame, nlohmann::json& U
 }
 
 Temperature2::Temperature2(){
-	ControlBoardTemperature;
-	ControlBoardTemperatureProcessed;
-	RTD1_Temperature;
-	RTD1_TemperatureProcessed;
-	RTD2_Temperature;
-	RTD2_TemperatureProcessed;
-	RTD3_Temperature;
-	RTD3_TemperatureProcessed;
+	ControlBoardTemperature 			= 0.0;
+	ControlBoardTemperatureProcessed 	= 0.0;
+	RTD1_Temperature 					= 0.0;
+	RTD1_TemperatureProcessed 			= 0.0;
+	RTD2_Temperature 					= 0.0;
+	RTD2_TemperatureProcessed 			= 0.0;
+	RTD3_Temperature 					= 0.0;
+	RTD3_TemperatureProcessed 			= 0.0;
 }
 
 Temperature2::Temperature2(unsigned char* CAN_DATA){
@@ -382,14 +404,14 @@ void  Temperature2::IfID_Temperature2(struct can_frame* frame, nlohmann::json& U
 }
 
 Temperature3::Temperature3(){
-	RTD4_Temperature;
-	RTD4_TemperatureProcessed;
-	RTD5_Temperature;
-	RTD5_TemperatureProcessed;
-	MotorTemperature;
-	MotorTemperatureProcessed;
-	TorqueShudder;
-	TorqueShudderProcessed;
+	RTD4_Temperature 			= 0.0;
+	RTD4_TemperatureProcessed   = 0.0;
+	RTD5_Temperature 			= 0.0;
+	RTD5_TemperatureProcessed   = 0.0;
+	MotorTemperature 			= 0.0;
+	MotorTemperatureProcessed   = 0.0;
+	TorqueShudder 				= 0.0;
+	TorqueShudderProcessed 		= 0.0;
 }
 
 Temperature3::Temperature3(unsigned char* CAN_DATA){
@@ -412,11 +434,11 @@ float Temperature3::GetRTD4_TemperatureProcessed(){
 }
 
 float Temperature3::GetRTD5_TemperatureProcessed(){
-	return RTD5_TemperatureProcessed ;
+	return RTD5_TemperatureProcessed;
 }
 
 float Temperature3::GetMotorTemperatureProcessed(){
-	return MotorTemperatureProcessed ;
+	return MotorTemperatureProcessed;
 }
 
 float Temperature3::GetTorqueShudderProcessed(){
@@ -438,13 +460,238 @@ void  Temperature3::IfID_Temperature3(struct can_frame* frame, nlohmann::json& U
 		//this->ShowAllValuesProcessed();
 
 		UDP_Package["ID"]							= "TEMPERATURES_3";
-		UDP_Package["RTD4_Temperature"] 			= GetRTD4_TemperatureProcessed;
-		UDP_Package["RTD5_Temperature"]  			= GetRTD5_TemperatureProcessed;
-		UDP_Package["MotorTemperature"]				= GetMotorTemperatureProcessed;
-		UDP_Package["TorqueShudder"] 				= GetTorqueShudderProcessed;
+		UDP_Package["RTD4_Temperature"] 			= RTD4_TemperatureProcessed;
+		UDP_Package["RTD5_Temperature"]  			= RTD5_TemperatureProcessed;
+		UDP_Package["MotorTemperature"]				= MotorTemperatureProcessed;
+		UDP_Package["TorqueShudder"] 				= TorqueShudderProcessed;
 
 	}
 }
+
+CurrentInformation::CurrentInformation(){
+	PhaseACurrent					=	0.0;
+	PhaseACurrentProcessed			=	0.0;
+	PhaseBCurrent					=	0.0;
+	PhaseBCurrentProcessed			=	0.0;
+	PhaseCCurrent					=	0.0;
+	PhaseCCurrentProcessed			=	0.0;
+	DC_BusCurrent					=	0.0;
+	DC_BusCurrentProcessed			=	0.0;
+}
+
+CurrentInformation::CurrentInformation(unsigned char* CAN_DATA){
+	PhaseACurrentProcessed	=	ProcessTorqueReceive(CAN_DATA, 1, 0);
+	PhaseBCurrentProcessed	=	ProcessTorqueReceive(CAN_DATA, 3, 2);
+	PhaseCCurrentProcessed	=	ProcessTorqueReceive(CAN_DATA, 5, 4);
+	DC_BusCurrentProcessed	=	ProcessTorqueReceive(CAN_DATA, 7, 6);
+}
+
+void CurrentInformation::UpdateObject(unsigned char* CAN_DATA){
+	PhaseACurrentProcessed	=	this->ProcessTorqueReceive(CAN_DATA, 1, 0);
+	PhaseBCurrentProcessed	=	this->ProcessTorqueReceive(CAN_DATA, 3, 2);
+	PhaseCCurrentProcessed	=	this->ProcessTorqueReceive(CAN_DATA, 5, 4);
+	DC_BusCurrentProcessed	=	this->ProcessTorqueReceive(CAN_DATA, 7, 6);
+}
+
+void CurrentInformation::IfID_CurrentInformation(struct can_frame* frame, nlohmann::json& UDP_Package){
+	if(frame->can_id == 166){
+
+		this->UpdateObject(frame->data);
+
+		UDP_Package["ID"]					=		"CURRENT_INFORMATION";
+		UDP_Package["PhaseACurrent"]		=		PhaseACurrentProcessed;
+		UDP_Package["PhaseBCurrent"]		=		PhaseBCurrentProcessed;
+		UDP_Package["PhaseCCurrent"]		=		PhaseCCurrentProcessed;
+		UDP_Package["DC_BusCurrent"]		=		DC_BusCurrentProcessed;
+	}
+}
+
+VoltageInformation::VoltageInformation(){
+	DC_BusVoltage 			= 0.0;
+	DC_BusVoltageProcessed  = 0.0;
+	OutputVoltage 			= 0.0;
+	OutputVoltageProcessed 	= 0.0;
+	VAB_Vd_Voltage 			= 0.0;
+	VAB_Vd_VoltageProcessed = 0.0;
+	VBC_Vd_Voltage 			= 0.0;
+	VBC_Vd_VoltageProcessed = 0.0;
+}
+
+
+
+VoltageInformation::VoltageInformation(unsigned char* CAN_DATA){
+	DC_BusVoltageProcessed 	= ProcessHighVoltage(CAN_DATA, 1, 0);
+	OutputVoltageProcessed 	= ProcessHighVoltage(CAN_DATA, 3, 2);
+	VAB_Vd_VoltageProcessed = ProcessHighVoltage(CAN_DATA, 5, 4);
+	VBC_Vd_VoltageProcessed = ProcessHighVoltage(CAN_DATA, 7, 6);
+}
+
+void VoltageInformation::UpdateObject(unsigned char* CAN_DATA){
+	DC_BusVoltageProcessed 	= this->ProcessHighVoltage(CAN_DATA, 1, 0);
+	OutputVoltageProcessed 	= this->ProcessHighVoltage(CAN_DATA, 3, 2);
+	VAB_Vd_VoltageProcessed = this->ProcessHighVoltage(CAN_DATA, 5, 4);
+	VBC_Vd_VoltageProcessed = this->ProcessHighVoltage(CAN_DATA, 7, 6);
+}
+
+void VoltageInformation::IfID_VoltageInformation(struct can_frame* frame, nlohmann::json& UDP_Package){
+	if(frame->can_id == 167){
+
+		this->UpdateObject(frame->data);
+
+		UDP_Package["ID"]					=		"VOLTAGE_INFORMATION";
+		UDP_Package["DC_BusVoltage"]		=		DC_BusVoltageProcessed;
+		UDP_Package["OutputVoltage"]		=		OutputVoltageProcessed;
+		UDP_Package["VAB_Vd_Voltage"]		=		VAB_Vd_VoltageProcessed;
+		UDP_Package["VBC_Vd_Voltage"]		=		VBC_Vd_VoltageProcessed;
+
+	}
+}
+
+FluxInformation::FluxInformation(){
+	FluxCommand 			= 0.0;
+	FluxCommandProcessed 	= 0.0;
+	FluxFeedback 			= 0.0;
+	FluxFeedbackProcessed 	= 0.0;
+	IdFeedback				= 0.0;
+	IdFeedbackProcessed		= 0.0;
+	IqFeedback				= 0.0;	 
+	IqFeedbackProcessed		= 0.0;	 
+}
+
+FluxInformation::FluxInformation(unsigned char* CAN_DATA){
+	FluxCommand 			= 0.0;
+	FluxCommandProcessed 	= 0.0;
+	FluxFeedback 			= 0.0;
+	FluxFeedbackProcessed 	= 0.0;
+	IdFeedback				= 0.0;
+	IdFeedbackProcessed		= 0.0;
+	IqFeedback				= 0.0;	 
+	IqFeedbackProcessed		= 0.0;	 
+}
+
+void FluxInformation::UpdateObject(unsigned char* CAN_DATA){
+	FluxCommandProcessed	=	ProcessFluxReceive(CAN_DATA, 1, 0);
+	FluxFeedbackProcessed	=	ProcessFluxReceive(CAN_DATA, 3, 2);
+	IdFeedbackProcessed		=	ProcessTorqueReceive(CAN_DATA, 5, 4);
+	IdFeedbackProcessed		=	ProcessTorqueReceive(CAN_DATA, 7, 6);
+}
+
+void FluxInformation::IfID_FluxInformation(struct can_frame* frame, nlohmann::json& UDP_Package){
+	if(frame->can_id == 168){
+
+		this->UpdateObject(frame->data);
+
+		UDP_Package["ID"]				=	"FluxInformation";
+		UDP_Package["FluxCommand"]		=	FluxCommandProcessed;
+		UDP_Package["FluxFeedback"]		=	FluxFeedbackProcessed;
+		UDP_Package["IdFeedback"]		=	IdFeedbackProcessed;
+		UDP_Package["IqFeedback"]		=	IqFeedbackProcessed;
+
+	}
+}
+
+InternalVoltages::InternalVoltages(){
+	VoltageReference1Dot5 = 0.0;
+	VoltageReference2Dot5 = 0.0;
+	VoltageReference5Dot0 = 0.0;
+	VoltageReference12	  = 0.0;
+}
+
+InternalVoltages::InternalVoltages(unsigned char* CAN_DATA){
+	VoltageReference1Dot5 = 0.0;
+	VoltageReference2Dot5 = 0.0;
+	VoltageReference5Dot0 = 0.0;
+	VoltageReference12	  = 0.0;
+}
+
+void InternalVoltages::UpdateObject(unsigned char* CAN_DATA){
+	VoltageReference1Dot5	=	ProcessLowVoltage(CAN_DATA, 1, 0);
+	VoltageReference2Dot5	=	ProcessLowVoltage(CAN_DATA, 3, 2);
+	VoltageReference5Dot0	=	ProcessLowVoltage(CAN_DATA, 5, 4);
+	VoltageReference12		=	ProcessLowVoltage(CAN_DATA, 7, 6);
+}
+
+void InternalVoltages::IfID_InternalVoltages(struct can_frame* frame, nlohmann::json& UDP_Package){
+	if(frame->can_id == 169){
+		this->UpdateObject(frame->data);
+
+		UDP_Package["ID"]						=	"InternalVoltages";
+		UDP_Package["VoltageReference1Dot5"]	=	VoltageReference1Dot5;	
+		UDP_Package["VoltageReference2Dot5"]	=	VoltageReference2Dot5;	
+		UDP_Package["VoltageReference5Dot0"]	=	VoltageReference5Dot0;	
+		UDP_Package["VoltageReference12"]	=	VoltageReference12;	
+	}
+}
+
+
+
+AnalogInputVoltages::AnalogInputVoltages(){
+	AnalogInput1 			= 0.0;
+	AnalogInput1Processed 	= 0.0;
+	AnalogInput2 			= 0.0;
+	AnalogInput2Processed	= 0.0;
+	AnalogInput3 			= 0.0;
+	AnalogInput3Processed   = 0.0;
+	AnalogInput4 			= 0.0;
+	AnalogInput4Processed 	= 0.0;
+	AnalogInput5 			= 0.0;
+	AnalogInput5Processed 	= 0.0;
+	AnalogInput6 			= 0.0;
+	AnalogInput6Processed 	= 0.0;
+}
+
+AnalogInputVoltages::AnalogInputVoltages(unsigned char* CAN_DATA){
+	AnalogInput1Processed 	= 0.0;
+	AnalogInput2Processed 	= 0.0;
+	AnalogInput3Processed 	= 0.0;
+	AnalogInput4Processed 	= 0.0;
+	AnalogInput5Processed 	= 0.0;
+	AnalogInput6Processed 	= 0.0;
+
+}
+
+ModulationIndex_FluxWeakening::ModulationIndex_FluxWeakening(){
+	ModulationIndex 				=	0.0;
+	ModulationIndexProcessed		=	0.0;
+	FluxWeakeningOutput 			=	0.0;
+	FluxWeakeningOutputProcessed 	=	0.0;
+	IdCommand 						=	0.0;
+	IdCommandProcessed 				=	0.0;
+	IqCommand 						=	0.0;
+	IqCommandProcessed 				=	0.0;
+}
+
+ModulationIndex_FluxWeakening::ModulationIndex_FluxWeakening(unsigned char* CAN_DATA){
+	ModulationIndex 				=	0.0;
+	ModulationIndexProcessed		=	0.0;
+	FluxWeakeningOutput 			=	0.0;
+	FluxWeakeningOutputProcessed 	=	0.0;
+	IdCommand 						=	0.0;
+	IdCommandProcessed 				=	0.0;
+	IqCommand 						=	0.0;
+	IqCommandProcessed 				=	0.0;
+}
+
+void ModulationIndex_FluxWeakening::UpdateObject(unsigned char* CAN_DATA){
+	ModulationIndexProcessed		=	ProcessTorqueReceive(CAN_DATA, 1, 0)/10;
+	FluxWeakeningOutputProcessed	=	ProcessTorqueReceive(CAN_DATA, 3, 2);
+	IdCommandProcessed				=	ProcessTorqueReceive(CAN_DATA, 5, 4);
+	IqCommandProcessed				=	ProcessTorqueReceive(CAN_DATA, 7, 6);
+}
+
+void ModulationIndex_FluxWeakening::IfID_ModulationIndex_FluxWeakening(struct can_frame* frame, nlohmann::json& UDP_Package){
+	if(frame->can_id == 173){
+
+		UpdateObject(frame->data);
+
+		UDP_Package["ID"]						=		"ModulationIndex_FluxWeakening";
+		UDP_Package["FluxWeakeningOutput"]		=		FluxWeakeningOutputProcessed;
+		UDP_Package["IdCommandProcessed"]		=		IdCommandProcessed;
+		UDP_Package["IqCommandProcessed"]		=		IqCommandProcessed;
+
+	}
+}
+
 
 CommandMessage::CommandMessage(){
 	
@@ -484,6 +731,29 @@ void CommandMessage::UpdateFrame(struct can_frame* frame){
 	frame->data[6] = CommandedTorqueLimitLSB;
 	frame->data[7] = CommandedTorqueLimitMSB;
 
+}
+
+DigitalInputStatus::DigitalInputStatus(){
+	DigitalInput_1 = 0;
+	DigitalInput_2 = 0;
+	DigitalInput_3 = 0;
+	DigitalInput_4 = 0;
+	DigitalInput_5 = 0;
+	DigitalInput_6 = 0;
+	DigitalInput_7 = 0;
+	DigitalInput_8 = 0;
+}
+
+void DigitalInputStatus::UpdateFrame(struct can_frame* frame){
+	frame->can_id = DIGITAL_IN;
+	frame->data[0] = DigitalInput_1;
+	frame->data[1] = DigitalInput_2;
+	frame->data[2] = DigitalInput_3;
+	frame->data[3] = DigitalInput_4;
+	frame->data[4] = DigitalInput_5;
+	frame->data[5] = DigitalInput_6;
+	frame->data[6] = DigitalInput_7;
+	frame->data[7] = DigitalInput_8;
 }
 
 

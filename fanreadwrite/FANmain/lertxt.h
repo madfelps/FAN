@@ -63,6 +63,13 @@ public:
 
 };
 
+class Flux:public NegativeValues{
+private:
+
+public:
+	static float ProcessFluxReceive(unsigned char* CAN_DATA, int MSByte, int LSByte);
+}
+
 class Angle:public NegativeValues{
 private:
 
@@ -76,6 +83,20 @@ private:
 public:
 	static float ProcessAngleVelocity(unsigned char*, int MSByte, int LSByte);
 };
+
+class LowVoltage:public NegativeValues{
+private:
+
+public:
+	static float ProcessLowVoltage(unsigned char*, int MSByte, int LSByte);
+}
+
+class HighVoltage:public NegativeValues{
+private:
+
+public:
+	static float ProcessHighVoltage(unsigned char*, int MSByte, int LSByte);
+}
 
 class MotorPosInfo:public Angle, public AngleVelocity{
 private:
@@ -214,6 +235,109 @@ public:
 	void ShowAllValuesProcessed();
 };
 
+class CurrentInformation:public Torque{
+private:
+	float PhaseACurrent;
+	float PhaseACurrentProcessed;
+	float PhaseBCurrent;
+	float PhaseBCurrentProcessed;
+	float PhaseCCurrent;
+	float PhaseCCurrentProcessed;
+	float DC_BusCurrent;
+	float DC_BusCurrentProcessed;
+public:
+	CurrentInformation();
+	CurrentInformation(unsigned char* CAN_DATA);
+	void UpdateObject(unsigned char* CAN_DATA);
+	void IfID_CurrentInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
+}
+
+class VoltageInformation:public HighVoltage{
+private:
+	float DC_BusVoltage;
+	float DC_BusVoltageProcessed;
+	float OutputVoltage;
+	float OutputVoltageProcessed;
+	float VAB_Vd_Voltage;
+	float VAB_Vd_VoltageProcessed;
+	float VBC_Vd_Voltage;
+	float VBC_Vd_VoltageProcessed;
+public:
+	VoltageInformation();
+	VoltageInformation(unsigned char* CAN_DATA);
+	void UpdateObject(unsigned char* CAN_DATA);
+	void IfID_VoltageInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
+
+};
+
+class FluxInformation:public Torque, Flux{
+private:
+	float FluxCommand;
+	float FluxFeedback;
+	float IdFeedback;
+	float IqFeedback;
+public:
+	FluxInformation();
+	FluxInformation(unsigned char* CAN_DATA);
+	void UpdateObject(unsigned char* CAN_DATA);
+	void IfID_FluxInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
+};
+
+class InternalVoltages:public LowVoltage{
+private:
+	float VoltageReference1Dot5;
+	float VoltageReference2Dot5;
+	float VoltageReference5Dot0;
+	float VoltageReference12;
+public:
+	InternalVoltages();
+	InternalVoltages(unsigned char* CAN_DATA);
+	void UpdateObject(unsigned char* CAN_DATA);
+	void IfID_InternalVoltages(struct can_frame* frame, nlohmann::json& UDP_Package);
+};
+
+class AnalogInputVoltages:public LowVoltage{
+
+private:
+	float AnalogInput1;
+	float AnalogInput1Processed;
+	float AnalogInput2;
+	float AnalogInput2Processed;
+	float AnalogInput3;
+	float AnalogInput3Processed;
+	float AnalogInput4;
+	float AnalogInput4Processed;
+	float AnalogInput5;
+	float AnalogInput5Processed;
+	float AnalogInput6;
+	float AnalogInput6Processed;
+
+public:
+	AnalogInputVoltages();
+	AnalogInputVoltages(unsigned char* CAN_DATA);
+
+	void IfID_AnalogInputVoltages(struct can_frame* frame, nlohmann::json& UDP_Package);
+
+};
+
+class ModulationIndex_FluxWeakening:public Torque{
+private:
+	float ModulationIndex;
+	float ModulationIndexProcessed;
+	float FluxWeakeningOutput;
+	float FluxWeakeningOutputProcessed;
+	float IdCommand;
+	float IdCommandProcessed;
+	float IqCommand;
+	float IqCommandProcessed;
+public:
+	ModulationIndex_FluxWeakening::ModulationIndex_FluxWeakening();
+	ModulationIndex_FluxWeakening::ModulationIndex_FluxWeakening(unsigned char* CAN_DATA);
+	void UpdateObject(unsigned char* CAN_DATA);
+	void IfID_ModulationIndex_FluxWeakening(struct can_frame* frame, nlohmann::json& UDP_Package);
+
+};
+
 //Desenvolver o método pra dar update no frame
 class CommandMessage{
 private:
@@ -237,6 +361,23 @@ public:
 
 
 };
+
+class DigitalInputStates{
+private:
+	int DigitalInput_1;
+	int DigitalInput_2;
+	int DigitalInput_3;
+	int DigitalInput_4;
+	int DigitalInput_5;
+	int DigitalInput_6;
+	int DigitalInput_7;
+	int DigitalInput_8;
+public:
+	DigitalInputStates();
+	void UpdateFrame(struct can_frame* frame);
+};
+
+
 
 class InternalStates: public CutBytes{
 private:

@@ -119,6 +119,22 @@ int main()
 	UDP_Package["RTD5_Temperature"] 			= 0.0;
 	UDP_Package["MotorTemperature"]				= 0.0;
 	UDP_Package["Torque_Shudder"] 				= 0.0;
+	UDP_Package["PhaseACurrent"]				= 0.0;
+	UDP_Package["PhaseBCurrent"]				= 0.0;
+	UDP_Package["PhaseCCurrent"]				= 0.0;
+	UDP_Package["DC_BusCurrent"]				= 0.0;
+	UDP_Package["DC_BusVoltage"]				= 0.0;
+	UDP_Package["OutputVoltage"]				= 0.0;
+	UDP_Package["VAB_Vd_Voltage"]				= 0.0;
+	UDP_Package["VBC_Vd_Voltage"]				= 0.0;
+	UDP_Package["FluxCommand"]					= 0.0;
+	UDP_Package["FluxFeedback"]					= 0.0;
+	UDP_Package["IdFeedback"]					= 0.0;
+	UDP_Package["IqFeedback"]					= 0.0;
+	UDP_Package["VoltageReference1Dot5"]		= 0.0;
+	UDP_Package["VoltageReference2Dot5"]		= 0.0;
+	UDP_Package["VoltageReference5Dot0"]		= 0.0;
+	UDP_Package["VoltageReference12"]			= 0.0;
 
 	
 
