@@ -237,7 +237,7 @@ fileCAN.close();
 		#pragma omp sections
 		{
 
-		 	#pragma omp section //TASK READ 
+		 	#pragma omp section //TASK READ SOFTWARE-MOTOR
 
 		 	{
                 
@@ -323,21 +323,6 @@ fileCAN.close();
 						//ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
 						//ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
 
-
-						//Envio do pacote UDP para o computador
-
-						//UDP_Package_StdString = UDP_Package.dump();
-						std::string UDP_Package_StdString = UDP_Package.dump();
-
-						strcpy(MsgToClient, UDP_Package_StdString.c_str());
-						//printf("%d\n", contador);
-						//printf("%s\n", MsgToClient);
-						//contador++;
-						sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
-						MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
-						len);
-
-
 						
 						//Guarda dados dos sensores na string PARA VECTOR STRING, USAR PUSH BACK
 
@@ -408,15 +393,9 @@ fileCAN.close();
 			}
 		
 	
-			#pragma omp section //TASK WRITE
+			#pragma omp section //TASK WRITE MOTOR 
 			{ 
 				while(1){
-					n = recvfrom(sockfd, (char *)buffer, 100, 
-						MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
-						&len); 
-					buffer[n] = '\0'; 
-					TorqueLimit = atof(buffer);
-					
 					//ObjCommandMessage.ProcessAngleVelocity(&SpeedPretendida)
 					ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
 					ObjCommandMessage.UpdateFrame(&frameWrite);
@@ -424,7 +403,42 @@ fileCAN.close();
 					{
 					FlagWrite = write(SocketCan, &frameWrite, sizeof(struct can_frame));
 					}
+					usleep(400);
 				}
+			}
+
+			#pragma omp section // TASK READ INTERFACE
+			{
+				while(1){
+					n = recvfrom(sockfd, (char *)buffer, 100, 
+						MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
+						&len); 
+					buffer[n] = '\0'; 
+					TorqueLimit = atof(buffer);
+				}
+
+			}
+
+			#pragma omp section // TASK WRITE INTERFACE
+			{
+				while(1){
+					//Envio do pacote UDP para o computador
+
+					//UDP_Package_StdString = UDP_Package.dump();
+					std::string UDP_Package_StdString = UDP_Package.dump();
+
+					strcpy(MsgToClient, UDP_Package_StdString.c_str());
+					//printf("%d\n", contador);
+					//printf("%s\n", MsgToClient);
+					//contador++;
+					sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
+					MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+					len);
+
+				}
+
+				
+
 			}
 		}
 	}
