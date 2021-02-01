@@ -86,6 +86,41 @@ int main()
 
 	//servaddr.sin_addr.s_addr = INADDR_ANY; 
 	servaddr.sin_port = htons(8080); 
+
+	/* Set address automatically if desired */
+	if (argc == 2)
+	{
+
+    /* Get host name of this computer */
+    gethostname(host_name, sizeof(host_name));
+    hp = gethostbyname(host_name);
+
+    /* Check for NULL pointer */
+    if (hp == NULL)
+    {
+        fprintf(stderr, "Could not get host name.\n");
+        closesocket(sd);
+        WSACleanup();
+        exit(0);
+    }
+
+    /* Assign the address */
+    server.sin_addr.S_un.S_un_b.s_b1 = hp->h_addr_list[0][0];
+    server.sin_addr.S_un.S_un_b.s_b2 = hp->h_addr_list[0][1];
+    server.sin_addr.S_un.S_un_b.s_b3 = hp->h_addr_list[0][2];
+    server.sin_addr.S_un.S_un_b.s_b4 = hp->h_addr_list[0][3];
+	}
+
+	/* Otherwise assign it manually */
+	else
+	{
+	    server.sin_addr.S_un.S_un_b.s_b1 = (unsigned char)a1;
+	    server.sin_addr.S_un.S_un_b.s_b2 = (unsigned char)a2;
+	    server.sin_addr.S_un.S_un_b.s_b3 = (unsigned char)a3;
+	    server.sin_addr.S_un.S_un_b.s_b4 = (unsigned char)a4;
+	}
+
+
 	// Bind the socket with the server address 
 	if ( bind(sockfd, (const struct sockaddr *)&servaddr, 
 			sizeof(servaddr)) < 0 ) 
@@ -220,6 +255,7 @@ fileCAN.close();
         std::cout << "Arquivo nao aberto!" << std::endl;
     }
 
+<<<<<<< Updated upstream
     while(fileCAN >> auxStr)
 	{
 		GuardaDados.push_back(stoi(auxStr, nullptr, 16));
@@ -233,6 +269,7 @@ fileCAN.close();
 
 	lin = 0;
 	#pragma omp parallel default (none) shared(sockfd) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr)
+
 	{
 		#pragma omp sections
 		{
