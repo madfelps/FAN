@@ -171,6 +171,16 @@ int main()
 	UDP_Package["VoltageReference5Dot0"]		= 0.0;
 	UDP_Package["VoltageReference12"]			= 0.0;
 
+	UDP_Package["FaultCode_0"]					= "X";
+	UDP_Package["FaultCode_1"]					= "X";
+	UDP_Package["FaultCode_2"]					= "X";
+	UDP_Package["FaultCode_3"]					= "X";
+	UDP_Package["FaultCode_4"]					= "X";
+	UDP_Package["FaultCode_5"]					= "X";
+	UDP_Package["FaultCode_6"]					= "X";
+	UDP_Package["FaultCode_7"]					= "X";
+
+
 	
 
 	//struct can_frame frameRead, frameWrite; //Criação dos frames
@@ -269,6 +279,7 @@ fileCAN.close();
 
 	lin = 0;
 	#pragma omp parallel default (none) shared(sockfd) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr)
+
 
 	{
 		#pragma omp sections

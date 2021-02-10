@@ -32,6 +32,7 @@
 #include <string>
 #include "nlohmann/json.hpp"
 #include <string.h>
+#include <array>
 
 void DescreveSensor(char StringDescreveSensor[][50]);
 
@@ -414,6 +415,15 @@ public:
 
 };
 
+class FaultErrors{
+private:
+	std::vector<std::string, 4>Errors;
+	std::array<std::pair<bool, std::string>, 64>Errors;
 
+public:
+	FaultErrors::FaultErrors();
+	void IfId_FaultErrors(struct canframe* frame, nlohmann::json& UDP_Package);
+	void UpdateObject(unsigned char* CAN_DATA);
+};
 
 #endif //PROJECTFAN_LE_TXT_H
