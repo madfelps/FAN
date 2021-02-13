@@ -299,19 +299,19 @@ void Temperature1::UpdateObject(unsigned char* CAN_DATA){
 
 }
 
-float Temperature1::GetControlBoardTemperatureProcessed(){
+float Temperature1::GetModuleAProcessed(){
 	return ModuleAProcessed;
 }
 
-float Temperature1::GetRTD1Processed(){
+float Temperature1::GetModuleBProcessed(){
 	return ModuleBProcessed;
 }
 
-float Temperature1::GetRTD1Processed(){
+float Temperature1::GetModuleCProcessed(){
 	return ModuleCProcessed;
 }
 
-float Temperature1::GetRTD1Processed(){
+float Temperature1::GetGateDriverBoardProcessed(){
 	return GateDriverBoardProcessed;
 }
 
@@ -733,7 +733,7 @@ void CommandMessage::UpdateFrame(struct can_frame* frame){
 
 }
 
-DigitalInputStatus::DigitalInputStatus(){
+DigitalInputStates::DigitalInputStates(){
 	DigitalInput_1 = 0;
 	DigitalInput_2 = 0;
 	DigitalInput_3 = 0;
@@ -744,7 +744,7 @@ DigitalInputStatus::DigitalInputStatus(){
 	DigitalInput_8 = 0;
 }
 
-void DigitalInputStatus::UpdateFrame(struct can_frame* frame){
+void DigitalInputStates::UpdateFrame(struct can_frame* frame){
 	frame->can_id = DIGITAL_IN;
 	frame->data[0] = DigitalInput_1;
 	frame->data[1] = DigitalInput_2;
@@ -904,31 +904,32 @@ FaultErrors::FaultErrors(){
 	std::make_pair(false, "Reserved"),
 	std::make_pair(false, "Reserved"),
 	std::make_pair(false, "Resolver Not Connected"),
-	std::make_pair(false, "Inverter Discharge Active"),
+	std::make_pair(false, "Inverter Discharge Active")
 
 	};
 }
 
-void FaultErrors::IfId_FaultErros(struct canframe* frame, nlohmann::json& UDP_Package){
+void FaultErrors::IfId_FaultErrors(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 171){
 		this->UpdateObject(frame->data);
 
 		UDP_Package["ID"]							= "FaultErrors";
-		UDP_Package["FaultCode_0"]					= Errors[0];
-		UDP_Package["FaultCode_1"]					= Errors[1];
-		UDP_Package["FaultCode_2"]					= Errors[2];
-		UDP_Package["FaultCode_3"]					= Errors[3];
-		UDP_Package["FaultCode_4"]					= Errors[4];
-		UDP_Package["FaultCode_5"]					= Errors[5];
-		UDP_Package["FaultCode_6"]					= Errors[6];
-		UDP_Package["FaultCode_7"]					= Errors[7];
+		UDP_Package["FaultCode_0"]					= Errors_Bytes[0];
+		UDP_Package["FaultCode_1"]					= Errors_Bytes[1];
+		UDP_Package["FaultCode_2"]					= Errors_Bytes[2];
+		UDP_Package["FaultCode_3"]					= Errors_Bytes[3];
+		UDP_Package["FaultCode_4"]					= Errors_Bytes[4];
+		UDP_Package["FaultCode_5"]					= Errors_Bytes[5];
+		UDP_Package["FaultCode_6"]					= Errors_Bytes[6];
+		UDP_Package["FaultCode_7"]					= Errors_Bytes[7];
 	}
 }
 
 void FaultErrors::UpdateObject(unsigned char* CAN_DATA){
-	for (int i = 0; i < 64; ++i) {
-        errors.at(i).first = (canByte >> i) & 0x01;
-    }
+	for(int i = 0; i < 7; i++){
+		Errors_Bytes[i] = CAN_DATA[i];
+	}
+	
 }
 
 

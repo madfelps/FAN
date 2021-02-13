@@ -69,7 +69,7 @@ private:
 
 public:
 	static float ProcessFluxReceive(unsigned char* CAN_DATA, int MSByte, int LSByte);
-}
+};
 
 class Angle:public NegativeValues{
 private:
@@ -90,14 +90,14 @@ private:
 
 public:
 	static float ProcessLowVoltage(unsigned char*, int MSByte, int LSByte);
-}
+};
 
 class HighVoltage:public NegativeValues{
 private:
 
 public:
 	static float ProcessHighVoltage(unsigned char*, int MSByte, int LSByte);
-}
+};
 
 class MotorPosInfo:public Angle, public AngleVelocity{
 private:
@@ -198,7 +198,7 @@ public:
 
 	void UpdateObject(unsigned char*);
 	float GetControlBoardTemperatureProcessed();
-	float GetRTD1Processed()();
+	float GetRTD1Processed();
 	float GetRTD2Processed();
 	float GetRTD3Processed();
 
@@ -226,7 +226,7 @@ public:
 
 	void UpdateObject(unsigned char*);
 	float GetRTD4_TemperatureProcessed();
-	float GetRTD5_TemperatureProcessed()();
+	float GetRTD5_TemperatureProcessed();
 	float GetMotorTemperatureProcessed();
 	float GetTorqueShudderProcessed();
 
@@ -251,7 +251,7 @@ public:
 	CurrentInformation(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_CurrentInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
-}
+};
 
 class VoltageInformation:public HighVoltage{
 private:
@@ -274,9 +274,13 @@ public:
 class FluxInformation:public Torque, Flux{
 private:
 	float FluxCommand;
+	float FluxCommandProcessed;
 	float FluxFeedback;
+	float FluxFeedbackProcessed;
 	float IdFeedback;
+	float IdFeedbackProcessed;
 	float IqFeedback;
+	float IqFeedbackProcessed;
 public:
 	FluxInformation();
 	FluxInformation(unsigned char* CAN_DATA);
@@ -332,8 +336,8 @@ private:
 	float IqCommand;
 	float IqCommandProcessed;
 public:
-	ModulationIndex_FluxWeakening::ModulationIndex_FluxWeakening();
-	ModulationIndex_FluxWeakening::ModulationIndex_FluxWeakening(unsigned char* CAN_DATA);
+	ModulationIndex_FluxWeakening();
+	ModulationIndex_FluxWeakening(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_ModulationIndex_FluxWeakening(struct can_frame* frame, nlohmann::json& UDP_Package);
 
@@ -417,12 +421,12 @@ public:
 
 class FaultErrors{
 private:
-	std::vector<std::string, 4>Errors;
 	std::array<std::pair<bool, std::string>, 64>Errors;
+	std::array<int, 8>Errors_Bytes;
 
 public:
-	FaultErrors::FaultErrors();
-	void IfId_FaultErrors(struct canframe* frame, nlohmann::json& UDP_Package);
+	FaultErrors();
+	void IfId_FaultErrors(struct can_frame* frame, nlohmann::json& UDP_Package);
 	void UpdateObject(unsigned char* CAN_DATA);
 };
 

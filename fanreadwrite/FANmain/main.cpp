@@ -27,6 +27,7 @@ using json = nlohmann::json;
 
 int main()
 {
+	
 	float SpeedPretendida;
 	float TorquePretendido;
 	float TorqueLimit;
@@ -64,11 +65,14 @@ int main()
 	frameRead.can_dlc = 8;
 	frameWrite.can_dlc = 8;
 	
+	
 
 	//Configuração do protocolo UDP
 	int sockfd; 
 	char MsgToClient[400];
-	struct sockaddr_in servaddr, cliaddr; 
+	struct sockaddr_in servaddr, cliaddr;
+
+	
 	
 	// Creating socket file descriptor 
 	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
@@ -82,46 +86,48 @@ int main()
 	
 	servaddr.sin_family = AF_INET; // IPv4 
 
-	inet_aton("192.168.7.2" , &servaddr.sin_addr); 
+	inet_aton("192.168.15.14" , &servaddr.sin_addr); 
 
-	//servaddr.sin_addr.s_addr = INADDR_ANY; 
+	servaddr.sin_addr.s_addr = INADDR_ANY; 
 	servaddr.sin_port = htons(8080); 
 
+	
+	
 	/* Set address automatically if desired */
-	if (argc == 2)
-	{
+	//if (argc == 2)
+	//{
 
     /* Get host name of this computer */
-    gethostname(host_name, sizeof(host_name));
-    hp = gethostbyname(host_name);
+    //gethostname(host_name, sizeof(host_name));
+    //hp = gethostbyname(host_name);
 
     /* Check for NULL pointer */
-    if (hp == NULL)
-    {
-        fprintf(stderr, "Could not get host name.\n");
-        closesocket(sd);
-        WSACleanup();
-        exit(0);
-    }
+    //if (hp == NULL)
+    //{
+    //    fprintf(stderr, "Could not get host name.\n");
+    //    closesocket(sd);
+    //    WSACleanup();
+    //    exit(0);
+    //}
 
     /* Assign the address */
-    server.sin_addr.S_un.S_un_b.s_b1 = hp->h_addr_list[0][0];
-    server.sin_addr.S_un.S_un_b.s_b2 = hp->h_addr_list[0][1];
-    server.sin_addr.S_un.S_un_b.s_b3 = hp->h_addr_list[0][2];
-    server.sin_addr.S_un.S_un_b.s_b4 = hp->h_addr_list[0][3];
-	}
+    //server.sin_addr.S_un.S_un_b.s_b1 = hp->h_addr_list[0][0];
+    //server.sin_addr.S_un.S_un_b.s_b2 = hp->h_addr_list[0][1];
+    //server.sin_addr.S_un.S_un_b.s_b3 = hp->h_addr_list[0][2];
+    //server.sin_addr.S_un.S_un_b.s_b4 = hp->h_addr_list[0][3];
+	//}
 
 	/* Otherwise assign it manually */
-	else
-	{
-	    server.sin_addr.S_un.S_un_b.s_b1 = (unsigned char)a1;
-	    server.sin_addr.S_un.S_un_b.s_b2 = (unsigned char)a2;
-	    server.sin_addr.S_un.S_un_b.s_b3 = (unsigned char)a3;
-	    server.sin_addr.S_un.S_un_b.s_b4 = (unsigned char)a4;
-	}
+	//else
+	//{
+	//   server.sin_addr.S_un.S_un_b.s_b1 = (unsigned char)a1;
+	//    server.sin_addr.S_un.S_un_b.s_b2 = (unsigned char)a2;
+	//    server.sin_addr.S_un.S_un_b.s_b3 = (unsigned char)a3;
+	//    server.sin_addr.S_un.S_un_b.s_b4 = (unsigned char)a4;
+	//}
 
 
-	// Bind the socket with the server address 
+	//Bind the socket with the server address 
 	if ( bind(sockfd, (const struct sockaddr *)&servaddr, 
 			sizeof(servaddr)) < 0 ) 
 	{ 
@@ -131,9 +137,11 @@ int main()
 	socklen_t len;
 	len = sizeof(cliaddr); //len is value/resuslt 
 
+
 	//Inicialização e Configuração do Pacote por JSON
 	json UDP_Package;
 	//std::string UDP_Package_StdString = "";
+
 	UDP_Package["ID"] 							= "X";
 	UDP_Package["Angle"] 						= 0.0;
 	UDP_Package["Speed"] 						= 0.0;
@@ -171,15 +179,14 @@ int main()
 	UDP_Package["VoltageReference5Dot0"]		= 0.0;
 	UDP_Package["VoltageReference12"]			= 0.0;
 
-	UDP_Package["FaultCode_0"]					= "X";
-	UDP_Package["FaultCode_1"]					= "X";
-	UDP_Package["FaultCode_2"]					= "X";
-	UDP_Package["FaultCode_3"]					= "X";
-	UDP_Package["FaultCode_4"]					= "X";
-	UDP_Package["FaultCode_5"]					= "X";
-	UDP_Package["FaultCode_6"]					= "X";
-	UDP_Package["FaultCode_7"]					= "X";
-
+	UDP_Package["FaultCode_0"]					= 0;
+	UDP_Package["FaultCode_1"]					= 0;
+	UDP_Package["FaultCode_2"]					= 0;
+	UDP_Package["FaultCode_3"]					= 0;
+	UDP_Package["FaultCode_4"]					= 0;
+	UDP_Package["FaultCode_5"]					= 0;
+	UDP_Package["FaultCode_6"]					= 0;
+	UDP_Package["FaultCode_7"]					= 0;
 
 	
 
@@ -208,12 +215,15 @@ int main()
 	int i, j;
 	int CounterMotorPosition = 0;
 	int CounterTorqueTimerInfo = 0;
+	
 
 	n = recvfrom(sockfd, (char *)buffer, 100, 
 	MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
 	&len); 
+
 	buffer[n] = '\0'; 
 	printf("Client : %s\n", buffer); 
+
 
 
 	strcpy(buffer2, "Teste para o Qt..");
@@ -289,8 +299,8 @@ fileCAN.close();
 
 		 	{
                 
-					while (1) 
-					{
+				while (1) 
+				{
 
 				#pragma omp critical (mutex)
 				{
@@ -444,6 +454,7 @@ fileCAN.close();
 			#pragma omp section //TASK WRITE MOTOR 
 			{ 
 				while(1){
+					
 					//ObjCommandMessage.ProcessAngleVelocity(&SpeedPretendida)
 					ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
 					ObjCommandMessage.UpdateFrame(&frameWrite);
@@ -458,11 +469,13 @@ fileCAN.close();
 			#pragma omp section // TASK READ INTERFACE
 			{
 				while(1){
+					//printf("Chegando da interface..");
 					n = recvfrom(sockfd, (char *)buffer, 100, 
 						MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
 						&len); 
 					buffer[n] = '\0'; 
 					TorqueLimit = atof(buffer);
+					//printf("%s \n", buffer);
 				}
 
 			}
@@ -470,16 +483,24 @@ fileCAN.close();
 			#pragma omp section // TASK WRITE INTERFACE
 			{
 				while(1){
+					//printf("Alo\n");
 					//Envio do pacote UDP para o computador
 
 					//UDP_Package_StdString = UDP_Package.dump();
 					std::string UDP_Package_StdString = UDP_Package.dump();
 
-					strcpy(MsgToClient, UDP_Package_StdString.c_str());
+					//DESCOMENTAR A LINHA DE BAIXO DEPOIS
+					//strcpy(MsgToClient, UDP_Package_StdString.c_str());
 					//printf("%d\n", contador);
 					//printf("%s\n", MsgToClient);
 					//contador++;
-					sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
+					//DESCOMENTAR A LINHA DE BAIXO DEPOIS
+					//sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
+					//MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+					//len);
+
+					scanf(" %[^\n]s", buffer3);
+					sendto(sockfd, (const char *)buffer3, strlen(buffer3),
 					MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
 					len);
 
