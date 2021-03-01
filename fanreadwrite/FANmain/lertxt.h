@@ -33,6 +33,8 @@
 #include "nlohmann/json.hpp"
 #include <string.h>
 #include <array>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 void DescreveSensor(char StringDescreveSensor[][50]);
 

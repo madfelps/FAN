@@ -238,6 +238,12 @@ int main()
 	int matrx[4][9];
     int lin = 0;
     int col = 0;
+
+	//Configuração do log
+	auto logger = spdlog::basic_logger_mt("logger", "log.txt");
+	logger->info("Arquivo de log de dados do software embarcado");
+
+
    
 /*
 	while(fileCAN>> auxstr)
@@ -288,7 +294,7 @@ fileCAN.close();
     int OpcaoTorqueLimit;
 
 	lin = 0;
-	#pragma omp parallel default (none) shared(sockfd) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr)
+	#pragma omp parallel default (none) shared(sockfd) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr, logger)
 
 
 	{
@@ -372,14 +378,32 @@ fileCAN.close();
 						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
 						ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
 						ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
-						//printf("Aloooooooooo");
+						
+
+						//Desenvolvimento do log
+						if(frameRead.can_id == 160){
+							logger->info("ID: TEMPERATURES_1");
+							logger->info("Module A: %f", ObjTemperature1.GetModuleAProcessed());
+							logger->info("Module B: %f", ObjTemperature1.GetModuleBProcessed());
+							logger->info("Module C: %f", ObjTemperature1.GetModuleCProcessed());
+						}
+
+						if(frameRead.can_id == 165){ 
+							logger->info("ID: MOTOR_POSITION");
+							logger->info("Angle: %f", ObjMotorPosInfo.GetMotorAngleProcessed());
+							logger->info("Speed: %f", ObjMotorPosInfo.GetMotorAngleProcessed());
+							logger->info("--------------------------------------------------");
+						}
+
+						if(frameRead.can_id == 172){ 
+							logger->info("ID: TORQUE_TIMER_INFO");
+							logger->info("Commanded Torque: %f", ObjTorqueTimerInfo.GetCommandedTorqueProcessed());
+							logger->info("Torque Feedback: %f", ObjTorqueTimerInfo.GetTorqueFeedbackProcessed());
+							logger->info("--------------------------------------------------");
+						}
 
 
-						//GuardaIntervaloTempo = clock();
-						//ObjMotorPosInfo.IfID_MotorPosInfo(&frameRead, UDP_Package);
-						//ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
-						//ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
-						//ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
+
 
 						
 						//Guarda dados dos sensores na string PARA VECTOR STRING, USAR PUSH BACK
