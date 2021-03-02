@@ -125,7 +125,6 @@ float Flux::ProcessFluxReceive(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
 
 float Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
-
 	float AngleValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	AngleValue = NegativeValuesTwoBytes(AngleValue);
 	AngleValue = AngleValue/10;
@@ -137,7 +136,6 @@ float Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
 }
 
 float AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte){
-
 	float AngleVelocityValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	AngleVelocityValue = NegativeValuesTwoBytes(AngleVelocityValue);
 	//AngleVelocityValue = AngleVelocityValue/10;
@@ -194,9 +192,43 @@ float MotorPosInfo::GetDeltaResolverFilteredProcessed(){
 	return DeltaResolverFilteredProcessed;
 }
 
+int MotorPosInfo::GetByte0(){
+	return Byte[0];
+}
+
+int MotorPosInfo::GetByte1(){
+	return Byte[1];
+}
+
+int MotorPosInfo::GetByte2(){
+	return Byte[2];
+}
+
+int MotorPosInfo::GetByte3(){
+	return Byte[3];
+}
+
+int MotorPosInfo::GetByte4(){
+	return Byte[4];
+}
+
+int MotorPosInfo::GetByte5(){
+	return Byte[5];
+}
+
+int MotorPosInfo::GetByte6(){
+	return Byte[6];
+}
+
+int MotorPosInfo::GetByte7(){
+	return Byte[7];
+}
+
 void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
+
 	MotorAngle             			= 0;
 	MotorAngleProcessed             = this->ProcessAngle(CAN_DATA, 1, 0);
+	printf("MotorAngleProcessed: %f\n", MotorAngleProcessed);
 	MotorSpeed            			= 0;
 	MotorSpeedProcessed             = this->ProcessAngleVelocity(CAN_DATA, 3, 2);
 	ElectricalOutFreq      			= 0;
@@ -215,7 +247,11 @@ void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UD
 
 		this->UpdateObject(frame->data);
 
-		//this->ShowAllValuesProcessed();
+		
+
+		for(int pos = 0; pos < 8; pos++){
+			Byte[pos] = frame->data[pos];
+		}
 
 		UDP_Package["ID"]	 = "MOTOR_POSITION";
 		UDP_Package["Angle"] = MotorAngleProcessed;
@@ -245,7 +281,48 @@ float TorqueTimerInfo::GetPowerOnTimeProcessed(){
 	return PowerOnTimeProcessed;
 }
 
+float TorqueTimerInfo::GetByte0(){
+	return Byte[0];
+}
+
+float TorqueTimerInfo::GetByte1(){
+	return Byte[1];
+}
+
+float TorqueTimerInfo::GetByte2(){
+	return Byte[2];
+}
+
+float TorqueTimerInfo::GetByte3(){
+	return Byte[3];
+}
+
+float TorqueTimerInfo::GetByte4(){
+	return Byte[4];
+}
+
+float TorqueTimerInfo::GetByte5(){
+	return Byte[5];
+}
+
+float TorqueTimerInfo::GetByte6(){
+	return Byte[6];
+}
+
+float TorqueTimerInfo::GetByte7(){
+	return Byte[7];
+}
+
 void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
+	Byte[0] = GetByte0(); 
+	Byte[1] = GetByte1(); 
+	Byte[2] = GetByte2(); 
+	Byte[3] = GetByte3(); 
+	Byte[4] = GetByte4(); 
+	Byte[5] = GetByte5(); 
+	Byte[6] = GetByte6();
+	Byte[7] = GetByte7();  
+
 	CommandedTorqueProcessed     = this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 	TorqueFeedbackProcessed      = this->ProcessTorqueReceive(CAN_DATA, 3, 2);
 	PowerOnTimeProcessed         = 0;
@@ -291,7 +368,48 @@ Temperature1::Temperature1(unsigned char* CAN_DATA){
 	GateDriverBoardProcessed 	= ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
+float Temperature1::GetByte0(){
+	return Byte[0];
+}
+
+float Temperature1::GetByte1(){
+	return Byte[1];
+}
+
+float Temperature1::GetByte2(){
+	return Byte[2];
+}
+
+float Temperature1::GetByte3(){
+	return Byte[3];
+}
+
+float Temperature1::GetByte4(){
+	return Byte[4];
+}
+
+float Temperature1::GetByte5(){
+	return Byte[5];
+}
+
+float Temperature1::GetByte6(){
+	return Byte[6];
+}
+
+float Temperature1::GetByte7(){
+	return Byte[7];
+}
+
 void Temperature1::UpdateObject(unsigned char* CAN_DATA){
+		Byte[0] = GetByte0(); 
+		Byte[1] = GetByte1(); 
+		Byte[2] = GetByte2(); 
+		Byte[3] = GetByte3(); 
+		Byte[4] = GetByte4(); 
+		Byte[5] = GetByte5(); 
+		Byte[6] = GetByte6();
+		Byte[7] = GetByte7();  
+
 		ModuleAProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 		ModuleBProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
 		ModuleCProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 5, 4);
@@ -337,6 +455,9 @@ void  Temperature1::IfID_Temperature1(struct can_frame* frame, nlohmann::json& U
 
 	}
 }
+
+
+
 
 Temperature2::Temperature2(){
 	ControlBoardTemperature 			= 0.0;
@@ -931,5 +1052,7 @@ void FaultErrors::UpdateObject(unsigned char* CAN_DATA){
 	}
 	
 }
+
+
 
 

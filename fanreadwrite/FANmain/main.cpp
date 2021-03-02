@@ -86,7 +86,7 @@ int main()
 	
 	servaddr.sin_family = AF_INET; // IPv4 
 
-	inet_aton("192.168.15.14" , &servaddr.sin_addr); 
+	inet_aton("192.168.6.2" , &servaddr.sin_addr); 
 
 	servaddr.sin_addr.s_addr = INADDR_ANY; 
 	servaddr.sin_port = htons(8080); 
@@ -200,7 +200,7 @@ int main()
 	//std::ofstream Log("log.txt");
 	//vector<std::string> StringDescreveSensor, StringGuardaDadosSensor;
 
-
+	
 	int FlagRead = 0;
 	int FlagWrite = 0;
 	int n = 0;
@@ -242,6 +242,7 @@ int main()
 	//Configuração do log
 	auto logger = spdlog::basic_logger_mt("logger", "log.txt");
 	logger->info("Arquivo de log de dados do software embarcado");
+	std::cout << "teste_debug" << std::endl;
 
 
    
@@ -308,10 +309,10 @@ fileCAN.close();
 				while (1) 
 				{
 
-				#pragma omp critical (mutex)
-				{
-				FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
-				}
+				//#pragma omp critical (mutex)
+				//{
+				//FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
+				//}
 
 					//if(FlagRead != 0){ // Verifica se a mensagem foi lida
 
@@ -370,6 +371,16 @@ fileCAN.close();
                         	printf("%d ", frameRead.data[k]);
                         }
                         */
+					   frameRead.can_id = 165;
+					   frameRead.data[0] = 8;
+					   frameRead.data[1] = 168;
+					   frameRead.data[2] = 51;
+					   frameRead.data[3] = 1;
+					   frameRead.data[4] = 8;
+					   frameRead.data[5] = 168;
+					   frameRead.data[6] = 51;
+					   frameRead.data[7] = 2;
+					   std::cout << "teste5" << std::endl;
 
 
 						//GuardaIntervaloTempo = clock();
@@ -383,27 +394,33 @@ fileCAN.close();
 						//Desenvolvimento do log
 						if(frameRead.can_id == 160){
 							logger->info("ID: TEMPERATURES_1");
-							logger->info("Module A: %f", ObjTemperature1.GetModuleAProcessed());
-							logger->info("Module B: %f", ObjTemperature1.GetModuleBProcessed());
-							logger->info("Module C: %f", ObjTemperature1.GetModuleCProcessed());
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjTemperature1.GetByte7(), ObjTemperature1.GetByte6(), ObjTemperature1.GetByte5(), ObjTemperature1.GetByte4(), ObjTemperature1.GetByte3(), ObjTemperature1.GetByte2(), ObjTemperature1.GetByte1(), ObjTemperature1.GetByte0());
+							logger->info("Module A: {:f}", ObjTemperature1.GetModuleAProcessed());
+							logger->info("Module B: {:f}", ObjTemperature1.GetModuleBProcessed());
+							logger->info("Module C: {:f}", ObjTemperature1.GetModuleCProcessed());
+							logger->info("--------------------------------------------------\n");
 						}
 
 						if(frameRead.can_id == 165){ 
+							std::cout << "teste5" << std::endl;
 							logger->info("ID: MOTOR_POSITION");
-							logger->info("Angle: %f", ObjMotorPosInfo.GetMotorAngleProcessed());
-							logger->info("Speed: %f", ObjMotorPosInfo.GetMotorAngleProcessed());
-							logger->info("--------------------------------------------------");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjMotorPosInfo.GetByte7(), ObjMotorPosInfo.GetByte6(), ObjMotorPosInfo.GetByte5(), ObjMotorPosInfo.GetByte4(), ObjMotorPosInfo.GetByte3(), ObjMotorPosInfo.GetByte2(), ObjMotorPosInfo.GetByte1(), ObjMotorPosInfo.GetByte0());
+							logger->info("Angle: {:f}", ObjMotorPosInfo.GetMotorAngleProcessed());
+							logger->info("Speed: {:f}", ObjMotorPosInfo.GetMotorSpeedProcessed());
+							logger->info("--------------------------------------------------\n");
 						}
 
 						if(frameRead.can_id == 172){ 
 							logger->info("ID: TORQUE_TIMER_INFO");
+							logger->info("Bytes recebidos: %f %f %f %f %f %f %f %f", ObjTorqueTimerInfo.GetByte7(), ObjTorqueTimerInfo.GetByte6(), ObjTorqueTimerInfo.GetByte5(), ObjTorqueTimerInfo.GetByte4(), ObjTorqueTimerInfo.GetByte3(), ObjTorqueTimerInfo.GetByte2(), ObjTorqueTimerInfo.GetByte1(), ObjTorqueTimerInfo.GetByte0());
 							logger->info("Commanded Torque: %f", ObjTorqueTimerInfo.GetCommandedTorqueProcessed());
 							logger->info("Torque Feedback: %f", ObjTorqueTimerInfo.GetTorqueFeedbackProcessed());
-							logger->info("--------------------------------------------------");
+							logger->info("--------------------------------------------------\n");
 						}
 
-
-
+						//sleep(1);
 
 						
 						//Guarda dados dos sensores na string PARA VECTOR STRING, USAR PUSH BACK

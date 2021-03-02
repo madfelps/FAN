@@ -113,6 +113,7 @@ private:
 	float MotorSpeedProcessed;
 	float ElectricalOutFreqProcessed;
 	float DeltaResolverFilteredProcessed;	
+	int Byte[8];
 
 public:
 
@@ -126,6 +127,7 @@ public:
 	float GetMotorSpeedProcessed();
 	float GetElectricalOutFreqProcessed();
 	float GetDeltaResolverFilteredProcessed();
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 };
 
@@ -138,6 +140,7 @@ private:
 	float CommandedTorqueProcessed;
 	float TorqueFeedbackProcessed;
 	float PowerOnTimeProcessed;
+	float Byte[8];
 
 
 public:
@@ -149,6 +152,7 @@ public:
 	float GetCommandedTorqueProcessed();
 	float GetTorqueFeedbackProcessed();
 	float GetPowerOnTimeProcessed();
+	float GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 };
 
@@ -163,6 +167,7 @@ private:
 	float ModuleCProcessed;
 	float GateDriverBoard;
 	float GateDriverBoardProcessed;
+	float Byte[8];
 
 public:
 	Temperature1();
@@ -173,6 +178,7 @@ public:
 	float GetModuleBProcessed();
 	float GetModuleCProcessed();
 	float GetGateDriverBoardProcessed();
+	float GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 
 //  A grandeza física temperatura se processa de modo igual ao Torque, ou seja, essa classe também usa a classe mãe Torque
