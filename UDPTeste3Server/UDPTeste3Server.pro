@@ -17,13 +17,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    qmeter.cpp \
+    qmeterdrawfunctions.cpp \
+    sobre.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    qmeter.h \
+    sobre.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    sobre.ui
 
 QMAKE_CXXFLAGS += -std=gnu++11
 
@@ -31,3 +37,6 @@ QMAKE_CXXFLAGS += -std=gnu++11
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resource_file.qrc

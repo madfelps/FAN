@@ -8,6 +8,7 @@
 #include <iostream>
 
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -30,15 +31,22 @@ public:
         return Buffer.mid(Pos1, Pos2-Pos1);
     }
 
+
+
 signals:
 
 
 private slots:
     void on_sendButton_clicked();
+    void on_actionSobre_triggered();
 
-    void on_ButtonSendTorque_clicked();
+    //void on_actionAbout_triggered();
 
-    void on_ButtonSendTorqueLimite_clicked();
+    //void on_pushButton_clicked();
+
+
+
+
 
 private:
     Ui::MainWindow *ui;
@@ -47,5 +55,8 @@ private:
     QString MessageSendTorque, MessageSendTorqueLimite;
     std::string MessageSendTorqueStd, MessageTorqueLimiteStd;
     int Pos1, Pos2;
+    std::string style(int value, int med_threshold, int max_threshold);
+    int getProperValue(float value, int singleStep, int maxSize);
+
 };
 #endif // MAINWINDOW_H

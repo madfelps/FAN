@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.13.2, 2021-03-04T17:15:17. -->
+<!-- Written by QtCreator 4.13.2, 2021-02-10T17:36:04. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -323,8 +323,9 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/gaspar/Documentos/IC/codigos/Git/FAN/UDPTeste3Server/UDPTeste3Server.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gaspar/Documentos/IC/codigos/Git/FAN/UDPTeste3Server/UDPTeste3Server.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">UDPTeste3Server2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/gaspar/Documentos/IC/codigos/Git/FAN/UDPTeste3Server-20201111T190621Z-001/UDPTeste3Server/UDPTeste3Server.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gaspar/Documentos/IC/codigos/Git/FAN/UDPTeste3Server-20201111T190621Z-001/UDPTeste3Server/UDPTeste3Server.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
