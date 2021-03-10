@@ -5,6 +5,7 @@
 // Copyright   : Your copyright notice
 // Description : main FAN project
 //============================================================================
+//teste
 
 /*
  *
@@ -34,11 +35,11 @@ int main()
 
 	char TempoEmString[10];
 
-	clock_t GuardaIntervaloTempo;
-	clock_t Temporaria;
+	//clock_t GuardaIntervaloTempo;
+	//clock_t Temporaria;
 
-	FILE* Arquivo;
-	Arquivo = fopen("log.txt", "a");
+	//FILE* Arquivo;
+	//Arquivo = fopen("log.txt", "a");
 
 	char StringDescreveSensor[11][10];
 	char StringGuardaDadosSensor[10][10];
@@ -48,6 +49,8 @@ int main()
 	TorqueTimerInfo ObjTorqueTimerInfo;
 	MotorPosInfo ObjMotorPosInfo;
 	Temperature1 ObjTemperature1;
+	Temperature2 ObjTemperature2;
+	Temperature3 ObjTemperature3;
 	CommandMessage ObjCommandMessage;
 	InternalStates ObjInternalStates;
 
@@ -295,7 +298,7 @@ fileCAN.close();
     int OpcaoTorqueLimit;
 
 	lin = 0;
-	#pragma omp parallel default (none) shared(sockfd) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr, logger)
+	#pragma omp parallel default (none) shared(sockfd) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr, logger)
 
 
 	{
@@ -388,6 +391,8 @@ fileCAN.close();
 
 						ObjTorqueTimerInfo.IfID_TorqueTimerInfo(&frameRead, UDP_Package);
 						ObjTemperature1.IfID_Temperature1(&frameRead, UDP_Package);
+						ObjTemperature2.IfID_Temperature2(&frameRead, UDP_Package);
+						ObjTemperature3.IfID_Temperature3(&frameRead, UDP_Package);
 						ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
 						
 
@@ -399,7 +404,30 @@ fileCAN.close();
 							logger->info("Module A: {:f}", ObjTemperature1.GetModuleAProcessed());
 							logger->info("Module B: {:f}", ObjTemperature1.GetModuleBProcessed());
 							logger->info("Module C: {:f}", ObjTemperature1.GetModuleCProcessed());
-							logger->info("--------------------------------------------------\n");
+							logger->info("--------------------------------------------------");
+						}
+					
+
+						if(frameRead.can_id == 161){ //TO DO ARRUMAR O ELSE
+							logger->info("ID: TEMPERATURES_2");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjTemperature2.GetByte7(), ObjTemperature2.GetByte6(), ObjTemperature2.GetByte5(), ObjTemperature2.GetByte4(), ObjTemperature2.GetByte3(), ObjTemperature2.GetByte2(), ObjTemperature2.GetByte1(), ObjTemperature2.GetByte0());
+							logger->info("Control Board Temperature: {:f}", ObjTemperature2.GetControlBoardTemperatureProcessed());
+							logger->info("RTD1: {:f}", ObjTemperature2.GetRTD1Processed());
+							logger->info("RTD2: {:f}", ObjTemperature2.GetRTD2Processed());
+							logger->info("RTD3: {:f}", ObjTemperature2.GetRTD3Processed());
+							logger->info("--------------------------------------------------");
+						}
+
+						if(frameRead.can_id == 162){
+							logger->info("ID: TEMPERATURES_3");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjTemperature3.GetByte7(), ObjTemperature3.GetByte6(), ObjTemperature3.GetByte5(), ObjTemperature3.GetByte4(), ObjTemperature3.GetByte3(), ObjTemperature3.GetByte2(), ObjTemperature3.GetByte1(), ObjTemperature3.GetByte0());
+							logger->info("RTD4 Temperature: {:f}", ObjTemperature3.GetRTD4_TemperatureProcessed());
+							logger->info("RTD5 Temperature: {:f}", ObjTemperature3.GetRTD5_TemperatureProcessed());
+							logger->info("Motor Temperature: {:f}", ObjTemperature3.GetMotorTemperatureProcessed());
+							logger->info("Torque Shudder: {:f}", ObjTemperature3.GetTorqueShudderProcessed());
+							logger->info("--------------------------------------------------");
 						}
 
 						if(frameRead.can_id == 165){ 
@@ -409,7 +437,7 @@ fileCAN.close();
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjMotorPosInfo.GetByte7(), ObjMotorPosInfo.GetByte6(), ObjMotorPosInfo.GetByte5(), ObjMotorPosInfo.GetByte4(), ObjMotorPosInfo.GetByte3(), ObjMotorPosInfo.GetByte2(), ObjMotorPosInfo.GetByte1(), ObjMotorPosInfo.GetByte0());
 							logger->info("Angle: {:f}", ObjMotorPosInfo.GetMotorAngleProcessed());
 							logger->info("Speed: {:f}", ObjMotorPosInfo.GetMotorSpeedProcessed());
-							logger->info("--------------------------------------------------\n");
+							logger->info("--------------------------------------------------");
 						}
 
 						if(frameRead.can_id == 172){ 
@@ -417,8 +445,10 @@ fileCAN.close();
 							logger->info("Bytes recebidos: %f %f %f %f %f %f %f %f", ObjTorqueTimerInfo.GetByte7(), ObjTorqueTimerInfo.GetByte6(), ObjTorqueTimerInfo.GetByte5(), ObjTorqueTimerInfo.GetByte4(), ObjTorqueTimerInfo.GetByte3(), ObjTorqueTimerInfo.GetByte2(), ObjTorqueTimerInfo.GetByte1(), ObjTorqueTimerInfo.GetByte0());
 							logger->info("Commanded Torque: %f", ObjTorqueTimerInfo.GetCommandedTorqueProcessed());
 							logger->info("Torque Feedback: %f", ObjTorqueTimerInfo.GetTorqueFeedbackProcessed());
-							logger->info("--------------------------------------------------\n");
+							logger->info("--------------------------------------------------");
 						}
+
+						
 
 						//sleep(1);
 
@@ -554,7 +584,7 @@ fileCAN.close();
 	}
 
 	close(SocketCan);
-	fclose(Arquivo);
+	//fclose(Arquivo);
 	close(sockfd);
 
 	return 0;

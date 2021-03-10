@@ -23,7 +23,6 @@
 #include <linux/can/raw.h>
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
-#include <ncurses.h>
 #include <time.h>
 #include <fstream>
 #include <omp.h>
@@ -152,7 +151,7 @@ public:
 	float GetCommandedTorqueProcessed();
 	float GetTorqueFeedbackProcessed();
 	float GetPowerOnTimeProcessed();
-	float GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 };
 
@@ -178,7 +177,7 @@ public:
 	float GetModuleBProcessed();
 	float GetModuleCProcessed();
 	float GetGateDriverBoardProcessed();
-	float GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 
 //  A grandeza física temperatura se processa de modo igual ao Torque, ou seja, essa classe também usa a classe mãe Torque
@@ -199,6 +198,7 @@ private:
 	float RTD2_TemperatureProcessed;
 	float RTD3_Temperature;
 	float RTD3_TemperatureProcessed;
+	int Byte[8];
 
 public:
 	Temperature2();
@@ -209,6 +209,7 @@ public:
 	float GetRTD1Processed();
 	float GetRTD2Processed();
 	float GetRTD3Processed();
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 
 //  A grandeza física temperatura se processa de modo igual ao Torque, ou seja, essa classe também usa a classe mãe Torque
@@ -227,6 +228,7 @@ private:
 	float MotorTemperatureProcessed;
 	float TorqueShudder;
 	float TorqueShudderProcessed;
+	int Byte[8];
 
 public:
 	Temperature3();
@@ -237,6 +239,7 @@ public:
 	float GetRTD5_TemperatureProcessed();
 	float GetMotorTemperatureProcessed();
 	float GetTorqueShudderProcessed();
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 
 //  A grandeza física temperatura se processa de modo igual ao Torque, ou seja, essa classe também usa a classe mãe Torque
@@ -254,11 +257,13 @@ private:
 	float PhaseCCurrentProcessed;
 	float DC_BusCurrent;
 	float DC_BusCurrentProcessed;
+	int Byte[8];
 public:
 	CurrentInformation();
 	CurrentInformation(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_CurrentInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 };
 
 class VoltageInformation:public HighVoltage{
@@ -271,11 +276,13 @@ private:
 	float VAB_Vd_VoltageProcessed;
 	float VBC_Vd_Voltage;
 	float VBC_Vd_VoltageProcessed;
+	int Byte[8];
 public:
 	VoltageInformation();
 	VoltageInformation(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_VoltageInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 };
 
@@ -289,11 +296,13 @@ private:
 	float IdFeedbackProcessed;
 	float IqFeedback;
 	float IqFeedbackProcessed;
+	int Byte[8];
 public:
 	FluxInformation();
 	FluxInformation(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_FluxInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 };
 
 class InternalVoltages:public LowVoltage{
@@ -302,11 +311,13 @@ private:
 	float VoltageReference2Dot5;
 	float VoltageReference5Dot0;
 	float VoltageReference12;
+	int Byte[8];
 public:
 	InternalVoltages();
 	InternalVoltages(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_InternalVoltages(struct can_frame* frame, nlohmann::json& UDP_Package);
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 };
 
 class AnalogInputVoltages:public LowVoltage{
@@ -324,12 +335,14 @@ private:
 	float AnalogInput5Processed;
 	float AnalogInput6;
 	float AnalogInput6Processed;
+	int Byte[8];
 
 public:
 	AnalogInputVoltages();
 	AnalogInputVoltages(unsigned char* CAN_DATA);
 
 	void IfID_AnalogInputVoltages(struct can_frame* frame, nlohmann::json& UDP_Package);
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 };
 
@@ -343,11 +356,14 @@ private:
 	float IdCommandProcessed;
 	float IqCommand;
 	float IqCommandProcessed;
+	int Byte[8];
+
 public:
 	ModulationIndex_FluxWeakening();
 	ModulationIndex_FluxWeakening(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_ModulationIndex_FluxWeakening(struct can_frame* frame, nlohmann::json& UDP_Package);
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 };
 
@@ -365,12 +381,15 @@ private:
 	int CommandedTorqueLimit;
 	int CommandedTorqueLimitMSB;
 	int CommandedTorqueLimitLSB;
+	int Byte[8];
+
 public:
 	CommandMessage();
 	void UpdateFrame();
 	void ProcessTorqueSend(float* TorqueCommand, int flag);
 	void ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte);
 	void UpdateFrame(struct can_frame* frame);
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 
 };
@@ -385,9 +404,12 @@ private:
 	int DigitalInput_6;
 	int DigitalInput_7;
 	int DigitalInput_8;
+	int Byte[8];
+
 public:
 	DigitalInputStates();
 	void UpdateFrame(struct can_frame* frame);
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 };
 
 
@@ -407,6 +429,7 @@ private:
 	int BMS_LimitingTorque;
 
 	int AuxByteCut;
+	int Byte[8];
 
 public:
 	int GetVSM_State();
@@ -424,6 +447,7 @@ public:
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_InternalStates(struct can_frame* frame, nlohmann::json& UDP_Package);
 	void ShowAllValuesProcessed();
+	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
 };
 

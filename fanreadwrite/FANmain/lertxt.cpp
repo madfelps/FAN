@@ -228,7 +228,6 @@ void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
 
 	MotorAngle             			= 0;
 	MotorAngleProcessed             = this->ProcessAngle(CAN_DATA, 1, 0);
-	printf("MotorAngleProcessed: %f\n", MotorAngleProcessed);
 	MotorSpeed            			= 0;
 	MotorSpeedProcessed             = this->ProcessAngleVelocity(CAN_DATA, 3, 2);
 	ElectricalOutFreq      			= 0;
@@ -246,12 +245,6 @@ void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UD
 	if(frame->can_id == 165){
 
 		this->UpdateObject(frame->data);
-
-		
-
-		for(int pos = 0; pos < 8; pos++){
-			Byte[pos] = frame->data[pos];
-		}
 
 		UDP_Package["ID"]	 = "MOTOR_POSITION";
 		UDP_Package["Angle"] = MotorAngleProcessed;
@@ -281,35 +274,35 @@ float TorqueTimerInfo::GetPowerOnTimeProcessed(){
 	return PowerOnTimeProcessed;
 }
 
-float TorqueTimerInfo::GetByte0(){
+int TorqueTimerInfo::GetByte0(){
 	return Byte[0];
 }
 
-float TorqueTimerInfo::GetByte1(){
+int TorqueTimerInfo::GetByte1(){
 	return Byte[1];
 }
 
-float TorqueTimerInfo::GetByte2(){
+int TorqueTimerInfo::GetByte2(){
 	return Byte[2];
 }
 
-float TorqueTimerInfo::GetByte3(){
+int TorqueTimerInfo::GetByte3(){
 	return Byte[3];
 }
 
-float TorqueTimerInfo::GetByte4(){
+int TorqueTimerInfo::GetByte4(){
 	return Byte[4];
 }
 
-float TorqueTimerInfo::GetByte5(){
+int TorqueTimerInfo::GetByte5(){
 	return Byte[5];
 }
 
-float TorqueTimerInfo::GetByte6(){
+int TorqueTimerInfo::GetByte6(){
 	return Byte[6];
 }
 
-float TorqueTimerInfo::GetByte7(){
+int TorqueTimerInfo::GetByte7(){
 	return Byte[7];
 }
 
@@ -368,35 +361,35 @@ Temperature1::Temperature1(unsigned char* CAN_DATA){
 	GateDriverBoardProcessed 	= ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
-float Temperature1::GetByte0(){
+int Temperature1::GetByte0(){
 	return Byte[0];
 }
 
-float Temperature1::GetByte1(){
+int Temperature1::GetByte1(){
 	return Byte[1];
 }
 
-float Temperature1::GetByte2(){
+int Temperature1::GetByte2(){
 	return Byte[2];
 }
 
-float Temperature1::GetByte3(){
+int Temperature1::GetByte3(){
 	return Byte[3];
 }
 
-float Temperature1::GetByte4(){
+int Temperature1::GetByte4(){
 	return Byte[4];
 }
 
-float Temperature1::GetByte5(){
+int Temperature1::GetByte5(){
 	return Byte[5];
 }
 
-float Temperature1::GetByte6(){
+int Temperature1::GetByte6(){
 	return Byte[6];
 }
 
-float Temperature1::GetByte7(){
+int Temperature1::GetByte7(){
 	return Byte[7];
 }
 
@@ -456,9 +449,6 @@ void  Temperature1::IfID_Temperature1(struct can_frame* frame, nlohmann::json& U
 	}
 }
 
-
-
-
 Temperature2::Temperature2(){
 	ControlBoardTemperature 			= 0.0;
 	ControlBoardTemperatureProcessed 	= 0.0;
@@ -499,6 +489,38 @@ float Temperature2::GetRTD2Processed(){
 
 float Temperature2::GetRTD3Processed(){
 	return RTD3_TemperatureProcessed;
+}
+
+int Temperature2::GetByte0(){
+	return Byte[0];
+}
+
+int Temperature2::GetByte1(){
+	return Byte[1];
+}
+
+int Temperature2::GetByte2(){
+	return Byte[2];
+}
+
+int Temperature2::GetByte3(){
+	return Byte[3];
+}
+
+int Temperature2::GetByte4(){
+	return Byte[4];
+}
+
+int Temperature2::GetByte5(){
+	return Byte[5];
+}
+
+int Temperature2::GetByte6(){
+	return Byte[6];
+}
+
+int Temperature2::GetByte7(){
+	return Byte[7];
 }
 
 void Temperature2::ShowAllValuesProcessed(){
@@ -566,6 +588,38 @@ float Temperature3::GetTorqueShudderProcessed(){
 	return TorqueShudderProcessed;
 }
 
+int Temperature3::GetByte0(){
+	return Byte[0];
+}
+
+int Temperature3::GetByte1(){
+	return Byte[1];
+}
+
+int Temperature3::GetByte2(){
+	return Byte[2];
+}
+
+int Temperature3::GetByte3(){
+	return Byte[3];
+}
+
+int Temperature3::GetByte4(){
+	return Byte[4];
+}
+
+int Temperature3::GetByte5(){
+	return Byte[5];
+}
+
+int Temperature3::GetByte6(){
+	return Byte[6];
+}
+
+int Temperature3::GetByte7(){
+	return Byte[7];
+}
+
 void Temperature3::ShowAllValuesProcessed(){
 		printf("Temperatura do RTD4: %f\n", this->GetRTD4_TemperatureProcessed());
 		printf("Temperatura do RTD5: %f\n", this->GetRTD5_TemperatureProcessed()); 
@@ -598,6 +652,38 @@ CurrentInformation::CurrentInformation(){
 	PhaseCCurrentProcessed			=	0.0;
 	DC_BusCurrent					=	0.0;
 	DC_BusCurrentProcessed			=	0.0;
+}
+
+int CurrentInformation::GetByte0(){
+	return Byte[0];
+}
+
+int CurrentInformation::GetByte1(){
+	return Byte[1];
+}
+
+int CurrentInformation::GetByte2(){
+	return Byte[2];
+}
+
+int CurrentInformation::GetByte3(){
+	return Byte[3];
+}
+
+int CurrentInformation::GetByte4(){
+	return Byte[4];
+}
+
+int CurrentInformation::GetByte5(){
+	return Byte[5];
+}
+
+int CurrentInformation::GetByte6(){
+	return Byte[6];
+}
+
+int CurrentInformation::GetByte7(){
+	return Byte[7];
 }
 
 CurrentInformation::CurrentInformation(unsigned char* CAN_DATA){
@@ -636,6 +722,38 @@ VoltageInformation::VoltageInformation(){
 	VAB_Vd_VoltageProcessed = 0.0;
 	VBC_Vd_Voltage 			= 0.0;
 	VBC_Vd_VoltageProcessed = 0.0;
+}
+
+int VoltageInformation::GetByte0(){
+	return Byte[0];
+}
+
+int VoltageInformation::GetByte1(){
+	return Byte[1];
+}
+
+int VoltageInformation::GetByte2(){
+	return Byte[2];
+}
+
+int VoltageInformation::GetByte3(){
+	return Byte[3];
+}
+
+int VoltageInformation::GetByte4(){
+	return Byte[4];
+}
+
+int VoltageInformation::GetByte5(){
+	return Byte[5];
+}
+
+int VoltageInformation::GetByte6(){
+	return Byte[6];
+}
+
+int VoltageInformation::GetByte7(){
+	return Byte[7];
 }
 
 
@@ -697,6 +815,38 @@ void FluxInformation::UpdateObject(unsigned char* CAN_DATA){
 	IdFeedbackProcessed		=	ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
+int FluxInformation::GetByte0(){
+	return Byte[0];
+}
+
+int FluxInformation::GetByte1(){
+	return Byte[1];
+}
+
+int FluxInformation::GetByte2(){
+	return Byte[2];
+}
+
+int FluxInformation::GetByte3(){
+	return Byte[3];
+}
+
+int FluxInformation::GetByte4(){
+	return Byte[4];
+}
+
+int FluxInformation::GetByte5(){
+	return Byte[5];
+}
+
+int FluxInformation::GetByte6(){
+	return Byte[6];
+}
+
+int FluxInformation::GetByte7(){
+	return Byte[7];
+}
+
 void FluxInformation::IfID_FluxInformation(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 168){
 
@@ -723,6 +873,38 @@ InternalVoltages::InternalVoltages(unsigned char* CAN_DATA){
 	VoltageReference2Dot5 = 0.0;
 	VoltageReference5Dot0 = 0.0;
 	VoltageReference12	  = 0.0;
+}
+
+int InternalVoltages::GetByte0(){
+	return Byte[0];
+}
+
+int InternalVoltages::GetByte1(){
+	return Byte[1];
+}
+
+int InternalVoltages::GetByte2(){
+	return Byte[2];
+}
+
+int InternalVoltages::GetByte3(){
+	return Byte[3];
+}
+
+int InternalVoltages::GetByte4(){
+	return Byte[4];
+}
+
+int InternalVoltages::GetByte5(){
+	return Byte[5];
+}
+
+int InternalVoltages::GetByte6(){
+	return Byte[6];
+}
+
+int InternalVoltages::GetByte7(){
+	return Byte[7];
 }
 
 void InternalVoltages::UpdateObject(unsigned char* CAN_DATA){
@@ -771,6 +953,38 @@ AnalogInputVoltages::AnalogInputVoltages(unsigned char* CAN_DATA){
 
 }
 
+int AnalogInputVoltages::GetByte0(){
+	return Byte[0];
+}
+
+int AnalogInputVoltages::GetByte1(){
+	return Byte[1];
+}
+
+int AnalogInputVoltages::GetByte2(){
+	return Byte[2];
+}
+
+int AnalogInputVoltages::GetByte3(){
+	return Byte[3];
+}
+
+int AnalogInputVoltages::GetByte4(){
+	return Byte[4];
+}
+
+int AnalogInputVoltages::GetByte5(){
+	return Byte[5];
+}
+
+int AnalogInputVoltages::GetByte6(){
+	return Byte[6];
+}
+
+int AnalogInputVoltages::GetByte7(){
+	return Byte[7];
+}
+
 ModulationIndex_FluxWeakening::ModulationIndex_FluxWeakening(){
 	ModulationIndex 				=	0.0;
 	ModulationIndexProcessed		=	0.0;
@@ -791,6 +1005,38 @@ ModulationIndex_FluxWeakening::ModulationIndex_FluxWeakening(unsigned char* CAN_
 	IdCommandProcessed 				=	0.0;
 	IqCommand 						=	0.0;
 	IqCommandProcessed 				=	0.0;
+}
+
+int ModulationIndex_FluxWeakening::GetByte0(){
+	return Byte[0];
+}
+
+int ModulationIndex_FluxWeakening::GetByte1(){
+	return Byte[1];
+}
+
+int ModulationIndex_FluxWeakening::GetByte2(){
+	return Byte[2];
+}
+
+int ModulationIndex_FluxWeakening::GetByte3(){
+	return Byte[3];
+}
+
+int ModulationIndex_FluxWeakening::GetByte4(){
+	return Byte[4];
+}
+
+int ModulationIndex_FluxWeakening::GetByte5(){
+	return Byte[5];
+}
+
+int ModulationIndex_FluxWeakening::GetByte6(){
+	return Byte[6];
+}
+
+int ModulationIndex_FluxWeakening::GetByte7(){
+	return Byte[7];
 }
 
 void ModulationIndex_FluxWeakening::UpdateObject(unsigned char* CAN_DATA){
@@ -877,6 +1123,38 @@ void DigitalInputStates::UpdateFrame(struct can_frame* frame){
 	frame->data[7] = DigitalInput_8;
 }
 
+int DigitalInputStates::GetByte0(){
+	return Byte[0];
+}
+
+int DigitalInputStates::GetByte1(){
+	return Byte[1];
+}
+
+int DigitalInputStates::GetByte2(){
+	return Byte[2];
+}
+
+int DigitalInputStates::GetByte3(){
+	return Byte[3];
+}
+
+int DigitalInputStates::GetByte4(){
+	return Byte[4];
+}
+
+int DigitalInputStates::GetByte5(){
+	return Byte[5];
+}
+
+int DigitalInputStates::GetByte6(){
+	return Byte[6];
+}
+
+int DigitalInputStates::GetByte7(){
+	return Byte[7];
+}
+
 
 
 int InternalStates::GetVSM_State(){
@@ -921,6 +1199,38 @@ int InternalStates::GetBMS_Active(){
 
 int InternalStates::GetBMS_LimitingTorque(){
 	return BMS_LimitingTorque;
+}
+
+int InternalStates::GetByte0(){
+	return Byte[0];
+}
+
+int InternalStates::GetByte1(){
+	return Byte[1];
+}
+
+int InternalStates::GetByte2(){
+	return Byte[2];
+}
+
+int InternalStates::GetByte3(){
+	return Byte[3];
+}
+
+int InternalStates::GetByte4(){
+	return Byte[4];
+}
+
+int InternalStates::GetByte5(){
+	return Byte[5];
+}
+
+int InternalStates::GetByte6(){
+	return Byte[6];
+}
+
+int InternalStates::GetByte7(){
+	return Byte[7];
 }
 
 void InternalStates::IfID_InternalStates(struct can_frame* frame, nlohmann::json& UDP_Package){
