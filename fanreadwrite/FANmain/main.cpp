@@ -5,7 +5,6 @@
 // Copyright   : Your copyright notice
 // Description : main FAN project
 //============================================================================
-//teste
 
 /*
  *
@@ -51,6 +50,12 @@ int main()
 	Temperature1 ObjTemperature1;
 	Temperature2 ObjTemperature2;
 	Temperature3 ObjTemperature3;
+	CurrentInformation ObjCurrentInformation;
+	VoltageInformation ObjVoltageInformation;
+	FluxInformation ObjFluxInformation;
+	InternalVoltages ObjInternalVoltages;
+	AnalogInputVoltages ObjAnalogInputVoltages;
+	ModulationIndex_FluxWeakening ObjModulationIndex_FluxWeakening;
 	CommandMessage ObjCommandMessage;
 	InternalStates ObjInternalStates;
 
@@ -408,7 +413,7 @@ fileCAN.close();
 						}
 					
 
-						if(frameRead.can_id == 161){ //TO DO ARRUMAR O ELSE
+						else(frameRead.can_id == 161){ //TO DO ARRUMAR O ELSE
 							logger->info("ID: TEMPERATURES_2");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjTemperature2.GetByte7(), ObjTemperature2.GetByte6(), ObjTemperature2.GetByte5(), ObjTemperature2.GetByte4(), ObjTemperature2.GetByte3(), ObjTemperature2.GetByte2(), ObjTemperature2.GetByte1(), ObjTemperature2.GetByte0());
@@ -419,7 +424,7 @@ fileCAN.close();
 							logger->info("--------------------------------------------------");
 						}
 
-						if(frameRead.can_id == 162){
+						else(frameRead.can_id == 162){
 							logger->info("ID: TEMPERATURES_3");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjTemperature3.GetByte7(), ObjTemperature3.GetByte6(), ObjTemperature3.GetByte5(), ObjTemperature3.GetByte4(), ObjTemperature3.GetByte3(), ObjTemperature3.GetByte2(), ObjTemperature3.GetByte1(), ObjTemperature3.GetByte0());
@@ -430,8 +435,7 @@ fileCAN.close();
 							logger->info("--------------------------------------------------");
 						}
 
-						if(frameRead.can_id == 165){ 
-							std::cout << "teste5" << std::endl;
+						else(frameRead.can_id == 165){ 
 							logger->info("ID: MOTOR_POSITION");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjMotorPosInfo.GetByte7(), ObjMotorPosInfo.GetByte6(), ObjMotorPosInfo.GetByte5(), ObjMotorPosInfo.GetByte4(), ObjMotorPosInfo.GetByte3(), ObjMotorPosInfo.GetByte2(), ObjMotorPosInfo.GetByte1(), ObjMotorPosInfo.GetByte0());
@@ -440,11 +444,89 @@ fileCAN.close();
 							logger->info("--------------------------------------------------");
 						}
 
-						if(frameRead.can_id == 172){ 
+						else(frameRead.can_id == 166){
+							logger->info("ID: CURRENT_INFORMATION");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjCurrentInformation.GetByte7(), ObjCurrentInformation.GetByte6(), ObjCurrentInformation.GetByte5(), ObjCurrentInformation.GetByte4(), ObjCurrentInformation.GetByte3(), ObjCurrentInformation.GetByte2(), ObjCurrentInformation.GetByte1(), ObjCurrentInformation.GetByte0());
+							logger->info("Phase A Current: {:f}", ObjCurrentInformation.GetPhaseACurrent());
+							logger->info("Phase B Current: {:f}", ObjCurrentInformation.GetPhaseBCurrent());
+							logger->info("Phase C Current: {:f}", ObjCurrentInformation.GetPhaseCCurrent());
+							logger->info("DC Bus Current: {:f}", ObjCurrentInformation.GetDCBusCurrent());
+							logger->info("--------------------------------------------------");
+						}
+
+						else(frameRead.can_id == 167){
+							logger->info("ID: VOLTAGE_INFORMATION");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjVoltageInformation.GetByte7(), ObjVoltageInformation.GetByte6(), ObjVoltageInformation.GetByte5(), ObjVoltageInformation.GetByte4(), ObjVoltageInformation.GetByte3(), ObjVoltageInformation.GetByte2(), ObjVoltageInformation.GetByte1(), ObjVoltageInformation.GetByte0());
+							logger->info("DC Bus Voltage: {:f}", ObjVoltageInformation.GetDCBusVoltageProcessed();
+							logger->info("Output Voltage: {:f}", ObjVoltageInformation.GetOutputVoltageProcessed());
+							logger->info("VAB Vd Voltage: {:f}", ObjVoltageInformation.GetVAB_Vd_VoltageProcessed());
+							logger->info("VBC Vd Voltage: {:f}", ObjVoltageInformation.GetVBC_Vd_VoltageProcessed());
+							logger->info("--------------------------------------------------");
+						}
+
+						else(frameRead.can_id == 168){
+							logger->info("ID: FLUX_INFORMATION");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjFluxInformation.GetByte7(), ObjFluxInformation.GetByte6(), ObjFluxInformation.GetByte5(), ObjFluxInformation.GetByte4(), ObjVoltageInformation.GetByte3(), ObjFluxInformation.GetByte2(), ObjFluxInformation.GetByte1(), ObjFluxInformation.GetByte0());
+							logger->info("Flux Command: {:f}", ObjFluxInformation.GetFluxCommandProcessed();
+							logger->info("Flux Feedback: {:f}", ObjFluxInformation.GetFluxFeedbackProcessed());
+							logger->info("Id Feedback: {:f}", ObjFluxInformation.GetIdFeedbackProcessed());
+							logger->info("Iq Feedback: {:f}", ObjFluxInformation.GetIqFeedbackProcessed());
+							logger->info("--------------------------------------------------");
+						}
+
+						else(frameRead.can_id == 169){
+							logger->info("ID: INTERNAL_VOLTAGES");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
+							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5();
+							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
+							logger->info("Voltage Reference 5.0: {:f}", ObjInternalVoltages.GetVoltageReference5Dot0());
+							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
+							logger->info("--------------------------------------------------");
+						}
+
+						else(frameRead.can_id == 170){ //TODO VER ISSO DAQUI DPS (INTERNAL STATES)
+							logger->info("ID: INTERNAL_VOLTAGES");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
+							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5();
+							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
+							logger->info("Voltage Reference 5.0: {:f}", ObjInternalVoltages.GetVoltageReference5Dot0());
+							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
+							logger->info("--------------------------------------------------");
+						}
+
+						else(frameRead.can_id == 171){ //TODO VER ISSO TBM (FAULT ERRORS)
+							logger->info("ID: INTERNAL_VOLTAGES");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
+							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5();
+							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
+							logger->info("Voltage Reference 5.0: {:f}", ObjInternalVoltages.GetVoltageReference5Dot0());
+							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
+							logger->info("--------------------------------------------------");
+						}
+
+
+						else(frameRead.can_id == 172){ 
 							logger->info("ID: TORQUE_TIMER_INFO");
 							logger->info("Bytes recebidos: %f %f %f %f %f %f %f %f", ObjTorqueTimerInfo.GetByte7(), ObjTorqueTimerInfo.GetByte6(), ObjTorqueTimerInfo.GetByte5(), ObjTorqueTimerInfo.GetByte4(), ObjTorqueTimerInfo.GetByte3(), ObjTorqueTimerInfo.GetByte2(), ObjTorqueTimerInfo.GetByte1(), ObjTorqueTimerInfo.GetByte0());
 							logger->info("Commanded Torque: %f", ObjTorqueTimerInfo.GetCommandedTorqueProcessed());
 							logger->info("Torque Feedback: %f", ObjTorqueTimerInfo.GetTorqueFeedbackProcessed());
+							logger->info("--------------------------------------------------");
+						}
+
+						else(frameRead.can_id == 171){ //TODO VER ISSO TBM (FAULT ERRORS)
+							logger->info("ID: MODULATIONINDEX_FLUXWEAKENING");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
+							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5();
+							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
+							logger->info("Voltage Reference 5.0: {:f}", ObjInternalVoltages.GetVoltageReference5Dot0());
+							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
 							logger->info("--------------------------------------------------");
 						}
 

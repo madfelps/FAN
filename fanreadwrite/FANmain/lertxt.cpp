@@ -654,6 +654,7 @@ CurrentInformation::CurrentInformation(){
 	DC_BusCurrentProcessed			=	0.0;
 }
 
+
 int CurrentInformation::GetByte0(){
 	return Byte[0];
 }
@@ -699,6 +700,23 @@ void CurrentInformation::UpdateObject(unsigned char* CAN_DATA){
 	PhaseCCurrentProcessed	=	this->ProcessTorqueReceive(CAN_DATA, 5, 4);
 	DC_BusCurrentProcessed	=	this->ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
+
+float CurrentInformation::GetPhaseACurrentProcessed(){
+	return PhaseACurrentProcessed;
+}
+
+float CurrentInformation::GetPhaseBCurrentProcessed(){
+	return PhaseBCurrentProcessed;
+}
+
+float CurrentInformation::GetPhaseCCurrentProcessed(){
+	return PhaseCCurrentProcessed;
+}
+
+float CurrentInformation::GetDCBusCurrentProcessed(){
+	return DC_BusCurrentProcessed;
+}
+
 
 void CurrentInformation::IfID_CurrentInformation(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 166){
@@ -772,6 +790,22 @@ void VoltageInformation::UpdateObject(unsigned char* CAN_DATA){
 	VBC_Vd_VoltageProcessed = this->ProcessHighVoltage(CAN_DATA, 7, 6);
 }
 
+float VoltageInformation::GetDCBusVoltageProcessed(){
+	return DC_BusVoltageProcessed;
+}
+
+float VoltageInformation::GetOutputVoltageProcessed(){
+	return OutputVoltageProcessed;
+}
+
+float VoltageInformation::GetVAB_Vd_VoltageProcessed(){
+	return VAB_Vd_VoltageProcessed;
+}
+
+float VoltageInformation::GetVBC_Vd_VoltageProcessed(){
+	return VBC_Vd_VoltageProcessed;
+}
+
 void VoltageInformation::IfID_VoltageInformation(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 167){
 
@@ -813,6 +847,22 @@ void FluxInformation::UpdateObject(unsigned char* CAN_DATA){
 	FluxFeedbackProcessed	=	ProcessFluxReceive(CAN_DATA, 3, 2);
 	IdFeedbackProcessed		=	ProcessTorqueReceive(CAN_DATA, 5, 4);
 	IdFeedbackProcessed		=	ProcessTorqueReceive(CAN_DATA, 7, 6);
+}
+
+float FluxInformation::GetFluxCommandProcessed(){
+	return FluxCommandProcessed;
+}
+
+float FluxInformation::GetFluxFeedbackProcessed(){
+	return FluxFeedbackProcessed;
+}
+
+float FluxInformation::GetIdFeedbackProcessed(){
+	return IdFeedbackProcessed;
+}
+
+float FluxInformation::GetIqFeedbackProcessed(){
+	return IqFeedbackProcessed;
 }
 
 int FluxInformation::GetByte0(){
@@ -912,6 +962,22 @@ void InternalVoltages::UpdateObject(unsigned char* CAN_DATA){
 	VoltageReference2Dot5	=	ProcessLowVoltage(CAN_DATA, 3, 2);
 	VoltageReference5Dot0	=	ProcessLowVoltage(CAN_DATA, 5, 4);
 	VoltageReference12		=	ProcessLowVoltage(CAN_DATA, 7, 6);
+}
+
+float InternalVoltages::GetVoltageReference1Dot5(){
+	return GetVoltageReference1Dot5();
+}
+
+float InternalVoltages::GetVoltageReference2Dot5(){
+	return GetVoltageReference2Dot5();
+}
+
+float InternalVoltages::GetVoltageReference5Dot0(){
+	return GetVoltageReference5Dot0();
+}
+
+float InternalVoltages::GetVoltageReference12(){
+	return GetVoltageReference12();
 }
 
 void InternalVoltages::IfID_InternalVoltages(struct can_frame* frame, nlohmann::json& UDP_Package){

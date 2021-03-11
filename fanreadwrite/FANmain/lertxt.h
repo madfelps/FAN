@@ -263,6 +263,7 @@ public:
 	CurrentInformation(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_CurrentInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
+	float GetPhaseACurrentProcessed(), GetPhaseBCurrentProcessed(), GetPhaseCCurrentProcessed(), GetDCBusCurrentProcessed();
 	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 };
 
@@ -281,6 +282,7 @@ public:
 	VoltageInformation();
 	VoltageInformation(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
+	float GetDCBusVoltageProcessed(), GetOutputVoltageProcessed(), GetVAB_Vd_VoltageProcessed(), GetVBC_Vd_VoltageProcessed(); 
 	void IfID_VoltageInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
 	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
@@ -302,6 +304,7 @@ public:
 	FluxInformation(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_FluxInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
+	float GetFluxCommandProcessed(), GetFluxFeedbackProcessed(), GetIdFeedbackProcessed(), GetIqFeedbackProcessed();
 	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 };
 
@@ -317,6 +320,7 @@ public:
 	InternalVoltages(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
 	void IfID_InternalVoltages(struct can_frame* frame, nlohmann::json& UDP_Package);
+	float GetVoltageReference1Dot5(), GetVoltageReference2Dot5(), GetVoltageReference5Dot0(), GetVoltageReference12();
 	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 };
 
