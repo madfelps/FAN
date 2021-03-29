@@ -27,7 +27,7 @@ using json = nlohmann::json;
 
 int main()
 {
-	
+	printf("teste");
 	float SpeedPretendida;
 	float TorquePretendido;
 	float TorqueLimit;
@@ -94,7 +94,7 @@ int main()
 	
 	servaddr.sin_family = AF_INET; // IPv4 
 
-	inet_aton("192.168.6.2" , &servaddr.sin_addr); 
+	inet_aton("127.0.0.1" , &servaddr.sin_addr);
 
 	servaddr.sin_addr.s_addr = INADDR_ANY; 
 	servaddr.sin_port = htons(8080); 
@@ -202,12 +202,6 @@ int main()
 	//frameRead.can_dlc = 8;
 
 
-	//Configuração do arquivo para teste
-
-
-	//std::ofstream Log("log.txt");
-	//vector<std::string> StringDescreveSensor, StringGuardaDadosSensor;
-
 	
 	int FlagRead = 0;
 	int FlagWrite = 0;
@@ -250,60 +244,15 @@ int main()
 	//Configuração do log
 	auto logger = spdlog::basic_logger_mt("logger", "log.txt");
 	logger->info("Arquivo de log de dados do software embarcado");
-	std::cout << "teste_debug" << std::endl;
 
-
-   
-/*
-	while(fileCAN>> auxstr)
-{
-    
-	 matrx[lin][col]  = stoi(auxstr, nullptr, 16);
-    
-	wordCounter++;
-    col++;
-    if(wordCounter == 9)
-    {
-        lin++;
-        col = 0;
-        wordCounter = 0;
-    }
-    
-}
-for(lin = 0; lin<4;lin++)
-{
-    for(col=0; col<9; col++)
-    {
-        printf("%d ",matrx[lin][col]);
-    }
-}
-
-fileCAN.close();
-*/
-
-/*
-    //Verifica se o arquivo abriu
-    if(fileCAN.is_open()){
-        std::cout << "Arquivo aberto!" << std::endl;
-    }
-    else{
-        std::cout << "Arquivo nao aberto!" << std::endl;
-    }
-
-<<<<<<< Updated upstream
-    while(fileCAN >> auxStr)
-	{
-		GuardaDados.push_back(stoi(auxStr, nullptr, 16));
-
-	}
-*/
- 
-/**/
 
     int OpcaoTorqueLimit;
 
+
 	lin = 0;
-	#pragma omp parallel default (none) shared(sockfd) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, UDP_Package, MsgToClient, contador, len, cliaddr, logger)
+	//em caso de teste do chrono, incluir std::cout no shared do openmp
+	int hasMessage = 0;
+	#pragma omp parallel default (none) shared(sockfd, hasMessage) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, ObjCurrentInformation, ObjVoltageInformation, ObjFluxInformation, ObjInternalVoltages, ObjAnalogInputVoltages, ObjModulationIndex_FluxWeakening, UDP_Package, MsgToClient, contador, len, cliaddr, logger)
 
 
 	{
@@ -322,63 +271,6 @@ fileCAN.close();
 				//FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
 				//}
 
-					//if(FlagRead != 0){ // Verifica se a mensagem foi lida
-
-
-
-						//while(fileCAN >> auxStr)
-						//{
-							//if(wordCounter == 0)
-							//{
-								//frameRead.can_id = stoi(auxStr, nullptr, 16);
-								//printf("1frameRead.can_id: %d\n", frameRead.can_id);
-
-							//}
-							//else
-							//{
-								//frameRead.data[wordCounter-1] = stoi(auxStr, nullptr, 16);
-							//}
-
-							//wordCounter++;
-						//}
-	
-	/*	
-    for(col=0; col<9; col++)
-    {
-        if(col == 0) frameRead.can_id = matrx[lin][col];
-		else frameRead.data[col] = matrx[lin][col];
-		
-    }
-
-	lin++;
-	if(lin == 4) lin = 0;
-	*/
-
-                        /* while(WordFlag){
-                        	if(WordCounter2 == 0){
-                        		frameRead.can_id = GuardaDados[WordCounter];
-
-                        	}
-                        	else{
-                        		frameRead.data[WordCounter2-1] = GuardaDados[WordCounter];
-                        	}
-
-                        	if(WordCounter2 == 9){
-                        		WordFlag = 0;
-                        	}
-
-                        	WordCounter++;
-                        	WordCounter2++;
-
-                        	
-                        }
-
-                        WordCounter2 == 0;
-
-                        for(int k = 0; k < 8; k++){
-                        	printf("%d ", frameRead.data[k]);
-                        }
-                        */
 					   frameRead.can_id = 165;
 					   frameRead.data[0] = 8;
 					   frameRead.data[1] = 168;
@@ -388,7 +280,7 @@ fileCAN.close();
 					   frameRead.data[5] = 168;
 					   frameRead.data[6] = 51;
 					   frameRead.data[7] = 2;
-					   std::cout << "teste5" << std::endl;
+
 
 
 						//GuardaIntervaloTempo = clock();
@@ -412,8 +304,8 @@ fileCAN.close();
 							logger->info("--------------------------------------------------");
 						}
 					
-
-						else(frameRead.can_id == 161){ //TO DO ARRUMAR O ELSE
+						//TO DO ARRUMAR O ELSE
+						else if(frameRead.can_id == 161){
 							logger->info("ID: TEMPERATURES_2");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjTemperature2.GetByte7(), ObjTemperature2.GetByte6(), ObjTemperature2.GetByte5(), ObjTemperature2.GetByte4(), ObjTemperature2.GetByte3(), ObjTemperature2.GetByte2(), ObjTemperature2.GetByte1(), ObjTemperature2.GetByte0());
@@ -424,7 +316,7 @@ fileCAN.close();
 							logger->info("--------------------------------------------------");
 						}
 
-						else(frameRead.can_id == 162){
+						else if(frameRead.can_id == 162){
 							logger->info("ID: TEMPERATURES_3");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjTemperature3.GetByte7(), ObjTemperature3.GetByte6(), ObjTemperature3.GetByte5(), ObjTemperature3.GetByte4(), ObjTemperature3.GetByte3(), ObjTemperature3.GetByte2(), ObjTemperature3.GetByte1(), ObjTemperature3.GetByte0());
@@ -435,83 +327,84 @@ fileCAN.close();
 							logger->info("--------------------------------------------------");
 						}
 
-						else(frameRead.can_id == 165){ 
+						else if(frameRead.can_id == 165){
 							logger->info("ID: MOTOR_POSITION");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjMotorPosInfo.GetByte7(), ObjMotorPosInfo.GetByte6(), ObjMotorPosInfo.GetByte5(), ObjMotorPosInfo.GetByte4(), ObjMotorPosInfo.GetByte3(), ObjMotorPosInfo.GetByte2(), ObjMotorPosInfo.GetByte1(), ObjMotorPosInfo.GetByte0());
 							logger->info("Angle: {:f}", ObjMotorPosInfo.GetMotorAngleProcessed());
 							logger->info("Speed: {:f}", ObjMotorPosInfo.GetMotorSpeedProcessed());
 							logger->info("--------------------------------------------------");
+							printf("alo\n");
 						}
 
-						else(frameRead.can_id == 166){
+						else if(frameRead.can_id == 166){
 							logger->info("ID: CURRENT_INFORMATION");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjCurrentInformation.GetByte7(), ObjCurrentInformation.GetByte6(), ObjCurrentInformation.GetByte5(), ObjCurrentInformation.GetByte4(), ObjCurrentInformation.GetByte3(), ObjCurrentInformation.GetByte2(), ObjCurrentInformation.GetByte1(), ObjCurrentInformation.GetByte0());
-							logger->info("Phase A Current: {:f}", ObjCurrentInformation.GetPhaseACurrent());
-							logger->info("Phase B Current: {:f}", ObjCurrentInformation.GetPhaseBCurrent());
-							logger->info("Phase C Current: {:f}", ObjCurrentInformation.GetPhaseCCurrent());
-							logger->info("DC Bus Current: {:f}", ObjCurrentInformation.GetDCBusCurrent());
+							logger->info("Phase A Current: {:f}", ObjCurrentInformation.GetPhaseACurrentProcessed());
+							logger->info("Phase B Current: {:f}", ObjCurrentInformation.GetPhaseBCurrentProcessed());
+							logger->info("Phase C Current: {:f}", ObjCurrentInformation.GetPhaseCCurrentProcessed());
+							logger->info("DC Bus Current: {:f}", ObjCurrentInformation.GetDCBusCurrentProcessed());
 							logger->info("--------------------------------------------------");
 						}
 
-						else(frameRead.can_id == 167){
+						else if(frameRead.can_id == 167){
 							logger->info("ID: VOLTAGE_INFORMATION");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjVoltageInformation.GetByte7(), ObjVoltageInformation.GetByte6(), ObjVoltageInformation.GetByte5(), ObjVoltageInformation.GetByte4(), ObjVoltageInformation.GetByte3(), ObjVoltageInformation.GetByte2(), ObjVoltageInformation.GetByte1(), ObjVoltageInformation.GetByte0());
-							logger->info("DC Bus Voltage: {:f}", ObjVoltageInformation.GetDCBusVoltageProcessed();
+							logger->info("DC Bus Voltage: {:f}", ObjVoltageInformation.GetDCBusVoltageProcessed());
 							logger->info("Output Voltage: {:f}", ObjVoltageInformation.GetOutputVoltageProcessed());
 							logger->info("VAB Vd Voltage: {:f}", ObjVoltageInformation.GetVAB_Vd_VoltageProcessed());
 							logger->info("VBC Vd Voltage: {:f}", ObjVoltageInformation.GetVBC_Vd_VoltageProcessed());
 							logger->info("--------------------------------------------------");
 						}
 
-						else(frameRead.can_id == 168){
+						else if(frameRead.can_id == 168){
 							logger->info("ID: FLUX_INFORMATION");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjFluxInformation.GetByte7(), ObjFluxInformation.GetByte6(), ObjFluxInformation.GetByte5(), ObjFluxInformation.GetByte4(), ObjVoltageInformation.GetByte3(), ObjFluxInformation.GetByte2(), ObjFluxInformation.GetByte1(), ObjFluxInformation.GetByte0());
-							logger->info("Flux Command: {:f}", ObjFluxInformation.GetFluxCommandProcessed();
+							logger->info("Flux Command: {:f}", ObjFluxInformation.GetFluxCommandProcessed());
 							logger->info("Flux Feedback: {:f}", ObjFluxInformation.GetFluxFeedbackProcessed());
 							logger->info("Id Feedback: {:f}", ObjFluxInformation.GetIdFeedbackProcessed());
 							logger->info("Iq Feedback: {:f}", ObjFluxInformation.GetIqFeedbackProcessed());
 							logger->info("--------------------------------------------------");
 						}
 
-						else(frameRead.can_id == 169){
+						else if(frameRead.can_id == 169){
 							logger->info("ID: INTERNAL_VOLTAGES");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
-							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5();
+							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5());
+							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
+							logger->info("Voltage Reference 5.0: {:f}", ObjInternalVoltages.GetVoltageReference5Dot0());
+							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
+							logger->info("--------------------------------------------------");
+						}
+						//VER ISSO DAQUI DPS (INTERNAL STATES)
+						else if(frameRead.can_id == 170){
+							logger->info("ID: INTERNAL_VOLTAGES");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
+							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5());
+							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
+							logger->info("Voltage Reference 5.0: {:f}", ObjInternalVoltages.GetVoltageReference5Dot0());
+							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
+							logger->info("--------------------------------------------------");
+						}
+						//VER ISSO TBM (FAULT ERRORS)
+						else if(frameRead.can_id == 171){
+							logger->info("ID: INTERNAL_VOLTAGES");
+							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
+							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5());
 							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
 							logger->info("Voltage Reference 5.0: {:f}", ObjInternalVoltages.GetVoltageReference5Dot0());
 							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
 							logger->info("--------------------------------------------------");
 						}
 
-						else(frameRead.can_id == 170){ //TODO VER ISSO DAQUI DPS (INTERNAL STATES)
-							logger->info("ID: INTERNAL_VOLTAGES");
-							logger->info("ID: {%d}", frameRead.can_id);
-							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
-							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5();
-							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
-							logger->info("Voltage Reference 5.0: {:f}", ObjInternalVoltages.GetVoltageReference5Dot0());
-							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
-							logger->info("--------------------------------------------------");
-						}
 
-						else(frameRead.can_id == 171){ //TODO VER ISSO TBM (FAULT ERRORS)
-							logger->info("ID: INTERNAL_VOLTAGES");
-							logger->info("ID: {%d}", frameRead.can_id);
-							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
-							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5();
-							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
-							logger->info("Voltage Reference 5.0: {:f}", ObjInternalVoltages.GetVoltageReference5Dot0());
-							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
-							logger->info("--------------------------------------------------");
-						}
-
-
-						else(frameRead.can_id == 172){ 
+						else if(frameRead.can_id == 172){
 							logger->info("ID: TORQUE_TIMER_INFO");
 							logger->info("Bytes recebidos: %f %f %f %f %f %f %f %f", ObjTorqueTimerInfo.GetByte7(), ObjTorqueTimerInfo.GetByte6(), ObjTorqueTimerInfo.GetByte5(), ObjTorqueTimerInfo.GetByte4(), ObjTorqueTimerInfo.GetByte3(), ObjTorqueTimerInfo.GetByte2(), ObjTorqueTimerInfo.GetByte1(), ObjTorqueTimerInfo.GetByte0());
 							logger->info("Commanded Torque: %f", ObjTorqueTimerInfo.GetCommandedTorqueProcessed());
@@ -519,85 +412,20 @@ fileCAN.close();
 							logger->info("--------------------------------------------------");
 						}
 
-						else(frameRead.can_id == 171){ //TODO VER ISSO TBM (FAULT ERRORS)
+						else if(frameRead.can_id == 171){ //TODO VER ISSO TBM (FAULT ERRORS)
 							logger->info("ID: MODULATIONINDEX_FLUXWEAKENING");
 							logger->info("ID: {%d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
-							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5();
+							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5());
 							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
 							logger->info("Voltage Reference 5.0: {:f}", ObjInternalVoltages.GetVoltageReference5Dot0());
 							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
 							logger->info("--------------------------------------------------");
 						}
 
-						
-
-						//sleep(1);
-
-						
-						//Guarda dados dos sensores na string PARA VECTOR STRING, USAR PUSH BACK
-
-						//sprintf(StringGuardaDadosSensor[0], "%f", ObjMotorPosInfo.GetMotorAngleProcessed());
-						//sprintf(StringGuardaDadosSensor[1], "%f", ObjMotorPosInfo.GetMotorSpeedProcessed());
-
-						//sprintf(StringGuardaDadosSensor[2], "%f", ObjTorqueTimerInfo.GetCommandedTorqueProcessed());
-						//sprintf(StringGuardaDadosSensor[3], "%f", ObjTorqueTimerInfo.GetTorqueFeedbackProcessed());
-						//sprintf(StringGuardaDadosSensor[4], "%f", ObjTorqueTimerInfo.GetPowerOnTimeProcessed());
-
-						//sprintf(StringGuardaDadosSensor[5], "%f", ObjTemperature1.GetModuleAProcessed());
-						//sprintf(StringGuardaDadosSensor[6], "%f", ObjTemperature1.GetModuleBProcessed());
-						//sprintf(StringGuardaDadosSensor[7], "%f", ObjTemperature1.GetModuleCProcessed());
-						//sprintf(StringGuardaDadosSensor[8], "%f", ObjTemperature1.GetGateDriverBoardProcessed());
-						//}
-
-
-						//Pega o instante de tempo da geração dos dados, transforma em string e guarda na variável StringDescreveSensor.
-						
-						/*Temporaria = clock() - GuardaIntervaloTempo;
-						strcpy(StringDescreveSensor[9], "Instante da geracao dos dados (em segundos): ");
-						sprintf(TempoEmString, "%lf", (double) Temporaria*10000/CLOCKS_PER_SEC);
-						strcat(StringDescreveSensor[9], TempoEmString);*/
-
-						//Concatena os valores na string
-						//for(i = 0; i < 8; i++){
-							//strcat(StringDescreveSensor[i], StringGuardaDadosSensor[i]);
-							//StringDescreveSensor[i] = StringDescreveSensor[i] + StringGuardaDadosSensor[i];
-						//}
-						//strcat(StringDescreveSensor[0], StringGuardaDadosSensor[0]);
-						//strcat(StringDescreveSensor[1], StringGuardaDadosSensor[1]);
-						//strcat(StringDescreveSensor[2], StringGuardaDadosSensor[2]);
-						//strcat(StringDescreveSensor[3], StringGuardaDadosSensor[3]);
-						//strcat(StringDescreveSensor[4], StringGuardaDadosSensor[4]);
-						//strcat(StringDescreveSensor[5], StringGuardaDadosSensor[5]);
-						//strcat(StringDescreveSensor[6], StringGuardaDadosSensor[6]);
-						//strcat(StringDescreveSensor[7], StringGuardaDadosSensor[7]);
-						//strcat(StringDescreveSensor[8], StringGuardaDadosSensor[8]);
-				
-
-						//Gera e escreve o log
-						/*for(i = 0; i < 9; i++){
-							Log << StringDescreveSensor[i];
-							Log << "\n";
-						}*/
-						//fprintf(Arquivo, "%s\n", StringDescreveSensor[0]);
-						//fprintf(Arquivo, "%s\n", StringDescreveSensor[1]);
-						//fprintf(Arquivo, "%s\n", StringDescreveSensor[2]);
-						//fprintf(Arquivo, "%s\n", StringDescreveSensor[3]);
-						//fprintf(Arquivo, "%s\n", StringDescreveSensor[4]);
-						//fprintf(Arquivo, "%s\n", StringDescreveSensor[5]);
-						//fprintf(Arquivo, "%s\n", StringDescreveSensor[6]);
-						//fprintf(Arquivo, "%s\n", StringDescreveSensor[7]);
-						//fprintf(Arquivo, "%s\n", StringDescreveSensor[8]);
-						//fprintf(Arquivo, "%s\n", StringDescreveSensor[9]);
-						//fprintf(Arquivo, "%s\n", "-----------------------------------------------------------------------");
-
-                        //scanf(" %s", buffer3);
-                        //sendto(sockfd, ( char *)buffer3, strlen(buffer3),
-                               //MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
-                               //len);
-
-				//}
-					//}
+						std::string UDP_Package_StdString = UDP_Package.dump();
+						strcpy(MsgToClient, UDP_Package_StdString.c_str());
+						hasMessage = 1;
 					}
 				
 
@@ -615,7 +443,10 @@ fileCAN.close();
 					{
 					FlagWrite = write(SocketCan, &frameWrite, sizeof(struct can_frame));
 					}
-					usleep(400);
+
+					//delay_openmp(400);
+					//std::cout << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now().time_since_epoch()).count() << std::endl;
+					std::this_thread::sleep_for (std::chrono::milliseconds(400));
 				}
 			}
 
@@ -636,31 +467,32 @@ fileCAN.close();
 			#pragma omp section // TASK WRITE INTERFACE
 			{
 				while(1){
-					//printf("Alo\n");
+
+					if(hasMessage){
+						printf("Mensagem: %s\n", MsgToClient);
+					}
+
 					//Envio do pacote UDP para o computador
 
 					//UDP_Package_StdString = UDP_Package.dump();
-					std::string UDP_Package_StdString = UDP_Package.dump();
+					//std::string UDP_Package_StdString = UDP_Package.dump();
 
 					//DESCOMENTAR A LINHA DE BAIXO DEPOIS
 					//strcpy(MsgToClient, UDP_Package_StdString.c_str());
-					//printf("%d\n", contador);
-					//printf("%s\n", MsgToClient);
-					//contador++;
+					//printf("Mensagem: %s\n", MsgToClient);
 					//DESCOMENTAR A LINHA DE BAIXO DEPOIS
 					//sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
 					//MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
 					//len);
 
-					scanf(" %[^\n]s", buffer3);
-					sendto(sockfd, (const char *)buffer3, strlen(buffer3),
-					MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
-					len);
+//					printf("vamos testarrrrrr\n");
+//					scanf(" %[^\n]s", buffer3);
+//					sendto(sockfd, (const char *)buffer3, strlen(buffer3),
+//					MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+//					len);
+//					printf("vamos testarrrr\n");
 
 				}
-
-				
-
 			}
 		}
 	}
@@ -671,3 +503,4 @@ fileCAN.close();
 
 	return 0;
 }
+
