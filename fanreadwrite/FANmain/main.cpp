@@ -143,7 +143,7 @@ int main()
 		exit(EXIT_FAILURE); 
 	}
 	socklen_t len;
-	len = sizeof(cliaddr); //len is value/resuslt 
+	len = sizeof(cliaddr); //len is value/result
 
 
 	//Inicialização e Configuração do Pacote por JSON
@@ -252,7 +252,7 @@ int main()
 	lin = 0;
 	//em caso de teste do chrono, incluir std::cout no shared do openmp
 	int hasMessage = 0;
-	#pragma omp parallel default (none) shared(sockfd, hasMessage) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, ObjCurrentInformation, ObjVoltageInformation, ObjFluxInformation, ObjInternalVoltages, ObjAnalogInputVoltages, ObjModulationIndex_FluxWeakening, UDP_Package, MsgToClient, contador, len, cliaddr, logger)
+	#pragma omp parallel default (none) shared(sockfd, hasMessage, MsgToClient) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, ObjCurrentInformation, ObjVoltageInformation, ObjFluxInformation, ObjInternalVoltages, ObjAnalogInputVoltages, ObjModulationIndex_FluxWeakening, UDP_Package, contador, len, cliaddr, logger)
 
 
 	{
@@ -271,13 +271,13 @@ int main()
 				//FlagRead = read(SocketCan, &frameRead, sizeof(struct can_frame)); // A função read retorna o número de bytes lidos
 				//}
 
-					   frameRead.can_id = 165;
+					   frameRead.can_id = 162;
 					   frameRead.data[0] = 8;
 					   frameRead.data[1] = 168;
 					   frameRead.data[2] = 51;
 					   frameRead.data[3] = 1;
-					   frameRead.data[4] = 8;
-					   frameRead.data[5] = 168;
+					   frameRead.data[4] = 2;
+					   frameRead.data[5] = 2;
 					   frameRead.data[6] = 51;
 					   frameRead.data[7] = 2;
 
@@ -334,7 +334,6 @@ int main()
 							logger->info("Angle: {:f}", ObjMotorPosInfo.GetMotorAngleProcessed());
 							logger->info("Speed: {:f}", ObjMotorPosInfo.GetMotorSpeedProcessed());
 							logger->info("--------------------------------------------------");
-							printf("alo\n");
 						}
 
 						else if(frameRead.can_id == 166){
@@ -481,9 +480,9 @@ int main()
 					//strcpy(MsgToClient, UDP_Package_StdString.c_str());
 					//printf("Mensagem: %s\n", MsgToClient);
 					//DESCOMENTAR A LINHA DE BAIXO DEPOIS
-					//sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
-					//MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
-					//len);
+					sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
+					MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+					len);
 
 //					printf("vamos testarrrrrr\n");
 //					scanf(" %[^\n]s", buffer3);
@@ -503,4 +502,3 @@ int main()
 
 	return 0;
 }
-
