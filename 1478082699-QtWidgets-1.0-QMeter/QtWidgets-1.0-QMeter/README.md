@@ -1,2 +1,0 @@
-# QtWidgets
-Qt custom widgets
