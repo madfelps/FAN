@@ -200,6 +200,12 @@ int main()
 
 	//struct can_frame frameRead, frameWrite; //Criação dos frames
 	//frameRead.can_dlc = 8;
+	//Recepção de dados pela interface
+	json UDP_Interface;
+
+	UDP_Interface["Parameter_1"]	=	0;
+	UDP_Interface["Parameter_2"]	=	0;
+	UDP_Interface["Parameter_3"]	=	0;
 
 
 	
