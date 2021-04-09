@@ -11,7 +11,8 @@
 #include "qmeter.h"
 #include <QPainter>
 #include <QDebug>
-
+#include<QLinearGradient>
+#include <QConicalGradient>
 #define PI 3.1415926535
 
 
@@ -172,7 +173,9 @@ void QMeter::drawThresholdLine(QPainter *painter)
     if(!enableThreshold() || !enableMediumThreshold())
         return;
 
+
     painter->save();
+    painter->setRenderHint(QPainter::Antialiasing);
     QPen pen;
     double thresholdAngle = ( m_startAngle+(m_endAngle-m_startAngle)/(m_maxValue-m_minValue)*(m_threshold-m_minValue) );
     double thresholdMediumAngle = ( m_startAngle+(m_endAngle-m_startAngle)/(m_maxValue-m_minValue)*(m_threshold_medium-m_minValue));
@@ -181,21 +184,38 @@ void QMeter::drawThresholdLine(QPainter *painter)
     //qDebug() << "thresholdAngle: " << thresholdAngle;
     pen.setWidth(5);
 
-
-
-    pen.setColor(Qt::green);
+    QConicalGradient conicalGrad;
+    conicalGrad.setColorAt(0.3, Qt::yellow);
+    conicalGrad.setColorAt(1, Qt::green);
+    QBrush brush=QBrush(conicalGrad);
+    pen.setBrush(brush);
     painter->setPen(pen);
     painter->drawArc(-25,-25,50,50,(int)m_startAngle*16,(int)(thresholdMediumAngle-m_startAngle)*16); //(rect dimensions, startangle, spanangle)
 
-    pen.setColor(Qt::yellow);
+    QColor orange;
+    orange.setRgb(255,165,0);
+    conicalGrad.setColorAt(0, orange);
+    conicalGrad.setColorAt(1, Qt::yellow);
+    QBrush brush2=QBrush(conicalGrad);
+    pen.setBrush(brush2);
+    //pen.setColor(Qt::yellow);
     painter->setPen(pen);
     painter->drawArc(-25,-25,50,50,(int)thresholdMediumAngle*16,(int)(thresholdAngle-thresholdMediumAngle)*16);
 
-    pen.setColor(Qt::red);
+    orange.setRgb(255,165,0);
+    conicalGrad.setColorAt(0.9, Qt::red);
+    conicalGrad.setColorAt(1, orange);
+    QBrush brush3=QBrush(conicalGrad);
+    pen.setBrush(brush3);
     painter->setPen(pen);
     painter->drawArc(-25,-25,50,50,(int)thresholdAngle*16,(int)(-thresholdAngle+m_endAngle)*16);
 
     painter->restore();
+    /*****************/
+    painter->save();
+
+
+
 }
 
 void QMeter::drawCoverGlass(QPainter *painter)

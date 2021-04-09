@@ -4,8 +4,9 @@
 #include <QMainWindow>
 #include <QUdpSocket>
 #include <QDebug>
-#include "nlohmann/json.hpp"
 #include <iostream>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 
 
@@ -48,6 +49,11 @@ private slots:
 
 
 
+    void on_enable_motor_button_clicked();
+
+    void on_disable_motor_button_clicked();
+
+
 private:
     Ui::MainWindow *ui;
     QUdpSocket* socket;
@@ -55,8 +61,9 @@ private:
     QString MessageSendTorque, MessageSendTorqueLimite;
     std::string MessageSendTorqueStd, MessageTorqueLimiteStd;
     int Pos1, Pos2;
-    std::string style(int value, int med_threshold, int max_threshold);
+    std::string style(double value, double med_threshold, double max_threshold);
     int getProperValue(float value, int singleStep, int maxSize);
-
+    bool flag_motor = false;
+    void sendJsonToUDP(const QJsonObject&);
 };
 #endif // MAINWINDOW_H
