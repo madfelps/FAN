@@ -21,19 +21,23 @@
 #include <sys/socket.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
-#include <arpa/inet.h> 
-#include <netinet/in.h> 
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <time.h>
 #include <fstream>
 #include <omp.h>
 #include "lertxt.h"
 #include <vector>
 #include <string>
+#include <thread>
+#include <chrono>
 #include "nlohmann/json.hpp"
 #include <string.h>
 #include <array>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
+
+void delay_openmp(int milisec);
 
 void DescreveSensor(char StringDescreveSensor[][50]);
 
@@ -111,7 +115,7 @@ private:
 	float MotorAngleProcessed;
 	float MotorSpeedProcessed;
 	float ElectricalOutFreqProcessed;
-	float DeltaResolverFilteredProcessed;	
+	float DeltaResolverFilteredProcessed;
 	int Byte[8];
 
 public:
@@ -282,7 +286,7 @@ public:
 	VoltageInformation();
 	VoltageInformation(unsigned char* CAN_DATA);
 	void UpdateObject(unsigned char* CAN_DATA);
-	float GetDCBusVoltageProcessed(), GetOutputVoltageProcessed(), GetVAB_Vd_VoltageProcessed(), GetVBC_Vd_VoltageProcessed(); 
+	float GetDCBusVoltageProcessed(), GetOutputVoltageProcessed(), GetVAB_Vd_VoltageProcessed(), GetVBC_Vd_VoltageProcessed();
 	void IfID_VoltageInformation(struct can_frame* frame, nlohmann::json& UDP_Package);
 	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
 
@@ -377,7 +381,9 @@ private:
 	int TorqueCommand;
 	int TorqueCommandMSByte;
 	int TorqueCommandLSByte;
-	float SpeedCommand;
+	int SpeedCommand;
+	int SpeedCommandMSByte;
+	int SpeedCommandLSByte;
 	float DirectionCommand;
 	float InverterEnable;
 	float InverterDischarge;
@@ -391,10 +397,11 @@ public:
 	CommandMessage();
 	void UpdateFrame();
 	void ProcessTorqueSend(float* TorqueCommand, int flag);
+	void Process_SpeedSend(float* SpeedCommand);
 	void ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte);
 	void UpdateFrame(struct can_frame* frame);
 	int GetByte0(), GetByte1(), GetByte2(), GetByte3(), GetByte4(), GetByte5(), GetByte6(), GetByte7();
-
+	void SetInverterEnable(int Inverter_Enable, struct can_frame* frame);
 
 };
 

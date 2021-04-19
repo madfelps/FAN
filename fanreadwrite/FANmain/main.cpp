@@ -11,7 +11,7 @@
  *
  *
  *
- * */ 
+ * */
 
 
 #include "lertxt.h"
@@ -27,7 +27,7 @@ using json = nlohmann::json;
 
 int main()
 {
-	printf("teste");
+	printf("Teste programa!\n");
 	float SpeedPretendida;
 	float TorquePretendido;
 	float TorqueLimit;
@@ -60,7 +60,7 @@ int main()
 	InternalStates ObjInternalStates;
 
 	//Configuração do CAN
-	
+
 	int SocketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 	struct sockaddr_can addr;
 	struct ifreq ifr;
@@ -72,35 +72,35 @@ int main()
 	struct can_frame frameRead, frameWrite; //Criação dos frames
 	frameRead.can_dlc = 8;
 	frameWrite.can_dlc = 8;
-	
-	
+
+
 
 	//Configuração do protocolo UDP
-	int sockfd; 
+	int sockfd;
 	char MsgToClient[400];
 	struct sockaddr_in servaddr, cliaddr;
 
-	
-	
-	// Creating socket file descriptor 
-	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
-		perror("socket creation failed"); 
-		exit(EXIT_FAILURE); 
-	} 
-	memset(&servaddr, 0, sizeof(servaddr)); 
-	memset(&cliaddr, 0, sizeof(cliaddr)); 
-	
-	// Filling server information 
-	
-	servaddr.sin_family = AF_INET; // IPv4 
 
-	inet_aton("127.0.0.1" , &servaddr.sin_addr);
 
-	servaddr.sin_addr.s_addr = INADDR_ANY; 
-	servaddr.sin_port = htons(8080); 
+	// Creating socket file descriptor
+	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+		perror("socket creation failed");
+		exit(EXIT_FAILURE);
+	}
+	memset(&servaddr, 0, sizeof(servaddr));
+	memset(&cliaddr, 0, sizeof(cliaddr));
 
-	
-	
+	// Filling server information
+
+	servaddr.sin_family = AF_INET; // IPv4
+
+	inet_aton("192.168.15.14" , &servaddr.sin_addr);
+
+	servaddr.sin_addr.s_addr = INADDR_ANY;
+	servaddr.sin_port = htons(8080);
+
+
+
 	/* Set address automatically if desired */
 	//if (argc == 2)
 	//{
@@ -135,12 +135,12 @@ int main()
 	//}
 
 
-	//Bind the socket with the server address 
-	if ( bind(sockfd, (const struct sockaddr *)&servaddr, 
-			sizeof(servaddr)) < 0 ) 
-	{ 
-		perror("bind failed"); 
-		exit(EXIT_FAILURE); 
+	//Bind the socket with the server address
+	if ( bind(sockfd, (const struct sockaddr *)&servaddr,
+			sizeof(servaddr)) < 0 )
+	{
+		perror("bind failed");
+		exit(EXIT_FAILURE);
 	}
 	socklen_t len;
 	len = sizeof(cliaddr); //len is value/result
@@ -196,19 +196,22 @@ int main()
 	UDP_Package["FaultCode_6"]					= 0;
 	UDP_Package["FaultCode_7"]					= 0;
 
-	
-
-	//struct can_frame frameRead, frameWrite; //Criação dos frames
-	//frameRead.can_dlc = 8;
 	//Recepção de dados pela interface
 	json UDP_Interface;
 
 	UDP_Interface["Parameter_1"]	=	0;
 	UDP_Interface["Parameter_2"]	=	0;
 	UDP_Interface["Parameter_3"]	=	0;
+	UDP_Interface["Parameter_4"]	=	0;
 
 
-	
+
+
+	//struct can_frame frameRead, frameWrite; //Criação dos frames
+	//frameRead.can_dlc = 8;
+
+
+
 	int FlagRead = 0;
 	int FlagWrite = 0;
 	int n = 0;
@@ -223,20 +226,20 @@ int main()
 	int i, j;
 	int CounterMotorPosition = 0;
 	int CounterTorqueTimerInfo = 0;
-	
 
-	n = recvfrom(sockfd, (char *)buffer, 100, 
-	MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
-	&len); 
 
-	buffer[n] = '\0'; 
-	printf("Client : %s\n", buffer); 
+	n = recvfrom(sockfd, (char *)buffer, 100,
+	MSG_WAITALL, ( struct sockaddr *) &cliaddr,
+	&len);
+
+	buffer[n] = '\0';
+	printf("Client : %s\n", buffer);
 
 
 
 	strcpy(buffer2, "Teste para o Qt..");
-	sendto(sockfd, (const char *)buffer2, strlen(buffer2), 
-	MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
+	sendto(sockfd, (const char *)buffer2, strlen(buffer2),
+	MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
 	len);
 
     int wordCounter = 0;
@@ -253,12 +256,14 @@ int main()
 
 
     int OpcaoTorqueLimit;
+    int AuxiliarInterface;
 
 
 	lin = 0;
+
 	//em caso de teste do chrono, incluir std::cout no shared do openmp
 	int hasMessage = 0;
-	#pragma omp parallel default (none) shared(sockfd, hasMessage, MsgToClient) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, ObjCurrentInformation, ObjVoltageInformation, ObjFluxInformation, ObjInternalVoltages, ObjAnalogInputVoltages, ObjModulationIndex_FluxWeakening, UDP_Package, contador, len, cliaddr, logger)
+	#pragma omp parallel default (none) shared(sockfd, hasMessage, MsgToClient) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, ObjCurrentInformation, ObjVoltageInformation, ObjFluxInformation, ObjInternalVoltages, ObjAnalogInputVoltages, ObjModulationIndex_FluxWeakening, UDP_Package, contador, len, cliaddr, logger, AuxiliarInterface)
 
 
 	{
@@ -268,8 +273,8 @@ int main()
 		 	#pragma omp section //TASK READ SOFTWARE-MOTOR
 
 		 	{
-                
-				while (1) 
+
+				while (1)
 				{
 
 				//#pragma omp critical (mutex)
@@ -297,7 +302,7 @@ int main()
 						ObjTemperature2.IfID_Temperature2(&frameRead, UDP_Package);
 						ObjTemperature3.IfID_Temperature3(&frameRead, UDP_Package);
 						ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
-						
+
 
 						//Desenvolvimento do log
 						if(frameRead.can_id == 160){
@@ -309,7 +314,7 @@ int main()
 							logger->info("Module C: {:f}", ObjTemperature1.GetModuleCProcessed());
 							logger->info("--------------------------------------------------");
 						}
-					
+
 						//TO DO ARRUMAR O ELSE
 						else if(frameRead.can_id == 161){
 							logger->info("ID: TEMPERATURES_2");
@@ -432,18 +437,17 @@ int main()
 						strcpy(MsgToClient, UDP_Package_StdString.c_str());
 						hasMessage = 1;
 					}
-				
+
 
 			}
-		
-	
-			#pragma omp section //TASK WRITE MOTOR 
-			{ 
+
+
+			#pragma omp section //TASK WRITE MOTOR
+			{
 				while(1){
-					
 					//ObjCommandMessage.ProcessAngleVelocity(&SpeedPretendida)
-					ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
-					ObjCommandMessage.UpdateFrame(&frameWrite);
+					//ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
+					//ObjCommandMessage.UpdateFrame(&frameWrite);
 					#pragma omp critical (mutex)
 					{
 					FlagWrite = write(SocketCan, &frameWrite, sizeof(struct can_frame));
@@ -457,16 +461,49 @@ int main()
 
 			#pragma omp section // TASK READ INTERFACE
 			{
+				std::string Mensagem;
+				json UDP_Receive;
+				std::string RecID;
+				std::string const Speed_Literal 			= "speed_id";
+				std::string const InverterEnable_Literal 	= "enable_id";
+
+
 				while(1){
 					//printf("Chegando da interface..");
-					n = recvfrom(sockfd, (char *)buffer, 100, 
-						MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
-						&len); 
-					buffer[n] = '\0'; 
-					TorqueLimit = atof(buffer);
-					//printf("%s \n", buffer);
-				}
+					//TODO ver a necessidade de utilizar mutex no UDP
+					n = recvfrom(sockfd, (char *)buffer, 99,
+						MSG_WAITALL, ( struct sockaddr *) &cliaddr,
+						&len);
+					buffer[n] = '\0';
+					//TODO Rever a questão da adição do '\0' (bitrix)
 
+					printf("%s\n", buffer);
+					printf("Testando..\n");
+					Mensagem = buffer;
+					UDP_Receive = json::parse(Mensagem); //converter char* pra string?
+					//TODO verificar se o ID existe (bitrix) https://github.com/nlohmann/json/issues/1471
+
+					//TorqueLimit = atof(buffer);
+					//printf("%s \n", buffer);
+
+					//TODO Utilizar operador de comparação (c++ tem overload)
+					if(UDP_Receive["ID"] == "speed_id"){
+						//ObjCommandMessage.Process_SpeedSend(static_cast<float*>(UDP_Receive.at("speed_id"))); //verificar isso depois
+						ObjCommandMessage.UpdateFrame(&frameWrite);
+						printf("Mensagem de velocidade. \n");
+					}
+					else if(UDP_Receive["ID"] == "enable_id"){
+						if(UDP_Receive["Enable_Command"]){
+							ObjCommandMessage.SetInverterEnable(1, &frameWrite);
+						}
+						else{
+							ObjCommandMessage.SetInverterEnable(0, &frameWrite);
+						}
+						//TODO ponteiro pra frameWrite pro conceito de titular e reserva (2 framewrite); atomic boolean
+						//Esse ponteiro e flag vão ser utilizados nas duas threads
+
+					}
+				}
 			}
 
 			#pragma omp section // TASK WRITE INTERFACE
@@ -474,7 +511,7 @@ int main()
 				while(1){
 
 					if(hasMessage){
-						printf("Mensagem: %s\n", MsgToClient);
+						//printf("Mensagem: %s\n", MsgToClient);
 					}
 
 					//Envio do pacote UDP para o computador

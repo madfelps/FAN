@@ -11,7 +11,7 @@
  *
  *
  *
- * */ 
+ * */
 
 
 #include "lertxt.h"
@@ -33,11 +33,19 @@
 #define    FAULT_CODES 	             0x0AB
 #define    TORQUE_TIMER_INFO	     0x0AC	//CHECK
 #define    MOD_FLUX_WEAK_OUT_INFO	 0x0AD	//CHECK
-#define    FIRM_INFO	             0x0AE	
+#define    FIRM_INFO	             0x0AE
 #define    DIAGNOSTIC_DATA	         0x0AF
 #define    COMMAND_MESSAGE           0x0C0	//CHECK
 
-
+void delay_openmp(int milisec){
+	double start;
+	double end;
+	start = omp_get_wtime();
+	end = omp_get_wtime();
+	while((end-start)*1000<milisec){
+		end = omp_get_wtime();
+	}
+}
 
 void DescreveSensor(char StringDescreveSensor[][50]){
 	/*
@@ -112,14 +120,14 @@ int CutBytes::CutByteInterval(unsigned char* CAN_DATA, int CanDataPosition, int 
 float Torque::ProcessTorqueReceive(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	float TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	TorqueValue = NegativeValuesTwoBytes(TorqueValue);
-	TorqueValue = TorqueValue/10; 
+	TorqueValue = TorqueValue/10;
 	return TorqueValue;
 }
 
 float Flux::ProcessFluxReceive(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	float FluxValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	FluxValue = NegativeValuesTwoBytes(FluxValue);
-	FluxValue = FluxValue/1000; 
+	FluxValue = FluxValue/1000;
 	return FluxValue;
 }
 
@@ -250,6 +258,7 @@ void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UD
 		UDP_Package["Angle"] = MotorAngleProcessed;
 		UDP_Package["Speed"] = MotorSpeedProcessed;
 
+
 	}
 }
 
@@ -307,14 +316,14 @@ int TorqueTimerInfo::GetByte7(){
 }
 
 void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
-	Byte[0] = GetByte0(); 
-	Byte[1] = GetByte1(); 
-	Byte[2] = GetByte2(); 
-	Byte[3] = GetByte3(); 
-	Byte[4] = GetByte4(); 
-	Byte[5] = GetByte5(); 
+	Byte[0] = GetByte0();
+	Byte[1] = GetByte1();
+	Byte[2] = GetByte2();
+	Byte[3] = GetByte3();
+	Byte[4] = GetByte4();
+	Byte[5] = GetByte5();
 	Byte[6] = GetByte6();
-	Byte[7] = GetByte7();  
+	Byte[7] = GetByte7();
 
 	CommandedTorqueProcessed     = this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 	TorqueFeedbackProcessed      = this->ProcessTorqueReceive(CAN_DATA, 3, 2);
@@ -394,14 +403,14 @@ int Temperature1::GetByte7(){
 }
 
 void Temperature1::UpdateObject(unsigned char* CAN_DATA){
-		Byte[0] = GetByte0(); 
-		Byte[1] = GetByte1(); 
-		Byte[2] = GetByte2(); 
-		Byte[3] = GetByte3(); 
-		Byte[4] = GetByte4(); 
-		Byte[5] = GetByte5(); 
+		Byte[0] = GetByte0();
+		Byte[1] = GetByte1();
+		Byte[2] = GetByte2();
+		Byte[3] = GetByte3();
+		Byte[4] = GetByte4();
+		Byte[5] = GetByte5();
 		Byte[6] = GetByte6();
-		Byte[7] = GetByte7();  
+		Byte[7] = GetByte7();
 
 		ModuleAProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 		ModuleBProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
@@ -428,7 +437,7 @@ float Temperature1::GetGateDriverBoardProcessed(){
 
 void Temperature1::ShowAllValuesProcessed(){
 		printf("Temperatura do MóduloA: %f\n", this->GetModuleAProcessed());
-		printf("Temperatura do MóduloB: %f\n", this->GetModuleBProcessed()); 
+		printf("Temperatura do MóduloB: %f\n", this->GetModuleBProcessed());
 		printf("Temperatura do MóduloC: %f\n", this->GetModuleCProcessed());
 		printf("Temperatura do Gate Driver Board: %f\n", this->GetGateDriverBoardProcessed());
 }
@@ -437,7 +446,7 @@ void  Temperature1::IfID_Temperature1(struct can_frame* frame, nlohmann::json& U
 	if(frame->can_id == 160){
 
 		this->UpdateObject(frame->data);
-		
+
 		//this->ShowAllValuesProcessed();
 
 		UDP_Package["ID"]							= "TEMPERATURES_1";
@@ -525,7 +534,7 @@ int Temperature2::GetByte7(){
 
 void Temperature2::ShowAllValuesProcessed(){
 		printf("Temperatura do ControlBoardTemperature: %f\n", this->GetControlBoardTemperatureProcessed());
-		printf("Temperatura do RTD1: %f\n", this->GetRTD1Processed()); 
+		printf("Temperatura do RTD1: %f\n", this->GetRTD1Processed());
 		printf("Temperatura do RTD2: %f\n", this->GetRTD2Processed());
 		printf("Temperatura do RTD3: %f\n", this->GetRTD3Processed());
 }
@@ -534,7 +543,7 @@ void  Temperature2::IfID_Temperature2(struct can_frame* frame, nlohmann::json& U
 	if(frame->can_id == 161){
 
 		this->UpdateObject(frame->data);
-		
+
 		//this->ShowAllValuesProcessed();
 
 		UDP_Package["ID"]							= "TEMPERATURES_2";
@@ -622,7 +631,7 @@ int Temperature3::GetByte7(){
 
 void Temperature3::ShowAllValuesProcessed(){
 		printf("Temperatura do RTD4: %f\n", this->GetRTD4_TemperatureProcessed());
-		printf("Temperatura do RTD5: %f\n", this->GetRTD5_TemperatureProcessed()); 
+		printf("Temperatura do RTD5: %f\n", this->GetRTD5_TemperatureProcessed());
 		printf("Temperatura do Motor: %f\n", this->GetMotorTemperatureProcessed());
 		printf("Torque shudder: %f\n", this->GetTorqueShudderProcessed());
 }
@@ -631,7 +640,7 @@ void  Temperature3::IfID_Temperature3(struct can_frame* frame, nlohmann::json& U
 	if(frame->can_id == 162){
 
 		this->UpdateObject(frame->data);
-		
+
 		//this->ShowAllValuesProcessed();
 
 		UDP_Package["ID"]							= "TEMPERATURES_3";
@@ -827,8 +836,8 @@ FluxInformation::FluxInformation(){
 	FluxFeedbackProcessed 	= 0.0;
 	IdFeedback				= 0.0;
 	IdFeedbackProcessed		= 0.0;
-	IqFeedback				= 0.0;	 
-	IqFeedbackProcessed		= 0.0;	 
+	IqFeedback				= 0.0;
+	IqFeedbackProcessed		= 0.0;
 }
 
 FluxInformation::FluxInformation(unsigned char* CAN_DATA){
@@ -838,8 +847,8 @@ FluxInformation::FluxInformation(unsigned char* CAN_DATA){
 	FluxFeedbackProcessed 	= 0.0;
 	IdFeedback				= 0.0;
 	IdFeedbackProcessed		= 0.0;
-	IqFeedback				= 0.0;	 
-	IqFeedbackProcessed		= 0.0;	 
+	IqFeedback				= 0.0;
+	IqFeedbackProcessed		= 0.0;
 }
 
 void FluxInformation::UpdateObject(unsigned char* CAN_DATA){
@@ -985,10 +994,10 @@ void InternalVoltages::IfID_InternalVoltages(struct can_frame* frame, nlohmann::
 		this->UpdateObject(frame->data);
 
 		UDP_Package["ID"]						=	"InternalVoltages";
-		UDP_Package["VoltageReference1Dot5"]	=	VoltageReference1Dot5;	
-		UDP_Package["VoltageReference2Dot5"]	=	VoltageReference2Dot5;	
-		UDP_Package["VoltageReference5Dot0"]	=	VoltageReference5Dot0;	
-		UDP_Package["VoltageReference12"]	=	VoltageReference12;	
+		UDP_Package["VoltageReference1Dot5"]	=	VoltageReference1Dot5;
+		UDP_Package["VoltageReference2Dot5"]	=	VoltageReference2Dot5;
+		UDP_Package["VoltageReference5Dot0"]	=	VoltageReference5Dot0;
+		UDP_Package["VoltageReference12"]	=	VoltageReference12;
 	}
 }
 
@@ -1127,7 +1136,7 @@ void ModulationIndex_FluxWeakening::IfID_ModulationIndex_FluxWeakening(struct ca
 
 
 CommandMessage::CommandMessage(){
-	
+
 
 }
 
@@ -1139,8 +1148,8 @@ void CommandMessage::ProcessTorqueSend(float* Torque, int flag){
 			TorqueCommandLSByte = TorqueCommand;
 		}
 		if(TorqueCommand >= 32768){
-			TorqueCommandLSByte = (TorqueCommand & 0xFF); 
-			TorqueCommandMSByte = (TorqueCommand >> 8); 
+			TorqueCommandLSByte = (TorqueCommand & 0xFF);
+			TorqueCommandMSByte = (TorqueCommand >> 8);
 		}
 	}
 	if(flag == 1){ //Torque Limit
@@ -1150,20 +1159,43 @@ void CommandMessage::ProcessTorqueSend(float* Torque, int flag){
 			CommandedTorqueLimitLSB = CommandedTorqueLimit;
 		}
 		if(CommandedTorqueLimit >= 32768){
-			CommandedTorqueLimitMSB = (CommandedTorqueLimit & 0xFF); 
-			CommandedTorqueLimitLSB = (CommandedTorqueLimit >> 8); 
+			CommandedTorqueLimitMSB = (CommandedTorqueLimit & 0xFF);
+			CommandedTorqueLimitLSB = (CommandedTorqueLimit >> 8);
 		}
 
 	}
 }
 
-void CommandMessage::UpdateFrame(struct can_frame* frame){ 
+void CommandMessage::Process_SpeedSend(float* Speed){
+	SpeedCommand =  (int) (*Speed)*10;
+	if(SpeedCommand < 32768){
+		SpeedCommandMSByte = 0;
+		SpeedCommandLSByte = SpeedCommand;
+	}
+	if(SpeedCommand >= 32768){
+		SpeedCommandLSByte = (SpeedCommand & 0xFF);
+		SpeedCommandMSByte = (SpeedCommand >> 8);
+	}
+}
+
+void CommandMessage::UpdateFrame(struct can_frame* frame){
 	frame->can_id = COMMAND_MESSAGE;
 	frame->data[0] = TorqueCommandLSByte;
 	frame->data[1] = TorqueCommandMSByte;
+	frame->data[2] = SpeedCommandLSByte;
+	frame->data[3] = SpeedCommandMSByte;
 	frame->data[6] = CommandedTorqueLimitLSB;
 	frame->data[7] = CommandedTorqueLimitMSB;
 
+}
+
+void CommandMessage::SetInverterEnable(int Inverter_Enable, struct can_frame* frame){
+	if(Inverter_Enable){
+		frame->data[5] = frame->data[5]|0b00000001;
+	}
+	else{
+		frame->data[5] = frame->data[5]&11111110;
+	}
 }
 
 DigitalInputStates::DigitalInputStates(){
@@ -1331,43 +1363,43 @@ void InternalStates::ShowAllValuesProcessed(){
 
 FaultErrors::FaultErrors(){
 	std::array<std::pair<bool, std::string>, 64> errors{
-	std::make_pair(false, "Hardware Gate/Desaturation Fault"), 
-	std::make_pair(false, "HW Over-current Fault"), 
-	std::make_pair(false, "Accelerator Shorted"), 
-	std::make_pair(false, "Accelerator Open"), 
-	std::make_pair(false, "Current Sensor Low"), 
-	std::make_pair(false, "Current Sensor High"), 
-	std::make_pair(false, "Module Temperature Low"), 
-	std::make_pair(false, "Module Temperature High"), 
+	std::make_pair(false, "Hardware Gate/Desaturation Fault"),
+	std::make_pair(false, "HW Over-current Fault"),
+	std::make_pair(false, "Accelerator Shorted"),
+	std::make_pair(false, "Accelerator Open"),
+	std::make_pair(false, "Current Sensor Low"),
+	std::make_pair(false, "Current Sensor High"),
+	std::make_pair(false, "Module Temperature Low"),
+	std::make_pair(false, "Module Temperature High"),
 
-	std::make_pair(false, "Control PCB Temperature Low"), 
-	std::make_pair(false, "Control PCB Temperature High"), 
-	std::make_pair(false, "Gate Drive PCB Temperature Low"), 
-	std::make_pair(false, "Gate Drive PCB Temperature High"), 
-	std::make_pair(false, "5V Sense Voltage Low"), 
-	std::make_pair(false, "5V Sense Voltage High"), 
-	std::make_pair(false, "12V Sense Voltage Low"), 
-	std::make_pair(false, "12V Sense Voltage High"), 
+	std::make_pair(false, "Control PCB Temperature Low"),
+	std::make_pair(false, "Control PCB Temperature High"),
+	std::make_pair(false, "Gate Drive PCB Temperature Low"),
+	std::make_pair(false, "Gate Drive PCB Temperature High"),
+	std::make_pair(false, "5V Sense Voltage Low"),
+	std::make_pair(false, "5V Sense Voltage High"),
+	std::make_pair(false, "12V Sense Voltage Low"),
+	std::make_pair(false, "12V Sense Voltage High"),
 
-	std::make_pair(false, "2.5V Sense Voltage Low"), 
-	std::make_pair(false, "2.5V Sense Voltage High"), 
-	std::make_pair(false, "1.5V Sense Voltage Low"), 
-	std::make_pair(false, "1.5V Sense Voltage High"), 
-	std::make_pair(false, "DC Bus Voltage High"), 
-	std::make_pair(false, "DC Bus Voltage Low"), 
-	std::make_pair(false, "Pre-charge Timeout"), 
-	std::make_pair(false, "Pre-charge Voltage Failure"), 
+	std::make_pair(false, "2.5V Sense Voltage Low"),
+	std::make_pair(false, "2.5V Sense Voltage High"),
+	std::make_pair(false, "1.5V Sense Voltage Low"),
+	std::make_pair(false, "1.5V Sense Voltage High"),
+	std::make_pair(false, "DC Bus Voltage High"),
+	std::make_pair(false, "DC Bus Voltage Low"),
+	std::make_pair(false, "Pre-charge Timeout"),
+	std::make_pair(false, "Pre-charge Voltage Failure"),
 
-	std::make_pair(false, "EEPROM Checksum Invalid"), 
-	std::make_pair(false, "EEPROM Data Out of Range"), 
-	std::make_pair(false, "EEPROM Update Required"), 
-	std::make_pair(false, "Reserved"), 
-	std::make_pair(false, "Reserved"), 
-	std::make_pair(false, "Reserved"), 
-	std::make_pair(false, "Brake Shorted"), 
-	std::make_pair(false, "Brake Open"), 
+	std::make_pair(false, "EEPROM Checksum Invalid"),
+	std::make_pair(false, "EEPROM Data Out of Range"),
+	std::make_pair(false, "EEPROM Update Required"),
+	std::make_pair(false, "Reserved"),
+	std::make_pair(false, "Reserved"),
+	std::make_pair(false, "Reserved"),
+	std::make_pair(false, "Brake Shorted"),
+	std::make_pair(false, "Brake Open"),
 
-	std::make_pair(false, "Motor Over-speed Fault"), 
+	std::make_pair(false, "Motor Over-speed Fault"),
 	std::make_pair(false, "Over-current Fault"),
 	std::make_pair(false, "Over-voltage Fault"),
 	std::make_pair(false, "Inverter Over-temperature Fault"),
@@ -1426,9 +1458,6 @@ void FaultErrors::UpdateObject(unsigned char* CAN_DATA){
 	for(int i = 0; i < 7; i++){
 		Errors_Bytes[i] = CAN_DATA[i];
 	}
-	
+
 }
-
-
-
 
