@@ -206,7 +206,7 @@ void MainWindow::on_disable_motor_button_clicked()
 
     QJsonObject UDP_Packet_Send;
     UDP_Packet_Send["ID"] = "disable_id";
-    UDP_Packet_Send["Disable_Command"] = false;
+    UDP_Packet_Send["Enable_Command"] = false;
 
     sendJsonToUDP(UDP_Packet_Send);
 
