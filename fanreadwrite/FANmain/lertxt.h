@@ -30,12 +30,15 @@
 #include <vector>
 #include <string>
 #include <thread>
+#include <mutex>
+#include <atomic>
 #include <chrono>
 #include "nlohmann/json.hpp"
 #include <string.h>
 #include <array>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
+#include <condition_variable>
 
 void delay_openmp(int milisec);
 

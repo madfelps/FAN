@@ -27,7 +27,7 @@ using json = nlohmann::json;
 
 int main()
 {
-	printf("Teste programa!\n");
+	printf("Iniciando.. \n");
 	float SpeedPretendida;
 	float TorquePretendido;
 	float TorqueLimit;
@@ -70,6 +70,7 @@ int main()
 	addr.can_ifindex = ifr.ifr_ifindex;
 	bind(SocketCan, (struct sockaddr *) &addr, sizeof(addr));
 	struct can_frame frameRead, frameWrite; //Criação dos frames
+	struct can_frame frameWrite_Reserva, frameWrite_Titular;
 	frameRead.can_dlc = 8;
 	frameWrite.can_dlc = 8;
 
@@ -94,7 +95,7 @@ int main()
 
 	servaddr.sin_family = AF_INET; // IPv4
 
-	inet_aton("192.168.15.14" , &servaddr.sin_addr);
+	inet_aton("127.0.0.1" , &servaddr.sin_addr);
 
 	servaddr.sin_addr.s_addr = INADDR_ANY;
 	servaddr.sin_port = htons(8080);
@@ -257,15 +258,14 @@ int main()
 
     int OpcaoTorqueLimit;
     int AuxiliarInterface;
+    std::mutex valorMtx;
 
 
 	lin = 0;
 
 	//em caso de teste do chrono, incluir std::cout no shared do openmp
 	int hasMessage = 0;
-	#pragma omp parallel default (none) shared(sockfd, hasMessage, MsgToClient) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, ObjCurrentInformation, ObjVoltageInformation, ObjFluxInformation, ObjInternalVoltages, ObjAnalogInputVoltages, ObjModulationIndex_FluxWeakening, UDP_Package, contador, len, cliaddr, logger, AuxiliarInterface)
-
-
+	#pragma omp parallel default (none) shared(sockfd, hasMessage, MsgToClient) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, ObjCurrentInformation, ObjVoltageInformation, ObjFluxInformation, ObjInternalVoltages, ObjAnalogInputVoltages, ObjModulationIndex_FluxWeakening, UDP_Package, contador, len, cliaddr, logger, AuxiliarInterface, frameWrite_Reserva)
 	{
 		#pragma omp sections
 		{
@@ -283,14 +283,15 @@ int main()
 				//}
 
 					   frameRead.can_id = 162;
-					   frameRead.data[0] = 8;
-					   frameRead.data[1] = 168;
+					   frameRead.data[0] = 2;
+					   frameRead.data[1] = 1;
 					   frameRead.data[2] = 51;
 					   frameRead.data[3] = 1;
 					   frameRead.data[4] = 2;
 					   frameRead.data[5] = 2;
 					   frameRead.data[6] = 51;
 					   frameRead.data[7] = 2;
+
 
 
 
@@ -307,7 +308,7 @@ int main()
 						//Desenvolvimento do log
 						if(frameRead.can_id == 160){
 							logger->info("ID: TEMPERATURES_1");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjTemperature1.GetByte7(), ObjTemperature1.GetByte6(), ObjTemperature1.GetByte5(), ObjTemperature1.GetByte4(), ObjTemperature1.GetByte3(), ObjTemperature1.GetByte2(), ObjTemperature1.GetByte1(), ObjTemperature1.GetByte0());
 							logger->info("Module A: {:f}", ObjTemperature1.GetModuleAProcessed());
 							logger->info("Module B: {:f}", ObjTemperature1.GetModuleBProcessed());
@@ -318,7 +319,7 @@ int main()
 						//TO DO ARRUMAR O ELSE
 						else if(frameRead.can_id == 161){
 							logger->info("ID: TEMPERATURES_2");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjTemperature2.GetByte7(), ObjTemperature2.GetByte6(), ObjTemperature2.GetByte5(), ObjTemperature2.GetByte4(), ObjTemperature2.GetByte3(), ObjTemperature2.GetByte2(), ObjTemperature2.GetByte1(), ObjTemperature2.GetByte0());
 							logger->info("Control Board Temperature: {:f}", ObjTemperature2.GetControlBoardTemperatureProcessed());
 							logger->info("RTD1: {:f}", ObjTemperature2.GetRTD1Processed());
@@ -329,7 +330,7 @@ int main()
 
 						else if(frameRead.can_id == 162){
 							logger->info("ID: TEMPERATURES_3");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjTemperature3.GetByte7(), ObjTemperature3.GetByte6(), ObjTemperature3.GetByte5(), ObjTemperature3.GetByte4(), ObjTemperature3.GetByte3(), ObjTemperature3.GetByte2(), ObjTemperature3.GetByte1(), ObjTemperature3.GetByte0());
 							logger->info("RTD4 Temperature: {:f}", ObjTemperature3.GetRTD4_TemperatureProcessed());
 							logger->info("RTD5 Temperature: {:f}", ObjTemperature3.GetRTD5_TemperatureProcessed());
@@ -340,7 +341,7 @@ int main()
 
 						else if(frameRead.can_id == 165){
 							logger->info("ID: MOTOR_POSITION");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjMotorPosInfo.GetByte7(), ObjMotorPosInfo.GetByte6(), ObjMotorPosInfo.GetByte5(), ObjMotorPosInfo.GetByte4(), ObjMotorPosInfo.GetByte3(), ObjMotorPosInfo.GetByte2(), ObjMotorPosInfo.GetByte1(), ObjMotorPosInfo.GetByte0());
 							logger->info("Angle: {:f}", ObjMotorPosInfo.GetMotorAngleProcessed());
 							logger->info("Speed: {:f}", ObjMotorPosInfo.GetMotorSpeedProcessed());
@@ -349,7 +350,7 @@ int main()
 
 						else if(frameRead.can_id == 166){
 							logger->info("ID: CURRENT_INFORMATION");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjCurrentInformation.GetByte7(), ObjCurrentInformation.GetByte6(), ObjCurrentInformation.GetByte5(), ObjCurrentInformation.GetByte4(), ObjCurrentInformation.GetByte3(), ObjCurrentInformation.GetByte2(), ObjCurrentInformation.GetByte1(), ObjCurrentInformation.GetByte0());
 							logger->info("Phase A Current: {:f}", ObjCurrentInformation.GetPhaseACurrentProcessed());
 							logger->info("Phase B Current: {:f}", ObjCurrentInformation.GetPhaseBCurrentProcessed());
@@ -360,7 +361,7 @@ int main()
 
 						else if(frameRead.can_id == 167){
 							logger->info("ID: VOLTAGE_INFORMATION");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjVoltageInformation.GetByte7(), ObjVoltageInformation.GetByte6(), ObjVoltageInformation.GetByte5(), ObjVoltageInformation.GetByte4(), ObjVoltageInformation.GetByte3(), ObjVoltageInformation.GetByte2(), ObjVoltageInformation.GetByte1(), ObjVoltageInformation.GetByte0());
 							logger->info("DC Bus Voltage: {:f}", ObjVoltageInformation.GetDCBusVoltageProcessed());
 							logger->info("Output Voltage: {:f}", ObjVoltageInformation.GetOutputVoltageProcessed());
@@ -371,7 +372,7 @@ int main()
 
 						else if(frameRead.can_id == 168){
 							logger->info("ID: FLUX_INFORMATION");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjFluxInformation.GetByte7(), ObjFluxInformation.GetByte6(), ObjFluxInformation.GetByte5(), ObjFluxInformation.GetByte4(), ObjVoltageInformation.GetByte3(), ObjFluxInformation.GetByte2(), ObjFluxInformation.GetByte1(), ObjFluxInformation.GetByte0());
 							logger->info("Flux Command: {:f}", ObjFluxInformation.GetFluxCommandProcessed());
 							logger->info("Flux Feedback: {:f}", ObjFluxInformation.GetFluxFeedbackProcessed());
@@ -382,7 +383,7 @@ int main()
 
 						else if(frameRead.can_id == 169){
 							logger->info("ID: INTERNAL_VOLTAGES");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
 							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5());
 							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
@@ -393,7 +394,7 @@ int main()
 						//VER ISSO DAQUI DPS (INTERNAL STATES)
 						else if(frameRead.can_id == 170){
 							logger->info("ID: INTERNAL_VOLTAGES");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
 							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5());
 							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
@@ -404,7 +405,7 @@ int main()
 						//VER ISSO TBM (FAULT ERRORS)
 						else if(frameRead.can_id == 171){
 							logger->info("ID: INTERNAL_VOLTAGES");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
 							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5());
 							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
@@ -424,7 +425,7 @@ int main()
 
 						else if(frameRead.can_id == 171){ //TODO VER ISSO TBM (FAULT ERRORS)
 							logger->info("ID: MODULATIONINDEX_FLUXWEAKENING");
-							logger->info("ID: {%d}", frameRead.can_id);
+							logger->info("ID: {:d}", frameRead.can_id);
 							logger->info("Bytes recebidos: {:d} {:d} {:d} {:d} {:d} {:d} {:d} {:d}", ObjInternalVoltages.GetByte7(), ObjInternalVoltages.GetByte6(), ObjInternalVoltages.GetByte5(), ObjInternalVoltages.GetByte4(), ObjVoltageInformation.GetByte3(), ObjInternalVoltages.GetByte2(), ObjInternalVoltages.GetByte1(), ObjInternalVoltages.GetByte0());
 							logger->info("Voltage Reference 1.5: {:f}", ObjInternalVoltages.GetVoltageReference1Dot5());
 							logger->info("Voltage Reference 2.5: {:f}", ObjInternalVoltages.GetVoltageReference2Dot5());
@@ -433,9 +434,14 @@ int main()
 							logger->info("--------------------------------------------------");
 						}
 
+
 						std::string UDP_Package_StdString = UDP_Package.dump();
+						#pragma omp critical (teste)
+						{
 						strcpy(MsgToClient, UDP_Package_StdString.c_str());
+						//printf("Mensagem aqui: %s\n", MsgToClient);
 						hasMessage = 1;
+						}
 					}
 
 
@@ -445,13 +451,19 @@ int main()
 			#pragma omp section //TASK WRITE MOTOR
 			{
 				while(1){
-					//ObjCommandMessage.ProcessAngleVelocity(&SpeedPretendida)
-					//ObjCommandMessage.ProcessTorqueSend(&TorqueLimit, 1);
-					//ObjCommandMessage.UpdateFrame(&frameWrite);
+
+					#pragma omp critical (writeFrame)
+					{
+					frameWrite = frameWrite_Reserva;
+					}
+
 					#pragma omp critical (mutex)
 					{
 					FlagWrite = write(SocketCan, &frameWrite, sizeof(struct can_frame));
+
 					}
+
+
 
 					//delay_openmp(400);
 					//std::cout << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now().time_since_epoch()).count() << std::endl;
@@ -466,43 +478,56 @@ int main()
 				std::string RecID;
 				std::string const Speed_Literal 			= "speed_id";
 				std::string const InverterEnable_Literal 	= "enable_id";
+				int lenUDP = 0;
 
 
 				while(1){
 					//printf("Chegando da interface..");
 					//TODO ver a necessidade de utilizar mutex no UDP
-					n = recvfrom(sockfd, (char *)buffer, 99,
-						MSG_WAITALL, ( struct sockaddr *) &cliaddr,
-						&len);
-					buffer[n] = '\0';
-					//TODO Rever a questão da adição do '\0' (bitrix)
+					ioctl(sockfd, FIONREAD, &lenUDP);
+					if(lenUDP > 0 && lenUDP < sizeof(buffer)){
+						n = recvfrom(sockfd, (char *)buffer, lenUDP,
+							MSG_WAITALL, ( struct sockaddr *) &cliaddr,
+							&len);
+						buffer[n] = '\0';
+						//TODO Rever a questão da adição do '\0' (bitrix)
+
+					}
+					else{
+						continue;
+					}
 
 					printf("%s\n", buffer);
-					printf("Testando..\n");
 					Mensagem = buffer;
-					UDP_Receive = json::parse(Mensagem); //converter char* pra string?
-					//TODO verificar se o ID existe (bitrix) https://github.com/nlohmann/json/issues/1471
+
+					UDP_Receive = json::parse(Mensagem);
 
 					//TorqueLimit = atof(buffer);
 					//printf("%s \n", buffer);
 
-					//TODO Utilizar operador de comparação (c++ tem overload)
-					if(UDP_Receive["ID"] == "speed_id"){
-						//ObjCommandMessage.Process_SpeedSend(static_cast<float*>(UDP_Receive.at("speed_id"))); //verificar isso depois
-						ObjCommandMessage.UpdateFrame(&frameWrite);
-						printf("Mensagem de velocidade. \n");
-					}
-					else if(UDP_Receive["ID"] == "enable_id"){
-						if(UDP_Receive["Enable_Command"]){
-							ObjCommandMessage.SetInverterEnable(1, &frameWrite);
+					if(UDP_Receive.find("ID") != UDP_Receive.end()){
+						#pragma omp critical (writeFrame)
+						{
+						if(UDP_Receive["ID"] == "speed_id"){
+							//ObjCommandMessage.Process_SpeedSend(static_cast<float*>(UDP_Receive.at("speed_id"))); //verificar isso depois
+							ObjCommandMessage.UpdateFrame(&frameWrite_Reserva);
 						}
-						else{
-							ObjCommandMessage.SetInverterEnable(0, &frameWrite);
+						else if(UDP_Receive["ID"] == "enable_id"){
+							if(UDP_Receive["Enable_Command"]){
+								ObjCommandMessage.SetInverterEnable(1, &frameWrite_Reserva);
+							}
+							else{
+								ObjCommandMessage.SetInverterEnable(0, &frameWrite_Reserva);
+							}
+
+							//TODO ponteiro pra frameWrite pro conceito de titular e reserva (2 framewrite); atomic boolean
+							//Esse ponteiro e flag vão ser utilizados nas duas threads
+							// flag atomic (flag e bool)
 						}
-						//TODO ponteiro pra frameWrite pro conceito de titular e reserva (2 framewrite); atomic boolean
-						//Esse ponteiro e flag vão ser utilizados nas duas threads
+						}
 
 					}
+
 				}
 			}
 
@@ -510,8 +535,16 @@ int main()
 			{
 				while(1){
 
+					#pragma omp critical (teste)
+					{
 					if(hasMessage){
 						//printf("Mensagem: %s\n", MsgToClient);
+						sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
+						MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+						len);
+						hasMessage = 0;
+
+					}
 					}
 
 					//Envio do pacote UDP para o computador
@@ -523,9 +556,7 @@ int main()
 					//strcpy(MsgToClient, UDP_Package_StdString.c_str());
 					//printf("Mensagem: %s\n", MsgToClient);
 					//DESCOMENTAR A LINHA DE BAIXO DEPOIS
-					sendto(sockfd, (const char *)MsgToClient, strlen(MsgToClient),
-					MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
-					len);
+
 
 //					printf("vamos testarrrrrr\n");
 //					scanf(" %[^\n]s", buffer3);
