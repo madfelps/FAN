@@ -40,11 +40,10 @@ int main()
 	//FILE* Arquivo;
 	//Arquivo = fopen("log.txt", "a");
 
-	char StringDescreveSensor[11][10];
-	char StringGuardaDadosSensor[10][10];
+
+	//Inicialização dos objetos referentes a classe dos parâmetros do motor
 
 
-	//Declaração dos Objetos
 	TorqueTimerInfo ObjTorqueTimerInfo;
 	MotorPosInfo ObjMotorPosInfo;
 	Temperature1 ObjTemperature1;
@@ -59,7 +58,10 @@ int main()
 	CommandMessage ObjCommandMessage;
 	InternalStates ObjInternalStates;
 
-	//Configuração do CAN
+
+
+	//Configuração da CAN
+
 
 	int SocketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 	struct sockaddr_can addr;
@@ -148,8 +150,8 @@ int main()
 
 
 	//Inicialização e Configuração do Pacote por JSON
+
 	json UDP_Package;
-	//std::string UDP_Package_StdString = "";
 
 	UDP_Package["ID"] 							= "X";
 	UDP_Package["Angle"] 						= 0.0;
@@ -263,7 +265,7 @@ int main()
 
 	lin = 0;
 
-	//em caso de teste do chrono, incluir std::cout no shared do openmp
+
 	int hasMessage = 0;
 	#pragma omp parallel default (none) shared(sockfd, hasMessage, MsgToClient) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, ObjCurrentInformation, ObjVoltageInformation, ObjFluxInformation, ObjInternalVoltages, ObjAnalogInputVoltages, ObjModulationIndex_FluxWeakening, UDP_Package, contador, len, cliaddr, logger, AuxiliarInterface, frameWrite_Reserva)
 	{
@@ -305,7 +307,7 @@ int main()
 						ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
 
 
-						//Desenvolvimento do log
+						//Desenvolvimento do log (spdlog)
 						if(frameRead.can_id == 160){
 							logger->info("ID: TEMPERATURES_1");
 							logger->info("ID: {:d}", frameRead.can_id);
@@ -316,7 +318,7 @@ int main()
 							logger->info("--------------------------------------------------");
 						}
 
-						//TO DO ARRUMAR O ELSE
+
 						else if(frameRead.can_id == 161){
 							logger->info("ID: TEMPERATURES_2");
 							logger->info("ID: {:d}", frameRead.can_id);
