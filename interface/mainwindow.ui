@@ -41,6 +41,27 @@
     <property name="styleSheet">
      <string notr="true">background-color: rgb(136, 138, 133);</string>
     </property>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>412</x>
+       <y>410</y>
+       <width>81</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>TORQUE</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QFrame" name="frame">
     <property name="geometry">
@@ -90,9 +111,9 @@ background-color: rgb(186, 189, 182);</string>
     <widget class="QPushButton" name="sendButton">
      <property name="geometry">
       <rect>
-       <x>618</x>
+       <x>598</x>
        <y>344</y>
-       <width>139</width>
+       <width>157</width>
        <height>57</height>
       </rect>
      </property>
@@ -122,7 +143,7 @@ background-color: rgb(13, 94, 4);</string>
      <property name="geometry">
       <rect>
        <x>294</x>
-       <y>346</y>
+       <y>348</y>
        <width>91</width>
        <height>45</height>
       </rect>
@@ -146,9 +167,9 @@ background-color: rgb(13, 94, 4);</string>
     <widget class="QSlider" name="setSpeedSlider">
      <property name="geometry">
       <rect>
-       <x>388</x>
+       <x>298</x>
        <y>410</y>
-       <width>367</width>
+       <width>457</width>
        <height>47</height>
       </rect>
      </property>
@@ -274,11 +295,6 @@ background-color: rgb(13, 94, 4);</string>
        <height>71</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>20</pointsize>
-      </font>
-     </property>
      <property name="styleSheet">
       <string notr="true">background-color: rgb(255, 255, 255);</string>
      </property>
@@ -292,25 +308,8 @@ background-color: rgb(13, 94, 4);</string>
        <height>69</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>40</pointsize>
-      </font>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
      <property name="styleSheet">
       <string notr="true">background-color: rgb(255, 255, 255);</string>
-     </property>
-     <property name="verticalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
-     </property>
-     <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
-     </property>
-     <property name="textInteractionFlags">
-      <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
      </property>
     </widget>
     <widget class="QLabel" name="label_9">
@@ -358,9 +357,9 @@ background-color: rgb(13, 94, 4);</string>
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>282</x>
-       <y>262</y>
-       <width>99</width>
+       <x>298</x>
+       <y>274</y>
+       <width>285</width>
        <height>51</height>
       </rect>
      </property>
@@ -373,14 +372,14 @@ background-color: rgb(13, 94, 4);</string>
       <string notr="true">color: rgb(255, 255, 255);</string>
      </property>
      <property name="text">
-      <string>MOTOR</string>
+      <string>MOTOR HABILITATION</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="enable_motor_button">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>262</y>
+       <x>596</x>
+       <y>268</y>
        <width>77</width>
        <height>61</height>
       </rect>
@@ -400,11 +399,11 @@ background-color: rgb(186, 189, 182);</string>
       <string>ENABLE</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_4">
+    <widget class="QPushButton" name="disable_motor_button">
      <property name="geometry">
       <rect>
-       <x>472</x>
-       <y>262</y>
+       <x>680</x>
+       <y>268</y>
        <width>75</width>
        <height>61</height>
       </rect>
@@ -424,36 +423,12 @@ background-color: rgb(186, 189, 182);</string>
       <string>DISABLE</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_5">
-     <property name="geometry">
-      <rect>
-       <x>556</x>
-       <y>262</y>
-       <width>201</width>
-       <height>73</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>30</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(204, 0, 0);</string>
-     </property>
-     <property name="text">
-      <string>BRAKE</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="speed_label">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>346</y>
-       <width>211</width>
+       <x>388</x>
+       <y>344</y>
+       <width>201</width>
        <height>55</height>
       </rect>
      </property>
@@ -467,6 +442,7 @@ background-color: rgb(204, 0, 0);</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-color: rgb(255, 255, 255);
+border-color: rgb(0, 0, 0);
 border-color: rgb(0, 0, 0);</string>
      </property>
      <property name="text">
@@ -497,10 +473,30 @@ border-color: rgb(0, 0, 0);</string>
 background-color: rgb(186, 189, 182);</string>
      </property>
      <property name="text">
-      <string>                                  TEMPERATURES</string>
+      <string>TEMPERATURES</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="torque_label">
+     <property name="geometry">
+      <rect>
+       <x>-18</x>
+       <y>424</y>
+       <width>289</width>
+       <height>37</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);
+border-color: rgb(0, 0, 0);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </widget>

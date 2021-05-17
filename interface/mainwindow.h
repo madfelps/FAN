@@ -31,6 +31,9 @@ public:
         }
         return Buffer.mid(Pos1, Pos2-Pos1);
     }
+    int new_speed, last_speed;
+    bool enable_send;
+    QByteArray confirmation;
 
 
 
@@ -40,7 +43,17 @@ signals:
 private slots:
     void on_sendButton_clicked();
     void on_actionSobre_triggered();
+
+    //void on_actionAbout_triggered();
+
+    //void on_pushButton_clicked();
+
+
+
+
+
     void on_enable_motor_button_clicked();
+
     void on_disable_motor_button_clicked();
 
 

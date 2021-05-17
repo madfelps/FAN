@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Interface gráfica para utilização do túnel de vento do hangar X do Departamente de Engenharia Aeronáutica da Escola de Engenharia de São Carlos - EESC USP, como parte do projeto de Iniciação Científica &quot;Desenvolvimento de um Software Embarcado para controle via Comunicação CAN de um Túnel de Vento&quot;.
+    <string> Interface gráfica para utilização do túnel de vento do hangar X do Departamente de Engenharia Aeronáutica da Escola de Engenharia de São Carlos - EESC USP, como parte do projeto de Iniciação Científica &quot;Desenvolvimento de um Software Embarcado para controle via Comunicação CAN de um Túnel de Vento&quot;.
 
 Orientandos: Felipe Madureira, Gaspar Henrique 
 ￼
@@ -33,7 +33,7 @@ Orientandos: Felipe Madureira, Gaspar Henrique
 
 
 
-Orientadores: Prof.Dr.Paulo Greco, Prof.Dr.Glauco, Doutorando Henrique...
+Orientadores: Prof.Dr.Paulo Greco, Prof.Dr.Glauco, Doutorando Henrique Borges Garcia
 </string>
    </property>
    <property name="wordWrap">
@@ -43,10 +43,10 @@ Orientadores: Prof.Dr.Paulo Greco, Prof.Dr.Glauco, Doutorando Henrique...
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>154</x>
      <y>200</y>
-     <width>91</width>
-     <height>91</height>
+     <width>115</width>
+     <height>111</height>
     </rect>
    </property>
    <property name="text">
@@ -54,6 +54,28 @@ Orientadores: Prof.Dr.Paulo Greco, Prof.Dr.Glauco, Doutorando Henrique...
    </property>
    <property name="pixmap">
     <pixmap resource="resource_file.qrc">:/imagens/images/gaspar.jpeg</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>14</x>
+     <y>200</y>
+     <width>131</width>
+     <height>109</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="resource_file.qrc">:/imagens/images/felipe.jpeg</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
