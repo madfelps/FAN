@@ -8,17 +8,37 @@
 #include <string>
 #include <QProgressBar>
 #include <QStyle>
+#include <QThread>
 
+//TROCAR OS DEFINES
+constexpr int MAX_MOTOR_TEMP  = 90;
+constexpr double LOW_LIMIT_MOTOR_TEMP = 30.0;
+constexpr double MED_LIMIT_MOTOR_TEMP  = 60.0;
+constexpr int MAX_INVERTER_TEMP = 80;
+constexpr double  LOW_LIMIT_INVERTER_TEMP = 30.0;
+constexpr double  MED_LIMIT_INVERTER_TEMP = 60.0;
+constexpr int MAX_SPEED = 5000;
+constexpr int MEDIUM_THRESHOLD_SPEED = 2500;
+constexpr int MAX_THRESHOLD_SPEED = 3000;
+constexpr int SLIDER_MAX_SPEED = 5000;
+constexpr int SLIDER_STEPS = 200;
+constexpr int PORT = 8080;
+/**/
 /*Função para discretizar o slider de velocidade*/
-int MainWindow::getProperValue(float value, int singleStep, int maxSize)
+int MainWindow::getProperValue(int value, int singleStep, int maxSize)
 {
-    for (int iterator = 0; iterator != maxSize; iterator += singleStep)
-    {
-        auto diff = std::abs(iterator - value);
-        if (diff <= singleStep/2)
-        {
-            return iterator;
-        }
+
+    int remainder = value % singleStep;
+
+    if ( remainder == 0 ) {
+        return value;
+    }
+
+    if ( singleStep - remainder < singleStep/(2.f) ) {
+        return (1 + (value / singleStep)) * singleStep;
+    }
+    else {
+        return (value / singleStep) * singleStep;
     }
 }
 
@@ -53,94 +73,100 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
 
+
     ui->setupUi(this);
 
     /*TERMOMETROS*/
     /*Termômetro do motor */
     ui->motorTermometer->setStyleSheet("QProgressBar::chunk{""background-color: green;""border-radius: 7px""}QProgressBar{""background-color: rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px""}");
     ui->textTempMotor->setStyleSheet("QTextEdit{ " "background-color:rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px;""padding: 0 8px;""selection-background-color: darkgray;""font-size: 16px;}""QTextEdit:focus { ""background-color:rgb(192, 192, 255);}");
-    ui->motorTermometer->setMaximum(90);
+    ui->motorTermometer->setMaximum(MAX_MOTOR_TEMP);
     //connect(ui->setSpeedSlider,SIGNAL(sliderMoved(int)),ui->motorTermometer,SLOT(setValue(int)));
     //connect(ui->motorTermometer, &QProgressBar::valueChanged,[=](){ui->motorTermometer->setStyleSheet(QString::fromStdString(style(ui->motorTermometer->value(),30,60)));});
 
     /*Termômetro do inversor*/
     ui->inverterTermometer->setStyleSheet("QProgressBar::chunk{""background-color: green;""border-radius: 7px""}QProgressBar{""background-color: rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px""}");
-    ui->inverterTermometer->setMaximum(80);
+    ui->inverterTermometer->setMaximum(MAX_INVERTER_TEMP);
     ui->textTempInverter->setStyleSheet("QTextEdit{ " "background-color:rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px;""padding: 0 8px;""selection-background-color: darkgray;""font-size: 16px;}""QTextEdit:focus { ""background-color:rgb(192, 192, 255);}");
 
 
     /*VELOCIMETRO CONFIG*/
     ui->meterWidget->setForeground(Qt::white);
-    ui->meterWidget->setMaxValue(5000);
-    ui->meterWidget->setThresholdMedium(2500);
-    ui->meterWidget->setThreshold(3000);
+    ui->meterWidget->setMaxValue(MAX_SPEED);
+    ui->meterWidget->setThresholdMedium(MEDIUM_THRESHOLD_SPEED);
+    ui->meterWidget->setThreshold(MAX_THRESHOLD_SPEED);
     ui->meterWidget->setUnits("RPM");
     ui->meterWidget->setLabel("Speed");
 
     /*SLIDER CONFIG*/
-    ui->setSpeedSlider->setMaximum(5000);
-    ui->setSpeedSlider->setSingleStep(200);
-    connect(ui->setSpeedSlider, &QSlider::valueChanged, [=](){ui->setSpeedSlider->setValue(
+    ui->setSpeedSlider->setMaximum(SLIDER_MAX_SPEED);
+    ui->setSpeedSlider->setSingleStep(SLIDER_STEPS);
+    connect(ui->setSpeedSlider, &QSlider::valueChanged, [&](){ui->setSpeedSlider->setValue(
                         getProperValue(ui->setSpeedSlider->value(), ui->setSpeedSlider->singleStep(), ui->setSpeedSlider->maximum())
                         );});
+
     connect(ui->setSpeedSlider, &QSlider::valueChanged,
                 [&](){ui->speed_label->setText(QString::fromStdString(std::to_string(ui->setSpeedSlider->value())));});
-    ui->setSpeedSlider->setStyleSheet("QSlider::groove:vertical {""border: 5px white;""width: 50px;" "border-radius: 5px;""height:140px;""margin: 2px;""}""QSlider::handle:horizontal {""background-color: blue;""border-color:black;""border: 3px black;""border-radius: 3px;""height: 50px;""width: 30px;""margin: -8px 0px;""}");
-    ui->setSpeedSlider->setStyleSheet("QSlider::groove:horizontal{height: 20px; margin: 0 0;}""QSlider::handle:horizontal {background-color: black; border: 1px; height: 40px; width: 40px; margin: 0 0;}" "");
+
+
+
+    ui->setSpeedSlider->setStyleSheet("QSlider::groove:vertical {border: 5px white;width: 50px;border-radius: 5px;height:140px;margin: 2px;}QSlider::handle:horizontal {background-color: blue;border-color:black;border: 3px black;border-radius: 3px;height: 50px;width: 30px;margin: -8px 0px;}");
+    ui->setSpeedSlider->setStyleSheet("QSlider::groove:horizontal{height: 20px; margin: 0 0;}QSlider::handle:horizontal {background-color: black; border: 1px; height: 40px; width: 40px; margin: 0 0;}");
 
     /*Criação do socket UDP para comunicação*/
     socket = new QUdpSocket(this);
     connect(socket, &QUdpSocket::readyRead, [&](){
         if(socket->hasPendingDatagrams()){
-
+            QString ID,Torque_text,TemperatureMotor_text,TemperatureInverter_text;
+            double Speed,TemperatureMotor,TemperatureInverter;
+            //double Torque;
             QByteArray Buffer;
-            QByteArray Word;
-            QByteArray Angle,Speed,Torque,TemperatureModuleA,TemperatureModuleB,TemperatureModuleC,TemperatureMotor,
-                       TemperatureInverter;
+            QByteArray TemperatureModuleA,TemperatureModuleB,TemperatureModuleC;
+
             Buffer.resize(socket->pendingDatagramSize());
             QHostAddress sender;
             quint16 senderPort;
             socket->readDatagram(Buffer.data(), Buffer.size(), &sender, &senderPort);
 
-            /*"Função" para pegar o valor de um campo do json*/
-            Pos1 = Buffer.indexOf(":", Buffer.indexOf("ID"));
-            Pos1 = Pos1+1;
-            Pos2 = Buffer.indexOf(",", Pos1);
-            if(Pos2 == -1){
-                Pos2 = Buffer.indexOf("}", Pos1);
-            }
-            Word = Buffer.mid(Pos1, Pos2-Pos1);
-            Word = Word.mid(1,Word.length()-2);
+            QJsonDocument JsonBuffer = QJsonDocument::fromJson(Buffer);
+            qDebug() << JsonBuffer.toJson();
+            //ID = JsonBuffer.object().value("ID").toString();
+            ID = JsonBuffer["ID"].toString();
 
-            if(Word == "MOTOR_POSITION")
+            if(ID == "MOTOR_POSITION")
             {
-                Word = SliceJson(Buffer,"Speed");
-                Speed = Word;
+                //Speed = JsonBuffer.object().value("Speed").toDouble();
+                Speed = JsonBuffer["Speed"].toDouble();
+                qDebug() << Speed;
                 /*Passa a Speed para o velocimetro*/
-                ui->meterWidget->setValue(Speed.toInt());
+                ui->meterWidget->setValue(Speed);
             }
-            if(Word == "MOTOR_TORQUE")
+            else if(ID == "MOTOR_TORQUE")
             {
-                Word = SliceJson(Buffer,"Torque");
-                Torque = Word;
-                qDebug() << "Torque: " << Torque;
+                Torque_text = JsonBuffer["Torque"].toString();
+                //Torque_text = JsonBuffer.object().value("Torque").toString();
+                qDebug() << Torque_text;
+                //Torque_text = QString::number(Torque);
                 /*Passa o Torque para o velocimetro*/
-                ui->torque_label->setText(Torque);
+                ui->torque_label->setText(Torque_text);
             }
-            if(Word == "TEMPERATURES_3"){
+            else if(ID == "TEMPERATURES_3"){
 
-                Word = SliceJson(Buffer,"TemperatureMotor");
-                TemperatureMotor = Word;
+                TemperatureMotor = JsonBuffer["TemperatureMotor"].toDouble();
+                TemperatureMotor_text = QString::number(TemperatureMotor);
                 /*Passa a TemperatureMotor para o termometro e para o campo de texto*/
-                ui->textTempMotor->setText(TemperatureMotor);
-                ui->motorTermometer->setStyleSheet((QString::fromStdString(style(TemperatureMotor.toDouble(),50.0,70.0))));
-                ui->motorTermometer->setValue(TemperatureMotor.toDouble());
+                ui->textTempMotor->setText(TemperatureMotor_text);
+                //COLOCAR GRADUAÇÕES NOS TERMOMETROS
+                ui->motorTermometer->setStyleSheet((QString::fromStdString(style(TemperatureMotor,LOW_LIMIT_MOTOR_TEMP,MED_LIMIT_MOTOR_TEMP))));
+                ui->motorTermometer->setValue(TemperatureMotor);
 
                 /*Passa a TemperatureInverter para o termometro e para o campo de texto*/
-                Word = SliceJson(Buffer,"TemperatureInverter");
-                ui->textTempInverter->setText(TemperatureInverter);
-                ui->inverterTermometer->setStyleSheet((QString::fromStdString(style(TemperatureInverter.toDouble(),30.0,60.0))));
-                ui->inverterTermometer->setValue(TemperatureInverter.toDouble());
+                TemperatureInverter = JsonBuffer["TemperatureInverter"].toDouble();
+                TemperatureInverter_text = QString::number(TemperatureInverter);
+
+                ui->textTempInverter->setText(TemperatureInverter_text);
+                ui->inverterTermometer->setStyleSheet((QString::fromStdString(style(TemperatureInverter,LOW_LIMIT_INVERTER_TEMP,MED_LIMIT_INVERTER_TEMP))));
+                ui->inverterTermometer->setValue(TemperatureInverter);
 
             }
 
@@ -156,7 +182,7 @@ MainWindow::~MainWindow()
 
 /*Função que envia o comando formatado em JSON para a BeagleBone.*/
 void MainWindow::sendJsonToUDP(const QJsonObject& qJsonObject) {
-    socket->writeDatagram(QJsonDocument{qJsonObject}.toJson(), QHostAddress{"10.0.0.106"}, 8080);
+    socket->writeDatagram(QJsonDocument{qJsonObject}.toJson(), QHostAddress{"10.0.0.106"}, PORT);
 }
 
 /*Função com operações referentes ao botão de envio de velocidade do motor.
@@ -171,6 +197,7 @@ void MainWindow::on_sendButton_clicked()
         UDP_Packet_Send["Speed_Command"] = ui->speed_label->text();
 
         sendJsonToUDP(UDP_Packet_Send);
+
     }
 }
 

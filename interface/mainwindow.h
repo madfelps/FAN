@@ -40,17 +40,7 @@ signals:
 private slots:
     void on_sendButton_clicked();
     void on_actionSobre_triggered();
-
-    //void on_actionAbout_triggered();
-
-    //void on_pushButton_clicked();
-
-
-
-
-
     void on_enable_motor_button_clicked();
-
     void on_disable_motor_button_clicked();
 
 
@@ -62,7 +52,7 @@ private:
     std::string MessageSendTorqueStd, MessageTorqueLimiteStd;
     int Pos1, Pos2;
     std::string style(double value, double med_threshold, double max_threshold);
-    int getProperValue(float value, int singleStep, int maxSize);
+    int getProperValue(int value, int singleStep, int maxSize);
     bool flag_motor = false;
     void sendJsonToUDP(const QJsonObject&);
 };
