@@ -1,3 +1,4 @@
+/** @file */
 //============================================================================
 // Name        : main.cpp
 // Author      : Felipe Moura Madureira, Henrique Borges Garcia e Gaspar Henrique
@@ -14,7 +15,7 @@
  * */
 
 
-#include "lertxt.h"
+#include "RemyHVH250.h"
 
 
 #define NUM_MSG 4
@@ -25,8 +26,8 @@
 using json = nlohmann::json;
 
 
-int main()
-{
+
+int main(){
 	printf("Iniciando.. \n");
 	float SpeedPretendida;
 	float TorquePretendido;
@@ -60,9 +61,9 @@ int main()
 
 
 
-	//Configuração da CAN
-
-
+	/**
+	 * @brief: Configuração da CAN
+	*/
 	int SocketCan = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 	struct sockaddr_can addr;
 	struct ifreq ifr;
@@ -254,8 +255,8 @@ int main()
     int col = 0;
 
 	//Configuração do log
-	auto logger = spdlog::basic_logger_mt("logger", "log.txt");
-	logger->info("Arquivo de log de dados do software embarcado");
+	//auto logger = spdlog::basic_logger_mt("logger", "log.txt");
+	//logger->info("Arquivo de log de dados do software embarcado");
 
 
     int OpcaoTorqueLimit;
@@ -265,9 +266,9 @@ int main()
 
 	lin = 0;
 
-
 	int hasMessage = 0;
-	#pragma omp parallel default (none) shared(sockfd, hasMessage, MsgToClient) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, ObjCurrentInformation, ObjVoltageInformation, ObjFluxInformation, ObjInternalVoltages, ObjAnalogInputVoltages, ObjModulationIndex_FluxWeakening, UDP_Package, contador, len, cliaddr, logger, AuxiliarInterface, frameWrite_Reserva)
+	//adicionar o logger
+	#pragma omp parallel default (none) shared(sockfd, hasMessage, MsgToClient) firstprivate(FlagWrite, ObjCommandMessage, FlagRead, frameWrite, SocketCan, wordCounter, TorqueLimit, buffer3, frameRead, n, buffer, ObjMotorPosInfo, ObjTorqueTimerInfo, ObjTemperature1, ObjTemperature2, ObjTemperature3, ObjInternalStates, ObjCurrentInformation, ObjVoltageInformation, ObjFluxInformation, ObjInternalVoltages, ObjAnalogInputVoltages, ObjModulationIndex_FluxWeakening, UDP_Package, contador, len, cliaddr, AuxiliarInterface, frameWrite_Reserva)
 	{
 		#pragma omp sections
 		{
@@ -306,7 +307,7 @@ int main()
 						ObjTemperature3.IfID_Temperature3(&frameRead, UDP_Package);
 						ObjInternalStates.IfID_InternalStates(&frameRead, UDP_Package);
 
-
+						/*
 						//Desenvolvimento do log (spdlog)
 						if(frameRead.can_id == 160){
 							logger->info("ID: TEMPERATURES_1");
@@ -435,6 +436,7 @@ int main()
 							logger->info("Voltage Reference 12: {:f}", ObjInternalVoltages.GetVoltageReference12());
 							logger->info("--------------------------------------------------");
 						}
+						*/
 
 
 						std::string UDP_Package_StdString = UDP_Package.dump();

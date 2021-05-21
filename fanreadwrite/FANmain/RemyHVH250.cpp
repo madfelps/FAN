@@ -14,7 +14,7 @@
  * */
 
 
-#include "lertxt.h"
+#include "RemyHVH250.h"
 
 #define NUM_MSG 4
 
@@ -37,44 +37,11 @@
 #define    DIAGNOSTIC_DATA	         0x0AF
 #define    COMMAND_MESSAGE           0x0C0	//CHECK
 
-void delay_openmp(int milisec){
-	double start;
-	double end;
-	start = omp_get_wtime();
-	end = omp_get_wtime();
-	while((end-start)*1000<milisec){
-		end = omp_get_wtime();
-	}
-}
-
-void DescreveSensor(char StringDescreveSensor[][50]){
-	/*
-	StringDescreveSensor[0] = "Angle: ";
-	StringDescreveSensor[1] = "Speed: ";
-	StringDescreveSensor[2] = "Torque Command: ";
-	StringDescreveSensor[3] = "TorqueFeedback: ";
-	StringDescreveSensor[4] = "PowerOnTime: ";
-	StringDescreveSensor[5] = "Temperatura do MóduloA: ";
-	StringDescreveSensor[6] = "Temeperatura do MóduloB: ";
-	StringDescreveSensor[7] = "Temperatura do MóduloC: ";
-	StringDescreveSensor[8] = "Temperatura do GateDriverBoard: ";
-	StringDescreveSensor[9] = "Instante da geração dos dados: ";
-
-	*/
-
-	strcpy(StringDescreveSensor[0], "Angle: ");
-	strcpy(StringDescreveSensor[1], "Speed: ");
-	strcpy(StringDescreveSensor[2], "Torque Command: ");
-	strcpy(StringDescreveSensor[3], "TorqueFeedback: ");
-	strcpy(StringDescreveSensor[4], "PowerOnTime: ");
-	strcpy(StringDescreveSensor[5], "Temperatura do MóduloA: ");
-	strcpy(StringDescreveSensor[6], "Temeperatura do MóduloB: ");
-	strcpy(StringDescreveSensor[7], "Temperatura do MóduloC: ");
-	strcpy(StringDescreveSensor[8], "Temperatura do GateDriverBoard: ");
-	strcpy(StringDescreveSensor[9], "Instante da geração dos dados: ");
-}
-
-
+/**
+*@Função: Processa os números negativos em lógica binária para decimal, respeitando o sinal matemático \n
+*@Parâmetros: Valor em lógica binária \n
+*@Retorno: Valor decimal, positivo ou negativo, conforme a lógica
+*/
 
 float NegativeValues::NegativeValuesTwoBytes(float Value){
 		if(Value >= 32768){
@@ -84,6 +51,13 @@ float NegativeValues::NegativeValuesTwoBytes(float Value){
 		}
 		return Value;
 }
+
+/**
+*@Função: Recorta um pedaço de um byte \n
+*@Parâmetros: Vetor de 8 bytes, a posição do byte a ser analisado, e as posições (LS e MS) para efetuar o recorte \n
+*@Retorno: Variável contendo o recorte solicitado do byte
+*/
+
 
 int CutBytes::CutByteInterval(unsigned char* CAN_DATA, int CanDataPosition, int MS_Position, int LS_Position, int CuttedByte){
 	CuttedByte = CAN_DATA[CanDataPosition]; //verificar a questão da tipagem
@@ -117,12 +91,29 @@ int CutBytes::CutByteInterval(unsigned char* CAN_DATA, int CanDataPosition, int 
 }
 
 
+
+/**
+ * @brief Processamento do torque recebido pelo motor para conversão na forma decimal
+ * @param CAN_DATA Conjunto de 8 bytes recebidos por meio da CAN
+ * @param MSByte índice do byte mais signiticativo
+ * @param LSByte índice do byte menos significativo
+ * @return Torque processado na forma decimal
+ */
+
 float Torque::ProcessTorqueReceive(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	float TorqueValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	TorqueValue = NegativeValuesTwoBytes(TorqueValue);
 	TorqueValue = TorqueValue/10;
 	return TorqueValue;
 }
+
+/**
+ * @brief Processamento do parâmetro de fluxo recebido pelo motor
+ * @param Conjunto de 8 bytes recebidos pela CAN
+ * @param MSByte índice do byte mais significativo
+ * @param LSByte índice do byte menos significativo
+ * @return Fluxo processado na forma decimal
+ */
 
 float Flux::ProcessFluxReceive(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	float FluxValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
@@ -131,6 +122,13 @@ float Flux::ProcessFluxReceive(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	return FluxValue;
 }
 
+/**
+ * @brief Processamento do parâmetro de ângulo recebido pelo motor
+ * @param Conjunto de 8 bytes recebidos pela CAN
+ * @param MSByte índice do byte mais significativo
+ * @param LSByte índice do byte menos significativo
+ * @return Ângulo processado na forma decimal
+ */
 
 float Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	float AngleValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
@@ -143,12 +141,28 @@ float Angle::ProcessAngle(unsigned char* CAN_DATA, int MSByte, int LSByte){
 		}*/
 }
 
+/**
+ * @brief Processamento do parâmetro de velocidade angular recebido pelo motor
+ * @param Conjunto de 8 bytes recebidos pela CAN
+ * @param MSByte índice do byte mais significativo
+ * @param LSByte índice do byte menos significativo
+ * @return Velocidade angular processada na forma decimal
+ */
+
 float AngleVelocity::ProcessAngleVelocity(unsigned char* CAN_DATA, int MSByte, int LSByte){
 	float AngleVelocityValue = CAN_DATA[LSByte] + CAN_DATA[MSByte] * 256;
 	AngleVelocityValue = NegativeValuesTwoBytes(AngleVelocityValue);
 	//AngleVelocityValue = AngleVelocityValue/10;
 	return AngleVelocityValue;
 }
+
+/**
+ * @brief Processamento do parâmetro de baixa tensão recebido pelo motor
+ * @param Conjunto de 8 bytes recebidos pela CAN
+ * @param MSByte índice do byte mais significativo
+ * @param LSByte índice do byte menos significativo
+ * @return Baixa tensão processada na forma decimal
+ */
 
 float LowVoltage::ProcessLowVoltage(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
@@ -157,6 +171,14 @@ float LowVoltage::ProcessLowVoltage(unsigned char* CAN_DATA, int MSByte, int LSB
 	LowVoltageValue = LowVoltageValue/100;
 	return LowVoltageValue;
 }
+
+/**
+ * @brief Processamento do parâmetro de alta tensão recebido pelo motor
+ * @param Conjunto de 8 bytes recebidos pela CAN
+ * @param MSByte índice do byte mais significativo
+ * @param LSByte índice do byte menos significativo
+ * @return Alta tensão processada na forma decimal
+ */
 
 float HighVoltage::ProcessHighVoltage(unsigned char* CAN_DATA, int MSByte, int LSByte){
 
@@ -175,6 +197,10 @@ MotorPosInfo::MotorPosInfo(){
 	DeltaResolverFiltered  			= 0;
 }
 
+/**
+ * @brief Construtor da classe MotorPosInfo
+ */
+
 MotorPosInfo::MotorPosInfo(unsigned char* CAN_DATA){
 	MotorAngle             			= 0;
 	MotorAngleProcessed             = ProcessAngle(CAN_DATA, 1, 0);
@@ -183,6 +209,7 @@ MotorPosInfo::MotorPosInfo(unsigned char* CAN_DATA){
 	ElectricalOutFreq      			= 0;
 	DeltaResolverFiltered  			= 0;
 }
+
 
 float MotorPosInfo::GetMotorAngleProcessed(){
 	return MotorAngleProcessed;
@@ -200,39 +227,21 @@ float MotorPosInfo::GetDeltaResolverFilteredProcessed(){
 	return DeltaResolverFilteredProcessed;
 }
 
-int MotorPosInfo::GetByte0(){
-	return Byte[0];
+int MotorPosInfo::GetByte(int Position){
+	return Byte[Position];
 }
 
-int MotorPosInfo::GetByte1(){
-	return Byte[1];
-}
 
-int MotorPosInfo::GetByte2(){
-	return Byte[2];
-}
-
-int MotorPosInfo::GetByte3(){
-	return Byte[3];
-}
-
-int MotorPosInfo::GetByte4(){
-	return Byte[4];
-}
-
-int MotorPosInfo::GetByte5(){
-	return Byte[5];
-}
-
-int MotorPosInfo::GetByte6(){
-	return Byte[6];
-}
-
-int MotorPosInfo::GetByte7(){
-	return Byte[7];
-}
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
 
 void MotorPosInfo::UpdateObject(unsigned char* CAN_DATA){
+    for(int i = 0; i < 8; i++){
+        Byte[i] = CAN_DATA[i];
+    }
 
 	MotorAngle             			= 0;
 	MotorAngleProcessed             = this->ProcessAngle(CAN_DATA, 1, 0);
@@ -248,6 +257,13 @@ void MotorPosInfo::ShowAllValuesProcessed(){
 	//printf("Angle: %f\n", this->GetMotorAngleProcessed());
 	//printf("Speed: %f\n", this->GetMotorSpeedProcessed());
 }
+
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe MotorPosInfo; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void MotorPosInfo::IfID_MotorPosInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 165){
@@ -283,59 +299,42 @@ float TorqueTimerInfo::GetPowerOnTimeProcessed(){
 	return PowerOnTimeProcessed;
 }
 
-int TorqueTimerInfo::GetByte0(){
-	return Byte[0];
+int TorqueTimerInfo::GetByte(int Position){
+	return Byte[Position];
 }
 
-int TorqueTimerInfo::GetByte1(){
-	return Byte[1];
-}
-
-int TorqueTimerInfo::GetByte2(){
-	return Byte[2];
-}
-
-int TorqueTimerInfo::GetByte3(){
-	return Byte[3];
-}
-
-int TorqueTimerInfo::GetByte4(){
-	return Byte[4];
-}
-
-int TorqueTimerInfo::GetByte5(){
-	return Byte[5];
-}
-
-int TorqueTimerInfo::GetByte6(){
-	return Byte[6];
-}
-
-int TorqueTimerInfo::GetByte7(){
-	return Byte[7];
-}
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
 
 void TorqueTimerInfo::UpdateObject(unsigned char* CAN_DATA){
-	Byte[0] = GetByte0();
-	Byte[1] = GetByte1();
-	Byte[2] = GetByte2();
-	Byte[3] = GetByte3();
-	Byte[4] = GetByte4();
-	Byte[5] = GetByte5();
-	Byte[6] = GetByte6();
-	Byte[7] = GetByte7();
+    for(int i = 0; i < 8; i++){
+        Byte[i] = CAN_DATA[i];
+    }
 
 	CommandedTorqueProcessed     = this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 	TorqueFeedbackProcessed      = this->ProcessTorqueReceive(CAN_DATA, 3, 2);
 	PowerOnTimeProcessed         = 0;
 }
 
+/**
+ * @brief Printa os parâmetros CommandedTorqueProcessed, TorqueFeedbackProcessed e PowerOnTimeProcessed
+ */
 
 void TorqueTimerInfo::ShowAllValuesProcessed(){
 		printf("Commanded Torque: %f\n", this->GetCommandedTorqueProcessed());
 		printf("Torque Feedback: %f\n", this->GetTorqueFeedbackProcessed());
 		printf("Power On Time: %f\n", this->GetPowerOnTimeProcessed());
 }
+
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe TorqueTimerInfo; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void TorqueTimerInfo::IfID_TorqueTimerInfo(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 172){
@@ -370,52 +369,26 @@ Temperature1::Temperature1(unsigned char* CAN_DATA){
 	GateDriverBoardProcessed 	= ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
-int Temperature1::GetByte0(){
-	return Byte[0];
+int Temperature1::GetByte(int Position){
+	return Byte[Position];
 }
 
-int Temperature1::GetByte1(){
-	return Byte[1];
-}
 
-int Temperature1::GetByte2(){
-	return Byte[2];
-}
-
-int Temperature1::GetByte3(){
-	return Byte[3];
-}
-
-int Temperature1::GetByte4(){
-	return Byte[4];
-}
-
-int Temperature1::GetByte5(){
-	return Byte[5];
-}
-
-int Temperature1::GetByte6(){
-	return Byte[6];
-}
-
-int Temperature1::GetByte7(){
-	return Byte[7];
-}
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
 
 void Temperature1::UpdateObject(unsigned char* CAN_DATA){
-		Byte[0] = GetByte0();
-		Byte[1] = GetByte1();
-		Byte[2] = GetByte2();
-		Byte[3] = GetByte3();
-		Byte[4] = GetByte4();
-		Byte[5] = GetByte5();
-		Byte[6] = GetByte6();
-		Byte[7] = GetByte7();
+    for(int i = 0; i < 8; i++){
+        Byte[i] = CAN_DATA[i];
+    }
 
-		ModuleAProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
-		ModuleBProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
-		ModuleCProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 5, 4);
-		GateDriverBoardProcessed 	= this->ProcessTorqueReceive(CAN_DATA, 7, 6);
+	ModuleAProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
+	ModuleBProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
+	ModuleCProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 5, 4);
+	GateDriverBoardProcessed 	= this->ProcessTorqueReceive(CAN_DATA, 7, 6);
 
 }
 
@@ -435,12 +408,21 @@ float Temperature1::GetGateDriverBoardProcessed(){
 	return GateDriverBoardProcessed;
 }
 
+/*
 void Temperature1::ShowAllValuesProcessed(){
 		printf("Temperatura do MóduloA: %f\n", this->GetModuleAProcessed());
 		printf("Temperatura do MóduloB: %f\n", this->GetModuleBProcessed());
 		printf("Temperatura do MóduloC: %f\n", this->GetModuleCProcessed());
 		printf("Temperatura do Gate Driver Board: %f\n", this->GetGateDriverBoardProcessed());
 }
+ */
+
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe Temperature1; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void  Temperature1::IfID_Temperature1(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 160){
@@ -476,6 +458,12 @@ Temperature2::Temperature2(unsigned char* CAN_DATA){
 	RTD3_TemperatureProcessed 			= ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
+
 void Temperature2::UpdateObject(unsigned char* CAN_DATA){
 		ControlBoardTemperatureProcessed 	= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 		RTD1_TemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
@@ -500,44 +488,25 @@ float Temperature2::GetRTD3Processed(){
 	return RTD3_TemperatureProcessed;
 }
 
-int Temperature2::GetByte0(){
-	return Byte[0];
+int Temperature2::GetByte(int Position){
+	return Byte[Position];
 }
 
-int Temperature2::GetByte1(){
-	return Byte[1];
-}
-
-int Temperature2::GetByte2(){
-	return Byte[2];
-}
-
-int Temperature2::GetByte3(){
-	return Byte[3];
-}
-
-int Temperature2::GetByte4(){
-	return Byte[4];
-}
-
-int Temperature2::GetByte5(){
-	return Byte[5];
-}
-
-int Temperature2::GetByte6(){
-	return Byte[6];
-}
-
-int Temperature2::GetByte7(){
-	return Byte[7];
-}
-
+/*
 void Temperature2::ShowAllValuesProcessed(){
 		printf("Temperatura do ControlBoardTemperature: %f\n", this->GetControlBoardTemperatureProcessed());
 		printf("Temperatura do RTD1: %f\n", this->GetRTD1Processed());
 		printf("Temperatura do RTD2: %f\n", this->GetRTD2Processed());
 		printf("Temperatura do RTD3: %f\n", this->GetRTD3Processed());
 }
+*/
+
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe Temperature2; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void  Temperature2::IfID_Temperature2(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 161){
@@ -573,11 +542,20 @@ Temperature3::Temperature3(unsigned char* CAN_DATA){
 	TorqueShudderProcessed 				= ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
+
 void Temperature3::UpdateObject(unsigned char* CAN_DATA){
-		RTD4_TemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
-		RTD5_TemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
-		MotorTemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 5, 4);
-		TorqueShudderProcessed 				= this->ProcessTorqueReceive(CAN_DATA, 7, 6);
+    for(int i = 0; i < 8; i++){
+        Byte[i] = CAN_DATA[i];
+    }
+    RTD4_TemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 1, 0);
+    RTD5_TemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 3, 2);
+    MotorTemperatureProcessed 			= this->ProcessTorqueReceive(CAN_DATA, 5, 4);
+    TorqueShudderProcessed 				= this->ProcessTorqueReceive(CAN_DATA, 7, 6);
 
 }
 
@@ -597,44 +575,26 @@ float Temperature3::GetTorqueShudderProcessed(){
 	return TorqueShudderProcessed;
 }
 
-int Temperature3::GetByte0(){
-	return Byte[0];
+int Temperature3::GetByte(int Position){
+	return Byte[Position];
 }
 
-int Temperature3::GetByte1(){
-	return Byte[1];
-}
-
-int Temperature3::GetByte2(){
-	return Byte[2];
-}
-
-int Temperature3::GetByte3(){
-	return Byte[3];
-}
-
-int Temperature3::GetByte4(){
-	return Byte[4];
-}
-
-int Temperature3::GetByte5(){
-	return Byte[5];
-}
-
-int Temperature3::GetByte6(){
-	return Byte[6];
-}
-
-int Temperature3::GetByte7(){
-	return Byte[7];
-}
-
+/*
 void Temperature3::ShowAllValuesProcessed(){
 		printf("Temperatura do RTD4: %f\n", this->GetRTD4_TemperatureProcessed());
 		printf("Temperatura do RTD5: %f\n", this->GetRTD5_TemperatureProcessed());
 		printf("Temperatura do Motor: %f\n", this->GetMotorTemperatureProcessed());
 		printf("Torque shudder: %f\n", this->GetTorqueShudderProcessed());
 }
+
+*/
+
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe Temperature3; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void  Temperature3::IfID_Temperature3(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 162){
@@ -664,37 +624,10 @@ CurrentInformation::CurrentInformation(){
 }
 
 
-int CurrentInformation::GetByte0(){
-	return Byte[0];
+int CurrentInformation::GetByte(int Position){
+	return Byte[Position];
 }
 
-int CurrentInformation::GetByte1(){
-	return Byte[1];
-}
-
-int CurrentInformation::GetByte2(){
-	return Byte[2];
-}
-
-int CurrentInformation::GetByte3(){
-	return Byte[3];
-}
-
-int CurrentInformation::GetByte4(){
-	return Byte[4];
-}
-
-int CurrentInformation::GetByte5(){
-	return Byte[5];
-}
-
-int CurrentInformation::GetByte6(){
-	return Byte[6];
-}
-
-int CurrentInformation::GetByte7(){
-	return Byte[7];
-}
 
 CurrentInformation::CurrentInformation(unsigned char* CAN_DATA){
 	PhaseACurrentProcessed	=	ProcessTorqueReceive(CAN_DATA, 1, 0);
@@ -703,7 +636,17 @@ CurrentInformation::CurrentInformation(unsigned char* CAN_DATA){
 	DC_BusCurrentProcessed	=	ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
 
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
+
 void CurrentInformation::UpdateObject(unsigned char* CAN_DATA){
+    for(int i = 0; i < 8; i++){
+        Byte[i] = GetByte(i);
+    }
+
 	PhaseACurrentProcessed	=	this->ProcessTorqueReceive(CAN_DATA, 1, 0);
 	PhaseBCurrentProcessed	=	this->ProcessTorqueReceive(CAN_DATA, 3, 2);
 	PhaseCCurrentProcessed	=	this->ProcessTorqueReceive(CAN_DATA, 5, 4);
@@ -726,6 +669,12 @@ float CurrentInformation::GetDCBusCurrentProcessed(){
 	return DC_BusCurrentProcessed;
 }
 
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe CurrentInformation; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void CurrentInformation::IfID_CurrentInformation(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 166){
@@ -751,39 +700,9 @@ VoltageInformation::VoltageInformation(){
 	VBC_Vd_VoltageProcessed = 0.0;
 }
 
-int VoltageInformation::GetByte0(){
-	return Byte[0];
+int VoltageInformation::GetByte(int Position){
+	return Byte[Position];
 }
-
-int VoltageInformation::GetByte1(){
-	return Byte[1];
-}
-
-int VoltageInformation::GetByte2(){
-	return Byte[2];
-}
-
-int VoltageInformation::GetByte3(){
-	return Byte[3];
-}
-
-int VoltageInformation::GetByte4(){
-	return Byte[4];
-}
-
-int VoltageInformation::GetByte5(){
-	return Byte[5];
-}
-
-int VoltageInformation::GetByte6(){
-	return Byte[6];
-}
-
-int VoltageInformation::GetByte7(){
-	return Byte[7];
-}
-
-
 
 VoltageInformation::VoltageInformation(unsigned char* CAN_DATA){
 	DC_BusVoltageProcessed 	= ProcessHighVoltage(CAN_DATA, 1, 0);
@@ -791,6 +710,12 @@ VoltageInformation::VoltageInformation(unsigned char* CAN_DATA){
 	VAB_Vd_VoltageProcessed = ProcessHighVoltage(CAN_DATA, 5, 4);
 	VBC_Vd_VoltageProcessed = ProcessHighVoltage(CAN_DATA, 7, 6);
 }
+
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
 
 void VoltageInformation::UpdateObject(unsigned char* CAN_DATA){
 	DC_BusVoltageProcessed 	= this->ProcessHighVoltage(CAN_DATA, 1, 0);
@@ -814,6 +739,13 @@ float VoltageInformation::GetVAB_Vd_VoltageProcessed(){
 float VoltageInformation::GetVBC_Vd_VoltageProcessed(){
 	return VBC_Vd_VoltageProcessed;
 }
+
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe VoltageInformation; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void VoltageInformation::IfID_VoltageInformation(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 167){
@@ -851,7 +783,17 @@ FluxInformation::FluxInformation(unsigned char* CAN_DATA){
 	IqFeedbackProcessed		= 0.0;
 }
 
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
+
 void FluxInformation::UpdateObject(unsigned char* CAN_DATA){
+    for(int i = 0; i < 8; i++){
+        Byte[i] = CAN_DATA[i];
+    }
+
 	FluxCommandProcessed	=	ProcessFluxReceive(CAN_DATA, 1, 0);
 	FluxFeedbackProcessed	=	ProcessFluxReceive(CAN_DATA, 3, 2);
 	IdFeedbackProcessed		=	ProcessTorqueReceive(CAN_DATA, 5, 4);
@@ -874,37 +816,17 @@ float FluxInformation::GetIqFeedbackProcessed(){
 	return IqFeedbackProcessed;
 }
 
-int FluxInformation::GetByte0(){
-	return Byte[0];
+int FluxInformation::GetByte(int Position){
+	return Byte[Position];
 }
 
-int FluxInformation::GetByte1(){
-	return Byte[1];
-}
 
-int FluxInformation::GetByte2(){
-	return Byte[2];
-}
-
-int FluxInformation::GetByte3(){
-	return Byte[3];
-}
-
-int FluxInformation::GetByte4(){
-	return Byte[4];
-}
-
-int FluxInformation::GetByte5(){
-	return Byte[5];
-}
-
-int FluxInformation::GetByte6(){
-	return Byte[6];
-}
-
-int FluxInformation::GetByte7(){
-	return Byte[7];
-}
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe FluxInformation; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void FluxInformation::IfID_FluxInformation(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 168){
@@ -934,37 +856,15 @@ InternalVoltages::InternalVoltages(unsigned char* CAN_DATA){
 	VoltageReference12	  = 0.0;
 }
 
-int InternalVoltages::GetByte0(){
-	return Byte[0];
+int InternalVoltages::GetByte(int Position){
+	return Byte[Position];
 }
 
-int InternalVoltages::GetByte1(){
-	return Byte[1];
-}
-
-int InternalVoltages::GetByte2(){
-	return Byte[2];
-}
-
-int InternalVoltages::GetByte3(){
-	return Byte[3];
-}
-
-int InternalVoltages::GetByte4(){
-	return Byte[4];
-}
-
-int InternalVoltages::GetByte5(){
-	return Byte[5];
-}
-
-int InternalVoltages::GetByte6(){
-	return Byte[6];
-}
-
-int InternalVoltages::GetByte7(){
-	return Byte[7];
-}
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
 
 void InternalVoltages::UpdateObject(unsigned char* CAN_DATA){
 	VoltageReference1Dot5	=	ProcessLowVoltage(CAN_DATA, 1, 0);
@@ -988,6 +888,13 @@ float InternalVoltages::GetVoltageReference5Dot0(){
 float InternalVoltages::GetVoltageReference12(){
 	return GetVoltageReference12();
 }
+
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe InternalVoltages; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void InternalVoltages::IfID_InternalVoltages(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 169){
@@ -1028,36 +935,8 @@ AnalogInputVoltages::AnalogInputVoltages(unsigned char* CAN_DATA){
 
 }
 
-int AnalogInputVoltages::GetByte0(){
+int AnalogInputVoltages::GetByte(int Position){
 	return Byte[0];
-}
-
-int AnalogInputVoltages::GetByte1(){
-	return Byte[1];
-}
-
-int AnalogInputVoltages::GetByte2(){
-	return Byte[2];
-}
-
-int AnalogInputVoltages::GetByte3(){
-	return Byte[3];
-}
-
-int AnalogInputVoltages::GetByte4(){
-	return Byte[4];
-}
-
-int AnalogInputVoltages::GetByte5(){
-	return Byte[5];
-}
-
-int AnalogInputVoltages::GetByte6(){
-	return Byte[6];
-}
-
-int AnalogInputVoltages::GetByte7(){
-	return Byte[7];
 }
 
 ModulationIndex_FluxWeakening::ModulationIndex_FluxWeakening(){
@@ -1082,37 +961,16 @@ ModulationIndex_FluxWeakening::ModulationIndex_FluxWeakening(unsigned char* CAN_
 	IqCommandProcessed 				=	0.0;
 }
 
-int ModulationIndex_FluxWeakening::GetByte0(){
-	return Byte[0];
+int ModulationIndex_FluxWeakening::GetByte(int Position){
+	return Byte[Position];
 }
 
-int ModulationIndex_FluxWeakening::GetByte1(){
-	return Byte[1];
-}
 
-int ModulationIndex_FluxWeakening::GetByte2(){
-	return Byte[2];
-}
-
-int ModulationIndex_FluxWeakening::GetByte3(){
-	return Byte[3];
-}
-
-int ModulationIndex_FluxWeakening::GetByte4(){
-	return Byte[4];
-}
-
-int ModulationIndex_FluxWeakening::GetByte5(){
-	return Byte[5];
-}
-
-int ModulationIndex_FluxWeakening::GetByte6(){
-	return Byte[6];
-}
-
-int ModulationIndex_FluxWeakening::GetByte7(){
-	return Byte[7];
-}
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
 
 void ModulationIndex_FluxWeakening::UpdateObject(unsigned char* CAN_DATA){
 	ModulationIndexProcessed		=	ProcessTorqueReceive(CAN_DATA, 1, 0)/10;
@@ -1120,6 +978,13 @@ void ModulationIndex_FluxWeakening::UpdateObject(unsigned char* CAN_DATA){
 	IdCommandProcessed				=	ProcessTorqueReceive(CAN_DATA, 5, 4);
 	IqCommandProcessed				=	ProcessTorqueReceive(CAN_DATA, 7, 6);
 }
+
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe ModulationIndex_FluxWeakening; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void ModulationIndex_FluxWeakening::IfID_ModulationIndex_FluxWeakening(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 173){
@@ -1198,6 +1063,10 @@ void CommandMessage::SetInverterEnable(int Inverter_Enable, struct can_frame* fr
 	}
 }
 
+int CommandMessage::GetByte(int Position){
+    return Byte[Position];
+}
+
 DigitalInputStates::DigitalInputStates(){
 	DigitalInput_1 = 0;
 	DigitalInput_2 = 0;
@@ -1221,39 +1090,9 @@ void DigitalInputStates::UpdateFrame(struct can_frame* frame){
 	frame->data[7] = DigitalInput_8;
 }
 
-int DigitalInputStates::GetByte0(){
-	return Byte[0];
+int DigitalInputStates::GetByte(int Position){
+	return Byte[Position];
 }
-
-int DigitalInputStates::GetByte1(){
-	return Byte[1];
-}
-
-int DigitalInputStates::GetByte2(){
-	return Byte[2];
-}
-
-int DigitalInputStates::GetByte3(){
-	return Byte[3];
-}
-
-int DigitalInputStates::GetByte4(){
-	return Byte[4];
-}
-
-int DigitalInputStates::GetByte5(){
-	return Byte[5];
-}
-
-int DigitalInputStates::GetByte6(){
-	return Byte[6];
-}
-
-int DigitalInputStates::GetByte7(){
-	return Byte[7];
-}
-
-
 
 int InternalStates::GetVSM_State(){
 	return VSM_State;
@@ -1299,37 +1138,16 @@ int InternalStates::GetBMS_LimitingTorque(){
 	return BMS_LimitingTorque;
 }
 
-int InternalStates::GetByte0(){
-	return Byte[0];
+int InternalStates::GetByte(int Position){
+	return Byte[Position];
 }
 
-int InternalStates::GetByte1(){
-	return Byte[1];
-}
-
-int InternalStates::GetByte2(){
-	return Byte[2];
-}
-
-int InternalStates::GetByte3(){
-	return Byte[3];
-}
-
-int InternalStates::GetByte4(){
-	return Byte[4];
-}
-
-int InternalStates::GetByte5(){
-	return Byte[5];
-}
-
-int InternalStates::GetByte6(){
-	return Byte[6];
-}
-
-int InternalStates::GetByte7(){
-	return Byte[7];
-}
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe InternalStates; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void InternalStates::IfID_InternalStates(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 170){
@@ -1340,6 +1158,12 @@ void InternalStates::IfID_InternalStates(struct can_frame* frame, nlohmann::json
 
 	}
 }
+
+/**
+ * @brief Atualiza os parâmetros do objeto conforme a mensagem CAN recebida
+ * @param CAN_DATA Conjunto de 8 bytes recebidos pela CAN
+ * @return void
+ */
 
 void InternalStates::UpdateObject(unsigned char* CAN_DATA){
 	VSM_State 							= CutByteInterval(CAN_DATA, 0, 0, 0, AuxByteCut);
@@ -1437,6 +1261,13 @@ FaultErrors::FaultErrors(){
 
 	};
 }
+
+/**
+ * @brief Verifica se o ID da CAN refere-se a classe Fault Errors; caso afirmativo, chama a função de update e atualiza os campos da mensagem json
+ * @param Struct referente ao can
+ * @param Pacote json para posterior envio a interface
+ * @return void
+ */
 
 void FaultErrors::IfId_FaultErrors(struct can_frame* frame, nlohmann::json& UDP_Package){
 	if(frame->can_id == 171){
