@@ -1,15 +1,56 @@
 ## Welcome to GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/madfelps/FAN/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+It’s important to highlight that all the processes described by this document must run on Linux, since some libraries used in the embedded software are exclusively for this operating system. Also, Ubuntu 16.04 is the reference for the commands related to the operating system.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Compilation Process 
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+The embedded software doesn’t run on x86 processor architecture, since the BeagleBone Black device contains an ARM A8 processor. So, you must compile the source code using the following tutorial.
 
 ```markdown
 Syntax highlighted code block
+
+On shell, type: 
+
+sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi gdb-arm-none-eabi openocd
+
+Great. Now, you are able to compile source codes on a x86 architecture into ARM executable files. 
+
+For compiling this project, go to the project directory and type:
+
+make
+
+As you can see, the generated executable is called “main_bbb”. 
+
+### CAN Configuration
+
+First, we will instal CAN-utils, a set of utilities that enable Linux to communicate with the CAN network. 
+
+$ git clone https://github.com/linux-can/can-utils.git
+$ cd can-utils
+$ ./autogen.sh
+$ ./configure
+$ sudo make
+$ sudo make install 
+
+All the process below is for enabling CAN1 (pins P9.24 and P9.26). However, if you want to enable CAN0, just enable pins P9.19 and P9.20.
+
+$ sudo config-pin p9.24 can
+$ sudo config-pin p9.26 can
+
+Setting CAN bitrate: 
+
+sudo ip link set can1 up type can bitrate 250000
+
+### Setting torque limit parameter
+
+
+In the beginning of the main code, set the define directive value for the desired value. 
+
+#define TORQUE_LIMIT_PARAMETER 800
+
+### Running the software
+
+The executable generated from make is called main_bbb. Just run this and the console will show messages if it’s all right. 
 
 # Header 1
 ## Header 2
