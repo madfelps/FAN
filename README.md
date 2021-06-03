@@ -21,6 +21,7 @@ make
 
 As you can see, the generated executable is called “main_bbb”. 
 
+```markdown
 ### CAN Configuration
 
 First, we will instal CAN-utils, a set of utilities that enable Linux to communicate with the CAN network. 
@@ -41,6 +42,7 @@ Setting CAN bitrate:
 
 sudo ip link set can1 up type can bitrate 250000
 
+```markdown
 ### Setting torque limit parameter
 
 
@@ -48,6 +50,7 @@ In the beginning of the main code, set the define directive value for the desire
 
 #define TORQUE_LIMIT_PARAMETER 800
 
+```markdown
 ### Running the software
 
 The executable generated from make is called main_bbb. Just run this and the console will show messages if it’s all right. 
