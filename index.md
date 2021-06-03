@@ -42,9 +42,9 @@ $ sudo config-pin p9.26 can
 
 Setting CAN bitrate: 
 
-<code>
-sudo ip link set can1 up type can bitrate 250000
-</code>
+<pre><code>
+ sudo ip link set can1 up type can bitrate 250000
+</code></pre>
   
 ### Setting torque limit parameter
 
@@ -52,9 +52,9 @@ sudo ip link set can1 up type can bitrate 250000
 In the beginning of the main code, set the define directive value for the desired value. 
 
 
-<code>
+<pre><code>
   #define TORQUE_LIMIT_PARAMETER 800
-</code>
+</code></pre>
   
   
 ### Running the software
