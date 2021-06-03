@@ -6,9 +6,6 @@ It’s important to highlight that all the processes described by this document 
 
 The embedded software doesn’t run on x86 processor architecture, since the BeagleBone Black device contains an ARM A8 processor. So, you must compile the source code using the following tutorial.
 
-```markdown
-Syntax highlighted code block
-
 On shell, type: 
 
 sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi gdb-arm-none-eabi openocd
