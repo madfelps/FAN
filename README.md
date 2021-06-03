@@ -6,9 +6,6 @@ It’s important to highlight that all the processes described by this document 
 
 The embedded software doesn’t run on x86 processor architecture, since the BeagleBone Black device contains an ARM A8 processor. So, you must compile the source code using the following tutorial.
 
-```markdown
-Syntax highlighted code block
-
 On shell, type: 
 
 sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi gdb-arm-none-eabi openocd
@@ -21,7 +18,6 @@ make
 
 As you can see, the generated executable is called “main_bbb”. 
 
-```markdown
 ### CAN Configuration
 
 First, we will instal CAN-utils, a set of utilities that enable Linux to communicate with the CAN network. 
@@ -42,7 +38,6 @@ Setting CAN bitrate:
 
 sudo ip link set can1 up type can bitrate 250000
 
-```markdown
 ### Setting torque limit parameter
 
 
@@ -50,7 +45,6 @@ In the beginning of the main code, set the define directive value for the desire
 
 #define TORQUE_LIMIT_PARAMETER 800
 
-```markdown
 ### Running the software
 
 The executable generated from make is called main_bbb. Just run this and the console will show messages if it’s all right. 
