@@ -8,13 +8,13 @@ The embedded software doesn’t run on x86 processor architecture, since the Bea
 
 On shell, type: 
 
-<pre><code>sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi gdb-arm-none-eabi openocd</code></pre>
+<pre><code>$ sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi gdb-arm-none-eabi openocd</code></pre>
 
 Great. Now, you are able to compile source codes on a x86 architecture into ARM executable files. 
 
 For compiling this project, go to the project directory and type:
 
- <pre><code>make</code></pre>
+ <pre><code>$ make</code></pre>
 
 
 As you can see, the generated executable is called “main_bbb”. 
@@ -42,7 +42,7 @@ $ sudo config-pin p9.26 can
 Setting CAN bitrate: 
 
 <pre><code>
- sudo ip link set can1 up type can bitrate 250000
+$ sudo ip link set can1 up type can bitrate 250000
 </code></pre>
   
 ### Setting torque limit parameter
@@ -52,7 +52,7 @@ In the beginning of the main code, set the define directive value for the desire
 
 
 <pre><code>
-  #define TORQUE_LIMIT_PARAMETER 800
+ #define TORQUE_LIMIT_PARAMETER 800
 </code></pre>
   
   
@@ -60,17 +60,17 @@ In the beginning of the main code, set the define directive value for the desire
 
 The executable generated from make is called main_bbb. However, you must send this file into BeagleBone Black. For that, type: 
 
-<pre><code>scp main_bbb debian@192.168.6.2:/debian/home</code></pre>
+<pre><code>$ scp main_bbb debian@192.168.6.2:/debian/home</code></pre>
 
 Now, access BeagleBone shell by typing in the shell: 
 
-<pre><code>ssh debian@192.168.6.2</code></pre>
+<pre><code>$ ssh debian@192.168.6.2</code></pre>
 
 To access the folder where the executable is in, type: 
 
-<pre><code>cd /home</code></pre>
+<pre><code>$ cd /home</code></pre>
 
 Finally, run the software typing
 
-<pre><code>./main_bbb</code></pre>
+<pre><code>$ ./main_bbb</code></pre>
 
