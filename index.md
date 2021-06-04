@@ -1,6 +1,6 @@
 
 
-## Welcome to GitHub Pages
+## FAN Documentation
 
 It’s important to highlight that all the processes described by this document must run on Linux, since some libraries used in the embedded software are exclusively for this operating system. Also, Ubuntu 16.04 is the reference for the commands related to the operating system.
 
