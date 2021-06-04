@@ -60,4 +60,19 @@ In the beginning of the main code, set the define directive value for the desire
   
 ### Running the software
 
-The executable generated from make is called main_bbb. Just run this and the console will show messages if it’s all right. 
+The executable generated from make is called main_bbb. However, you must send this file into BeagleBone Black. For that, type: 
+
+<pre><code>scp main_bbb debian@192.168.6.2:/debian/home</code></pre>
+
+Now, access BeagleBone shell by typing in the shell: 
+
+<pre><code>ssh debian@192.168.6.2</code></pre>
+
+To access the folder where the executable is in, type: 
+
+<pre><code>cd /home</code></pre>
+
+Finally, run the software typing
+
+<pre><code>./main_bbb</code></pre>
+
