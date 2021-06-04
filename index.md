@@ -10,13 +10,14 @@ The embedded software doesn’t run on x86 processor architecture, since the Bea
 
 On shell, type: 
 
-<p><code>sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi gdb-arm-none-eabi openocd</code></p>
+<pre><code>sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi gdb-arm-none-eabi openocd</code></pre>
 
 Great. Now, you are able to compile source codes on a x86 architecture into ARM executable files. 
 
 For compiling this project, go to the project directory and type:
 
- <p><code>make</code><p>
+ <pre><code>make</code></pre>
+
 
 As you can see, the generated executable is called “main_bbb”. 
 
