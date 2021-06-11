@@ -8,7 +8,15 @@ The embedded software doesn’t run on x86 processor architecture, since the Bea
 
 On shell, type: 
 
-<pre><code>$ sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi gdb-arm-none-eabi openocd</code></pre>
+<pre><code>$ wget -c https://releases.linaro.org/components/toolchain/binaries/6.5-2018.12/arm-linux-gnueabihf/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf.tar.xz</code></pre>
+
+<pre><code> tar xf gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf.tar.xz </code></pre>
+
+<pre><code> export CC=`pwd`/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf- </code></pre>
+
+You can check if the cross compiler it's all right by typing: 
+
+<pre><code> ${CC}gcc --version </code></pre>
 
 Great. Now, you are able to compile source codes on a x86 architecture into ARM executable files. 
 
