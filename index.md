@@ -29,6 +29,12 @@ As you can see, the generated executable is called “main_bbb”.
 
 ### CAN Configuration
 
+To connect the inverter and the BeagleBone Black with CAN Cape,  connect BBB_Tx to Inverter_Rx and BBB_Rx to Inverter_Tx. The image above shows a BBB pinout, and you can see the CAN pins highlighted.
+
+<img src="https://i.stack.imgur.com/paWjJ.jpg">
+
+IMPORTANT: This simple connection is if you’re using the BeagleBone CAN Cape. If you’re not using it, you must use transceivers and level logic converters. Since the laboratory contains a CAN Cape, I won’t explain further about the procedures without the cape. 
+
 First, we will instal CAN-utils, a set of utilities that enable Linux to communicate with the CAN network. 
 
 <pre><code>
