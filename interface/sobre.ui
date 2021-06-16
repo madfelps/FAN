@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>465</width>
-    <height>425</height>
+    <width>620</width>
+    <height>475</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>10</y>
-     <width>451</width>
-     <height>421</height>
+     <y>12</y>
+     <width>603</width>
+     <height>429</height>
     </rect>
    </property>
    <property name="text">
@@ -43,10 +43,10 @@ Orientadores: Prof.Dr.Paulo Greco, Prof.Dr.Glauco, Doutorando Henrique Borges Ga
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>154</x>
-     <y>200</y>
-     <width>115</width>
-     <height>111</height>
+     <x>214</x>
+     <y>204</y>
+     <width>113</width>
+     <height>107</height>
     </rect>
    </property>
    <property name="text">
@@ -62,10 +62,10 @@ Orientadores: Prof.Dr.Paulo Greco, Prof.Dr.Glauco, Doutorando Henrique Borges Ga
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>14</x>
-     <y>200</y>
-     <width>131</width>
-     <height>109</height>
+     <x>88</x>
+     <y>204</y>
+     <width>121</width>
+     <height>107</height>
     </rect>
    </property>
    <property name="autoFillBackground">
