@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1020</width>
-    <height>650</height>
+    <height>572</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -142,7 +142,7 @@ background-color: rgb(13, 94, 4);</string>
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>294</x>
+       <x>286</x>
        <y>348</y>
        <width>91</width>
        <height>45</height>
@@ -218,7 +218,7 @@ background-color: rgb(13, 94, 4);</string>
       <number>200</number>
      </property>
     </widget>
-    <widget class="QProgressBar" name="inverterTermometer">
+    <widget class="QProgressBar" name="inverterThermometer">
      <property name="geometry">
       <rect>
        <x>386</x>
@@ -255,6 +255,12 @@ background-color: rgb(13, 94, 4);</string>
      <property name="styleSheet">
       <string notr="true">background-color: rgb(255, 255, 255);</string>
      </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
     </widget>
     <widget class="QTextBrowser" name="textTempMotor">
      <property name="geometry">
@@ -265,8 +271,17 @@ background-color: rgb(13, 94, 4);</string>
        <height>69</height>
       </rect>
      </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true">background-color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
     </widget>
     <widget class="QLabel" name="label_9">
@@ -314,7 +329,7 @@ background-color: rgb(13, 94, 4);</string>
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>298</x>
+       <x>286</x>
        <y>274</y>
        <width>285</width>
        <height>51</height>
@@ -456,177 +471,30 @@ border-color: rgb(0, 0, 0);</string>
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QFrame" name="frame_2">
+    <widget class="QProgressBar" name="motorThermometer">
      <property name="geometry">
       <rect>
-       <x>384</x>
+       <x>386</x>
        <y>62</y>
        <width>283</width>
-       <height>69</height>
+       <height>71</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-color: rgb(0, 0, 0);
-background-color: rgb(211, 215, 207);</string>
+      <string notr="true">background-color: rgb(211, 215, 207);</string>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+     <property name="maximum">
+      <number>100</number>
      </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+     <property name="value">
+      <number>0</number>
      </property>
-     <widget class="QFrame" name="frame_motor_3">
-      <property name="geometry">
-       <rect>
-        <x>77</x>
-        <y>10</y>
-        <width>28</width>
-        <height>49</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: gray;</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-     <widget class="QFrame" name="frame_motor_7">
-      <property name="geometry">
-       <rect>
-        <x>212</x>
-        <y>10</y>
-        <width>27</width>
-        <height>49</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: gray;</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-     <widget class="QFrame" name="frame_motor_6">
-      <property name="geometry">
-       <rect>
-        <x>178</x>
-        <y>10</y>
-        <width>28</width>
-        <height>49</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: gray;</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-     <widget class="QFrame" name="frame_motor_2">
-      <property name="geometry">
-       <rect>
-        <x>44</x>
-        <y>10</y>
-        <width>27</width>
-        <height>49</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: gray;</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-     <widget class="QFrame" name="frame_motor_4">
-      <property name="geometry">
-       <rect>
-        <x>111</x>
-        <y>10</y>
-        <width>28</width>
-        <height>49</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: gray;</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-     <widget class="QFrame" name="frame_motor_5">
-      <property name="geometry">
-       <rect>
-        <x>145</x>
-        <y>10</y>
-        <width>27</width>
-        <height>49</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: gray;</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-     <widget class="QFrame" name="frame_motor_1">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>28</width>
-        <height>49</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: gray;</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-     <widget class="QFrame" name="frame_motor_8">
-      <property name="geometry">
-       <rect>
-        <x>245</x>
-        <y>10</y>
-        <width>28</width>
-        <height>49</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: gray;</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
+     <property name="textVisible">
+      <bool>false</bool>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
     </widget>
    </widget>
    <zorder>frame</zorder>

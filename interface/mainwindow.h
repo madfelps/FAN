@@ -86,18 +86,6 @@ private:
     void thermometers_config();
 
     /**
-     * @brief THE DESCRIPTION OF THESE FUNCTIONS WILL BE FINISHED WHEN THE
-     * THERMOMETERS ARE DECIDED AND FINISHED
-    */
-    void inverter_thermometer_style(double value);
-
-    /**
-     * @brief THE DESCRIPTION OF THESE FUNCTIONS WILL BE FINISHED WHEN THE
-     * THERMOMETERS ARE DECIDED AND FINISHED
-    */
-    void clear_thermometer();
-
-    /**
      * @brief Sets the style of the thermometer.
      * @param value The value of current temperature os system sent by the embedded board via UDP.
      * @param med_threshold Transition temperature between low temperature to medium temperature of system.

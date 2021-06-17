@@ -26,87 +26,34 @@ constexpr int SLIDER_STEPS = 200;
 /** Socket UDP port*/
 constexpr int PORT = 8080;
 
-void MainWindow::clear_thermometer()
+
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
 {
-    ui->frame_motor_1->setStyleSheet("background-color: gray;");
-    ui->frame_motor_2->setStyleSheet("background-color: gray;");
-    ui->frame_motor_3->setStyleSheet("background-color: gray;");
-    ui->frame_motor_4->setStyleSheet("background-color: gray;");
-    ui->frame_motor_5->setStyleSheet("background-color: gray;");
-    ui->frame_motor_6->setStyleSheet("background-color: gray;");
-    ui->frame_motor_7->setStyleSheet("background-color: gray;");
-    ui->frame_motor_8->setStyleSheet("background-color: gray;");
+    ui->setupUi(this);
+
+    /*Configure the thermometer*/
+    thermometers_config();
+
+    /*Configure the speedometer*/
+    speedometer_config();
+
+    /*Configure the SpeedSlider*/
+    speedslider_config();
+
+    /*Create a socket and receive the messages sended by embedded board via UDP*/
+    receiveMessages();
+
 }
-void MainWindow::inverter_thermometer_style(double value)
+
+MainWindow::~MainWindow()
 {
-    if(value < 12)
-    {
-        clear_thermometer();
-        ui->frame_motor_1->setStyleSheet("background-color: rgb(23, 198, 10);");
-    }
-    else if(value >= 12 && value < 24)
-    {
-        clear_thermometer();
-        ui->frame_motor_1->setStyleSheet("background-color: rgb(23, 198, 10);");
-        ui->frame_motor_2->setStyleSheet("background-color: rgb(102, 185, 0);");
-    }
-    else if(value >= 24 && value < 36)
-    {
-        clear_thermometer();
-        ui->frame_motor_1->setStyleSheet("background-color: rgb(23, 198, 10);");
-        ui->frame_motor_2->setStyleSheet("background-color: rgb(102, 185, 0);");
-        ui->frame_motor_3->setStyleSheet("background-color: rgb(141, 169, 0);");
-    }
-    else if(value >= 36 && value < 48)
-    {
-        clear_thermometer();
-        ui->frame_motor_1->setStyleSheet("background-color: rgb(23, 198, 10);");
-        ui->frame_motor_2->setStyleSheet("background-color: rgb(102, 185, 0);");
-        ui->frame_motor_3->setStyleSheet("background-color: rgb(141, 169, 0);");
-    }
-    else if(value >= 48 && value < 60)
-    {
-        clear_thermometer();
-        ui->frame_motor_1->setStyleSheet("background-color: rgb(23, 198, 10);");
-        ui->frame_motor_2->setStyleSheet("background-color: rgb(102, 185, 0);");
-        ui->frame_motor_3->setStyleSheet("background-color: rgb(141, 169, 0);");
-        ui->frame_motor_4->setStyleSheet("background-color: rgb(172, 152, 0);");
-        ui->frame_motor_5->setStyleSheet("background-color: rgb(198, 131, 0);");
-    }
-    else if(value >= 60 && value < 72)
-    {
-        clear_thermometer();
-        ui->frame_motor_1->setStyleSheet("background-color: rgb(23, 198, 10);");
-        ui->frame_motor_2->setStyleSheet("background-color: rgb(102, 185, 0);");
-        ui->frame_motor_3->setStyleSheet("background-color: rgb(141, 169, 0);");
-        ui->frame_motor_4->setStyleSheet("background-color: rgb(172, 152, 0);");
-        ui->frame_motor_5->setStyleSheet("background-color: rgb(198, 131, 0);");
-        ui->frame_motor_6->setStyleSheet("background-color: rgb(220, 106, 0);");
-    }
-    else if(value >= 72 && value < 84)
-    {
-        clear_thermometer();
-        ui->frame_motor_1->setStyleSheet("background-color: rgb(23, 198, 10);");
-        ui->frame_motor_2->setStyleSheet("background-color: rgb(102, 185, 0);");
-        ui->frame_motor_3->setStyleSheet("background-color: rgb(141, 169, 0);");
-        ui->frame_motor_4->setStyleSheet("background-color: rgb(172, 152, 0);");
-        ui->frame_motor_5->setStyleSheet("background-color: rgb(198, 131, 0);");
-        ui->frame_motor_6->setStyleSheet("background-color: rgb(220, 106, 0);");
-        ui->frame_motor_7->setStyleSheet("background-color: rgb(237, 74, 0);");
-    }
-    else if(value >= 84)
-    {
-        clear_thermometer();
-        ui->frame_motor_1->setStyleSheet("background-color: rgb(23, 198, 10);");
-        ui->frame_motor_2->setStyleSheet("background-color: rgb(102, 185, 0);");
-        ui->frame_motor_3->setStyleSheet("background-color: rgb(141, 169, 0);");
-        ui->frame_motor_4->setStyleSheet("background-color: rgb(172, 152, 0);");
-        ui->frame_motor_5->setStyleSheet("background-color: rgb(198, 131, 0);");
-        ui->frame_motor_6->setStyleSheet("background-color: rgb(220, 106, 0);");
-        ui->frame_motor_7->setStyleSheet("background-color: rgb(237, 74, 0);");
-        ui->frame_motor_8->setStyleSheet("background-color: rgb(249, 15, 15);");
-    }
+    delete ui;
 }
+
+
 int MainWindow::getProperValue(int value, int singleStep)
 {
 
@@ -131,7 +78,7 @@ std::string MainWindow::style(double value, double med_threshold, double max_thr
     /*If the progress bar value is bigger than the highest temperature value considered low and smaller than the highest considered high.*/
     if (value < med_threshold)
     {
-      std::string s{"QProgressBar::chunk{""background-color: green;""border-radius: 7px""}QProgressBar{""background-color: rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px""}"};
+      std::string s{"QProgressBar::chunk{""background-color: green"";""border-radius: 7px""}QProgressBar{""background-color: rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px""}"};
       string_style = s;
     }
 
@@ -154,6 +101,7 @@ return string_style;
 void MainWindow::speedometer_config()
 {
     ui->meterWidget->setForeground(Qt::white);
+    ui->meterWidget->setSteps(10);
     ui->meterWidget->setMaxValue(MAX_SPEED);
     ui->meterWidget->setThresholdMedium(MEDIUM_THRESHOLD_SPEED);
     ui->meterWidget->setThreshold(MAX_THRESHOLD_SPEED);
@@ -162,32 +110,32 @@ void MainWindow::speedometer_config()
 }
 void MainWindow::speedslider_config()
 {
+    ui->SpeedSlider->setStyleSheet("QSlider::groove:vertical {border: 5px white;width: 50px;border-radius: 5px;height:140px;margin: 2px;}QSlider::handle:horizontal {background-color: blue;border-color:black;border: 3px black;border-radius: 3px;height: 50px;width: 30px;margin: -8px 0px;}");
+    ui->SpeedSlider->setStyleSheet("QSlider::groove:horizontal{height: 20px; margin: 0 0;}QSlider::handle:horizontal {background-color: black; border: 1px; height: 40px; width: 40px; margin: 0 0;}");
     ui->SpeedSlider->setMaximum(SLIDER_MAX_SPEED);
     ui->SpeedSlider->setSingleStep(SLIDER_STEPS);
+    /*This connection links the slider to the getProperValue() function that discretizes its values*/
     connect(ui->SpeedSlider, &QSlider::valueChanged, [&](){ui->SpeedSlider->setValue(
                         getProperValue(ui->SpeedSlider->value(), ui->SpeedSlider->singleStep())
                         );});
-
+    /*This connection links the slider to the speed_label to update and show the speed value selected*/
     connect(ui->SpeedSlider, &QSlider::valueChanged,
                 [&](){ui->speed_label->setText(QString::fromStdString(std::to_string(ui->SpeedSlider->value())));});
-
-
-
-    ui->SpeedSlider->setStyleSheet("QSlider::groove:vertical {border: 5px white;width: 50px;border-radius: 5px;height:140px;margin: 2px;}QSlider::handle:horizontal {background-color: blue;border-color:black;border: 3px black;border-radius: 3px;height: 50px;width: 30px;margin: -8px 0px;}");
-    ui->SpeedSlider->setStyleSheet("QSlider::groove:horizontal{height: 20px; margin: 0 0;}QSlider::handle:horizontal {background-color: black; border: 1px; height: 40px; width: 40px; margin: 0 0;}");
 
 }
 void MainWindow::thermometers_config()
 {
     /*Motor thermometer*/
-    //ui->motorTermometer->setStyleSheet("QProgressBar::chunk{""background-color: green;""border-radius: 7px""}QProgressBar{""background-color: rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px""}");
-    ui->textTempMotor->setStyleSheet("QTextEdit{ " "background-color:rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px;""padding: 0 8px;""selection-background-color: darkgray;""font-size: 16px;}""QTextEdit:focus { ""background-color:rgb(192, 192, 255);}");
-    //ui->motorTermometer->setMaximum(MAX_MOTOR_TEMP);
+    ui->motorThermometer->setMaximum(MAX_MOTOR_TEMP);
+    ui->motorThermometer->setStyleSheet("QProgressBar::chunk{""background-color: green;""border-radius: 7px""}QProgressBar{""background-color: rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px""}");
+    ui->textTempMotor->setStyleSheet("QTextEdit{ ""text-align: center""; ""background-color:rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px;""padding: 0 8px;""selection-background-color: darkgray;""font-size: 25px;}""QTextEdit:focus { ""background-color:rgb(192, 192, 255);}");
+
 
     /*Inverter thermometer*/
-    ui->inverterTermometer->setStyleSheet("QProgressBar::chunk{""background-color: green;""border-radius: 7px""}QProgressBar{""background-color: rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px""}");
-    ui->inverterTermometer->setMaximum(MAX_INVERTER_TEMP);
-    ui->textTempInverter->setStyleSheet("QTextEdit{ ""background-color:rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px;""padding: 0 8px;""selection-background-color: darkgray;""font-size: 16px;}""QTextEdit:focus { ""background-color:rgb(192, 192, 255);}");
+    ui->inverterThermometer->setMaximum(MAX_INVERTER_TEMP);
+    ui->inverterThermometer->setStyleSheet("QProgressBar::chunk{""background-color: green;""border-radius: 7px""}QProgressBar{""background-color: rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px""}");
+    ui->textTempInverter->setStyleSheet("QTextEdit{ ""background-color:rgb(211, 215, 207);""border: 3px solid gray;""border-radius: 10px;""padding: 0 8px;""selection-background-color: darkgray;""font-size: 25px;}""QTextEdit:focus { ""background-color:rgb(192, 192, 255);}");
+
 
 }
 
@@ -198,7 +146,7 @@ void MainWindow::receiveMessages()
     /*Receiving, serializing and interpreting received messages*/
     connect(socket, &QUdpSocket::readyRead, [&](){
         if(socket->hasPendingDatagrams())
-        {      
+        {
             QString ID;/*ID receives the Json message identification; */
 
             /* Speed, Torque, MotorTemperature receive the speed, toque and motor temperature, respectively.
@@ -230,67 +178,46 @@ void MainWindow::receiveMessages()
             {
                 Torque = JsonBuffer["TorqueFeedback"].toDouble();
                 /*Passa o Torque para a label*/
-                //ui->torque_label->setText(QString::fromStdString(std::to_string(Torque)));
+                ui->torque_label->setText(QString::number(Torque,'f', 1));
+
             }
 
-            /*If the ID is of the TEMPERATURES_3 class, pass the temperatures ​​to the thermometers*/
+            /*If the ID is of the TEMPERATURES_3 class, pass the temperature ​​to the motor thermometer*/
             else if(ID == "TEMPERATURES_3"){
 
                 MotorTemperature = JsonBuffer["MotorTemperature"].toDouble();
                 /*Pass the TemperatureMotor to the thermometer and text field.*/
-                //ui->textTempMotor->setText(QString::fromStdString(std::to_string(MotorTemperature)));
-                //ui->motorTermometer->setStyleSheet((QString::fromStdString(style(TemperatureMotor,LOW_LIMIT_MOTOR_TEMP,MED_LIMIT_MOTOR_TEMP))));
-                //ui->motorTermometer->setValue(TemperatureMotor);
-                inverter_thermometer_style(MotorTemperature);
+                ui->textTempMotor->setText(QString::number(MotorTemperature,'f', 1));
 
-                /**/
+                //ui->textTempInverter->setAlignment(Qt::AlignCenter);
+                ui->motorThermometer->setStyleSheet((QString::fromStdString(style(MotorTemperature,LOW_LIMIT_MOTOR_TEMP,MED_LIMIT_MOTOR_TEMP))));
+                ui->motorThermometer->setValue(MotorTemperature);
+            }
+
+            else if(ID == "TEMPERATURES_1")
+            {
                 ModuleATemperature = JsonBuffer["ModuleATemperature"].toDouble();
                 ModuleBTemperature = JsonBuffer["ModuleBTemperature"].toDouble();
                 ModuleCTemperature = JsonBuffer["ModuleCTemperature"].toDouble();
-                double temps[] = {ModuleATemperature,ModuleBTemperature,ModuleCTemperature};
-                qDebug()<< std::max_element(temps, temps+3);
-                /*Pass the TemperatureInverter to the thermometer and to the text field*/
-                InverterTemperature = JsonBuffer["TemperatureInverter"].toDouble();
-                //ui->textTempInverter->setText(QString::fromStdString(std::to_string(InverterTemperature)));
-                ui->inverterTermometer->setStyleSheet((QString::fromStdString(style(InverterTemperature,LOW_LIMIT_INVERTER_TEMP,MED_LIMIT_INVERTER_TEMP))));
-                ui->inverterTermometer->setValue(InverterTemperature);
 
-                /*Add TemperatureModuleA,B,C*/
+                double temps[] = {ModuleATemperature,ModuleBTemperature,ModuleCTemperature};
+                qDebug() << "Maior temperatura:" << *std::max_element(temps,temps+3);
+                InverterTemperature = *std::max_element(temps,temps+3);
+
+                /*Pass the TemperatureInverter to the thermometer and to the text field*/
+                ui->textTempInverter->setText(QString::number(ModuleATemperature, 'f', 1));
+                ui->inverterThermometer->setStyleSheet((QString::fromStdString(style(InverterTemperature,LOW_LIMIT_INVERTER_TEMP,MED_LIMIT_INVERTER_TEMP))));
+                ui->inverterThermometer->setValue(InverterTemperature);
             }
+
 
         }
     });
 
 }
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-
-    /*Configure the thermometer*/
-    thermometers_config();
-
-    /*Configure the speedometer*/
-    speedometer_config();
-
-    /*Configure the SpeedSlider*/
-    speedslider_config();
-
-    /*Create a socket and receive the messages sended by embedded board via UDP*/
-    receiveMessages();
-
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
-
 void MainWindow::sendJsonToUDP(const QJsonObject& qJsonObject) {
-    socket->writeDatagram(QJsonDocument{qJsonObject}.toJson(), QHostAddress{"192.168.1.3"}, PORT);
+    socket->writeDatagram(QJsonDocument{qJsonObject}.toJson(), QHostAddress{"127.0.0.1"}, PORT);
 }
 
 void MainWindow::on_sendButton_clicked()

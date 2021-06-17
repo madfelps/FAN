@@ -223,17 +223,17 @@ public slots:
 	void setMaxValue(double);	
     void setMaxValue(int);
     /**
-     * @brief Sets the start of high speed range
+     * @brief Sets the start of high speed range.
      */
 	void setThreshold(double);
     void setThreshold(int);
     /**
-     * @brief Sets the start of medium speed range
+     * @brief Sets the start of medium speed range.
      */
     void setThresholdMedium(double);
     void setThresholdMedium(int);
     /**
-     * @brief Sets the numerical precision of the speedometer
+     * @brief Sets the numerical precision of the speedometer.
      */
     void setPrecision(int);
     void setPrecisionNumeric(int);
@@ -249,8 +249,9 @@ public slots:
      */
     void setLabel(QString);
     /**
-     * @brief arrow the difference between two consecutive values ​​in the speedometer layout.
-     * The speedometer will show (maximum - minimum)/steps values in the arc.
+     * @brief Sets the number of numerical points shown in the speedometer layout.
+     * The speedometer will have consecutive fixed values ​​in the layout with difference given by
+     * (maxValue - minValue)/steps.
      */
 	void setSteps(int);	
     /**
@@ -265,14 +266,21 @@ public slots:
     /**
      * @brief Sets end angle of the speedometer's inner arc. Used in building widget layout,
      * no real-time functionality.
+     * @param value is a double value angle.
      */
 	void setEndAngle(double);	
     /**
-     * @brief setForeground
+     * @brief Sets the foreground color. Suppose you want to use a foreground color
+     * to the text of some QPainter, that is, the color of the text, so use the m_foreground
+     * color which is defined by setForeground().
+     * @param A QColor of type QColor::setRgb(int r, int g, int b, int a = 255) or a Qt color of type Qt::blue, for example.
      */
 	void setForeground(QColor);
     /**
-     * @brief setBackground
+     * @brief Sets the background color. Suppose you want to use a background color
+     * to the text of some QPainter,so use the m_foreground color which is defined by
+     * setBackground().
+     * @param A QColor of type QColor::setRgb(int r, int g, int b, int a = 255) or a Qt color of type Qt::blue, for example.
      */
 	void setBackground(QColor);
     /**

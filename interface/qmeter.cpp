@@ -14,22 +14,19 @@
 QMeter::QMeter(QWidget *parent)
     : QWidget(parent)
 {
-   m_precision=0;
-   m_steps = 10;
+   setPrecision(0);
+   setSteps(10);
    m_thresholdFlag=false;
    m_thresholdMediumFlag = false;
 
-   m_foreground=QColor(Qt::black);
-   m_background=QColor(Qt::white);
-
-   m_foreground=QColor(Qt::yellow);
-   m_background=QColor(Qt::black);
+   setForeground(Qt::white);
+   setBackground(Qt::black);
 
    m_thresholdEnabled=true;
    m_thresholdMediumEnabled = true;
    m_numericIndicatorEnabled=true;
    setMinValue(0);
-   setMaxValue(200);
+   setMaxValue(5000);
    setValue(0);
    setStartAngle(225);
    setMediumAngle(45);
@@ -37,8 +34,8 @@ QMeter::QMeter(QWidget *parent)
    setMinimumSize(QSize(50,50));
    setLabel("Speed");
    setUnits("RPM");
-   setThreshold(80);
-   setThresholdMedium(30);
+   setThreshold(4000);
+   setThresholdMedium(2500);
 
    setEnableValidWindow(false);
    setBeginValidValue(40.0);
