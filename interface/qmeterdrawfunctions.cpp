@@ -180,38 +180,35 @@ void QMeter::drawThresholdLine(QPainter *painter)
     double thresholdAngle = ( m_startAngle+(m_endAngle-m_startAngle)/(m_maxValue-m_minValue)*(m_threshold-m_minValue) );
     double thresholdMediumAngle = ( m_startAngle+(m_endAngle-m_startAngle)/(m_maxValue-m_minValue)*(m_threshold_medium-m_minValue));
 
-    //qDebug() << "thresholdMediumAngle: " << thresholdMediumAngle;
-    //qDebug() << "thresholdAngle: " << thresholdAngle;
     pen.setWidth(5);
 
-    QConicalGradient linearGrad;
-    linearGrad.setColorAt(0.3, Qt::yellow);
-    linearGrad.setColorAt(1, Qt::green);
-    QBrush brush=QBrush(linearGrad);
+    QConicalGradient conicalGrad;
+    conicalGrad.setColorAt(0.3, Qt::yellow);
+    conicalGrad.setColorAt(1, Qt::green);
+    QBrush brush=QBrush(conicalGrad);
     pen.setBrush(brush);
     painter->setPen(pen);
     painter->drawArc(-25,-25,50,50,(int)m_startAngle*16,(int)(thresholdMediumAngle-m_startAngle)*16); //(rect dimensions, startangle, spanangle)
 
     QColor orange;
     orange.setRgb(255,165,0);
-    linearGrad.setColorAt(0, orange);
-    linearGrad.setColorAt(1, Qt::yellow);
-    QBrush brush2=QBrush(linearGrad);
+    conicalGrad.setColorAt(0, orange);
+    conicalGrad.setColorAt(1, Qt::yellow);
+    QBrush brush2=QBrush(conicalGrad);
     pen.setBrush(brush2);
-    //pen.setColor(Qt::yellow);
     painter->setPen(pen);
     painter->drawArc(-25,-25,50,50,(int)thresholdMediumAngle*16,(int)(thresholdAngle-thresholdMediumAngle)*16);
 
     orange.setRgb(255,165,0);
-    linearGrad.setColorAt(0.9, Qt::red);
-    linearGrad.setColorAt(1, orange);
-    QBrush brush3=QBrush(linearGrad);
+    conicalGrad.setColorAt(0.9, Qt::red);
+    conicalGrad.setColorAt(1, orange);
+    QBrush brush3=QBrush(conicalGrad);
     pen.setBrush(brush3);
     painter->setPen(pen);
     painter->drawArc(-25,-25,50,50,(int)thresholdAngle*16,(int)(-thresholdAngle+m_endAngle)*16);
 
     painter->restore();
-    /*****************/
+
     painter->save();
 
 
