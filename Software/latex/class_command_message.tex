@@ -1,0 +1,198 @@
+\doxysection{Command\+Message Class Reference}
+\label{class_command_message}\index{CommandMessage@{CommandMessage}}
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Command\+Message} ()
+\item 
+void \textbf{ Process\+Torque\+Send} (float $\ast$Torque\+Command, int flag)
+\begin{DoxyCompactList}\small\item\em \doxyref{Torque}{p.}{class_torque} processing to be send to the motor. \end{DoxyCompactList}\item 
+void \textbf{ Process\+\_\+\+Speed\+Send} (float $\ast$Speed\+Command)
+\begin{DoxyCompactList}\small\item\em Speed processing to be send to the motor. \end{DoxyCompactList}\item 
+void \textbf{ Update\+Frame} (struct can\+\_\+frame $\ast$frame)
+\begin{DoxyCompactList}\small\item\em Store torque and velocity parameters through M\+SB and L\+SB values. \end{DoxyCompactList}\item 
+int \textbf{ Get\+Byte} (int Position)
+\item 
+void \textbf{ Set\+Inverter\+Enable} (int Inverter\+\_\+\+Enable, struct can\+\_\+frame $\ast$frame)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{class_command_message_a45dd91f34a378d8e0995ecfaa7bac331}} 
+\index{CommandMessage@{CommandMessage}!CommandMessage@{CommandMessage}}
+\index{CommandMessage@{CommandMessage}!CommandMessage@{CommandMessage}}
+\doxysubsubsection{CommandMessage()}
+{\footnotesize\ttfamily Command\+Message\+::\+Command\+Message (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Data bytes to be received from C\+AN protocol (little endian) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1003                               \{}
+\DoxyCodeLine{1004 }
+\DoxyCodeLine{1005 }
+\DoxyCodeLine{1006 \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_command_message_a6ef454e3f11b9082eaa032d67be78567}} 
+\index{CommandMessage@{CommandMessage}!GetByte@{GetByte}}
+\index{GetByte@{GetByte}!CommandMessage@{CommandMessage}}
+\doxysubsubsection{GetByte()}
+{\footnotesize\ttfamily int Command\+Message\+::\+Get\+Byte (\begin{DoxyParamCaption}\item[{int}]{Position }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Position} & Byte position to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Byte returned from C\+A\+N\+\_\+\+D\+A\+TA (little endian) 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1066                                        \{}
+\DoxyCodeLine{1067     \textcolor{keywordflow}{return} Byte[Position];}
+\DoxyCodeLine{1068 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_command_message_a1272e1ec0774a86046b5f6fbcb6fd087}} 
+\index{CommandMessage@{CommandMessage}!Process\_SpeedSend@{Process\_SpeedSend}}
+\index{Process\_SpeedSend@{Process\_SpeedSend}!CommandMessage@{CommandMessage}}
+\doxysubsubsection{Process\_SpeedSend()}
+{\footnotesize\ttfamily void Command\+Message\+::\+Process\+\_\+\+Speed\+Send (\begin{DoxyParamCaption}\item[{float $\ast$}]{Speed\+Command }\end{DoxyParamCaption})}
+
+
+
+Speed processing to be send to the motor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Speed\+Command} & Speed value to configure the motor \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1034                                                   \{}
+\DoxyCodeLine{1035     SpeedCommand =  (int) (*Speed)*10;}
+\DoxyCodeLine{1036     \textcolor{keywordflow}{if}(SpeedCommand < 32768)\{}
+\DoxyCodeLine{1037         SpeedCommandMSByte = 0;}
+\DoxyCodeLine{1038         SpeedCommandLSByte = SpeedCommand;}
+\DoxyCodeLine{1039     \}}
+\DoxyCodeLine{1040     \textcolor{keywordflow}{if}(SpeedCommand >= 32768)\{}
+\DoxyCodeLine{1041         SpeedCommandLSByte = (SpeedCommand \& 0xFF);}
+\DoxyCodeLine{1042         SpeedCommandMSByte = (SpeedCommand >> 8);}
+\DoxyCodeLine{1043     \}}
+\DoxyCodeLine{1044 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_command_message_a73c925394b8d18e727793afa299324a4}} 
+\index{CommandMessage@{CommandMessage}!ProcessTorqueSend@{ProcessTorqueSend}}
+\index{ProcessTorqueSend@{ProcessTorqueSend}!CommandMessage@{CommandMessage}}
+\doxysubsubsection{ProcessTorqueSend()}
+{\footnotesize\ttfamily void Command\+Message\+::\+Process\+Torque\+Send (\begin{DoxyParamCaption}\item[{float $\ast$}]{Torque\+Command,  }\item[{int}]{flag }\end{DoxyParamCaption})}
+
+
+
+\doxyref{Torque}{p.}{class_torque} processing to be send to the motor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Torque\+Command} & \doxyref{Torque}{p.}{class_torque} value to configure the motor \\
+\hline
+{\em flag} & The flag indicates if this torque correspond to the limit torque or the \char`\"{}common\char`\"{} torque (trocar isso) \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1008                                                              \{}
+\DoxyCodeLine{1009     \textcolor{keywordflow}{if}(flag == 0)\{ \textcolor{comment}{//Commanded Torque}}
+\DoxyCodeLine{1010         TorqueCommand =  (int) (*Torque)*10;}
+\DoxyCodeLine{1011         \textcolor{keywordflow}{if}(TorqueCommand < 32768)\{}
+\DoxyCodeLine{1012             TorqueCommandMSByte = 0;}
+\DoxyCodeLine{1013             TorqueCommandLSByte = TorqueCommand;}
+\DoxyCodeLine{1014         \}}
+\DoxyCodeLine{1015         \textcolor{keywordflow}{if}(TorqueCommand >= 32768)\{}
+\DoxyCodeLine{1016             TorqueCommandLSByte = (TorqueCommand \& 0xFF);}
+\DoxyCodeLine{1017             TorqueCommandMSByte = (TorqueCommand >> 8);}
+\DoxyCodeLine{1018         \}}
+\DoxyCodeLine{1019     \}}
+\DoxyCodeLine{1020     \textcolor{keywordflow}{if}(flag == 1)\{ \textcolor{comment}{//Torque Limit}}
+\DoxyCodeLine{1021         CommandedTorqueLimit =  (int) (*Torque)*10;}
+\DoxyCodeLine{1022         \textcolor{keywordflow}{if}(CommandedTorqueLimit < 32768)\{}
+\DoxyCodeLine{1023             CommandedTorqueLimitMSB = 0;}
+\DoxyCodeLine{1024             CommandedTorqueLimitLSB = CommandedTorqueLimit;}
+\DoxyCodeLine{1025         \}}
+\DoxyCodeLine{1026         \textcolor{keywordflow}{if}(CommandedTorqueLimit >= 32768)\{}
+\DoxyCodeLine{1027             CommandedTorqueLimitMSB = (CommandedTorqueLimit \& 0xFF);}
+\DoxyCodeLine{1028             CommandedTorqueLimitLSB = (CommandedTorqueLimit >> 8);}
+\DoxyCodeLine{1029         \}}
+\DoxyCodeLine{1030 }
+\DoxyCodeLine{1031     \}}
+\DoxyCodeLine{1032 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_command_message_a5c46e3129a22228a4728fca3b32a2456}} 
+\index{CommandMessage@{CommandMessage}!SetInverterEnable@{SetInverterEnable}}
+\index{SetInverterEnable@{SetInverterEnable}!CommandMessage@{CommandMessage}}
+\doxysubsubsection{SetInverterEnable()}
+{\footnotesize\ttfamily void Command\+Message\+::\+Set\+Inverter\+Enable (\begin{DoxyParamCaption}\item[{int}]{Inverter\+\_\+\+Enable,  }\item[{struct can\+\_\+frame $\ast$}]{frame }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Inverter\+\_\+\+Enable} & logical value for setting the inverter (0 -\/ off, 1 -\/ on) \\
+\hline
+{\em frame} & frame that will be send to the motor \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1057                                                                                   \{}
+\DoxyCodeLine{1058     \textcolor{keywordflow}{if}(Inverter\_Enable)\{}
+\DoxyCodeLine{1059         frame-\/>data[5] = frame-\/>data[5]|0b00000001;}
+\DoxyCodeLine{1060     \}}
+\DoxyCodeLine{1061     \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{1062         frame-\/>data[5] = frame-\/>data[5]\&11111110;}
+\DoxyCodeLine{1063     \}}
+\DoxyCodeLine{1064 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_command_message_a602c8d8e9ca7f07b756249f1588b155a}} 
+\index{CommandMessage@{CommandMessage}!UpdateFrame@{UpdateFrame}}
+\index{UpdateFrame@{UpdateFrame}!CommandMessage@{CommandMessage}}
+\doxysubsubsection{UpdateFrame()}
+{\footnotesize\ttfamily void Command\+Message\+::\+Update\+Frame (\begin{DoxyParamCaption}\item[{struct can\+\_\+frame $\ast$}]{frame }\end{DoxyParamCaption})}
+
+
+
+Store torque and velocity parameters through M\+SB and L\+SB values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em frame} & frame that will be send to the motor \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1046                                                        \{}
+\DoxyCodeLine{1047     frame-\/>can\_id = COMMAND\_MESSAGE;}
+\DoxyCodeLine{1048     frame-\/>data[0] = TorqueCommandLSByte;}
+\DoxyCodeLine{1049     frame-\/>data[1] = TorqueCommandMSByte;}
+\DoxyCodeLine{1050     frame-\/>data[2] = SpeedCommandLSByte;}
+\DoxyCodeLine{1051     frame-\/>data[3] = SpeedCommandMSByte;}
+\DoxyCodeLine{1052     frame-\/>data[6] = CommandedTorqueLimitLSB;}
+\DoxyCodeLine{1053     frame-\/>data[7] = CommandedTorqueLimitMSB;}
+\DoxyCodeLine{1054 }
+\DoxyCodeLine{1055 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}

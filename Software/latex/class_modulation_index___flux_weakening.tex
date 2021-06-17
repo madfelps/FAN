@@ -1,0 +1,171 @@
+\doxysection{Modulation\+Index\+\_\+\+Flux\+Weakening Class Reference}
+\label{class_modulation_index___flux_weakening}\index{ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}}
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+Inheritance diagram for Modulation\+Index\+\_\+\+Flux\+Weakening\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_modulation_index___flux_weakening}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Modulation\+Index\+\_\+\+Flux\+Weakening} ()
+\item 
+\textbf{ Modulation\+Index\+\_\+\+Flux\+Weakening} (unsigned char $\ast$C\+A\+N\+\_\+\+D\+A\+TA)
+\item 
+void \textbf{ Update\+Object} (unsigned char $\ast$C\+A\+N\+\_\+\+D\+A\+TA)
+\begin{DoxyCompactList}\small\item\em Atualiza os parâmetros do objeto conforme a mensagem C\+AN recebida. \end{DoxyCompactList}\item 
+void \textbf{ If\+I\+D\+\_\+\+Modulation\+Index\+\_\+\+Flux\+Weakening} (struct can\+\_\+frame $\ast$frame, \textbf{ nlohmann\+::json} \&U\+D\+P\+\_\+\+Package)
+\begin{DoxyCompactList}\small\item\em Verify if the ID\textquotesingle{}s frame received refers to this class; if so, process according the manual. \end{DoxyCompactList}\item 
+int \textbf{ Get\+Byte} (int Position)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{class_modulation_index___flux_weakening_a3644fe2bc5b1f0984a7ffae3b3682edc}} 
+\index{ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}!ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}}
+\index{ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}!ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}}
+\doxysubsubsection{ModulationIndex\_FluxWeakening()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Modulation\+Index\+\_\+\+Flux\+Weakening\+::\+Modulation\+Index\+\_\+\+Flux\+Weakening (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Data bytes to be received from C\+AN protocol (little endian) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{942                                                             \{}
+\DoxyCodeLine{943     ModulationIndex                 =   0.0;}
+\DoxyCodeLine{944     ModulationIndexProcessed        =   0.0;}
+\DoxyCodeLine{945     FluxWeakeningOutput             =   0.0;}
+\DoxyCodeLine{946     FluxWeakeningOutputProcessed    =   0.0;}
+\DoxyCodeLine{947     IdCommand                       =   0.0;}
+\DoxyCodeLine{948     IdCommandProcessed              =   0.0;}
+\DoxyCodeLine{949     IqCommand                       =   0.0;}
+\DoxyCodeLine{950     IqCommandProcessed              =   0.0;}
+\DoxyCodeLine{951 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_modulation_index___flux_weakening_a6a00306de4ce7b5dea5d2f5d99bf8557}} 
+\index{ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}!ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}}
+\index{ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}!ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}}
+\doxysubsubsection{ModulationIndex\_FluxWeakening()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Modulation\+Index\+\_\+\+Flux\+Weakening\+::\+Modulation\+Index\+\_\+\+Flux\+Weakening (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA }\end{DoxyParamCaption})}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{953                                                                                    \{}
+\DoxyCodeLine{954     ModulationIndex                 =   0.0;}
+\DoxyCodeLine{955     ModulationIndexProcessed        =   0.0;}
+\DoxyCodeLine{956     FluxWeakeningOutput             =   0.0;}
+\DoxyCodeLine{957     FluxWeakeningOutputProcessed    =   0.0;}
+\DoxyCodeLine{958     IdCommand                       =   0.0;}
+\DoxyCodeLine{959     IdCommandProcessed              =   0.0;}
+\DoxyCodeLine{960     IqCommand                       =   0.0;}
+\DoxyCodeLine{961     IqCommandProcessed              =   0.0;}
+\DoxyCodeLine{962 \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_modulation_index___flux_weakening_a3fde4ece5670af662f5fe7049e7da206}} 
+\index{ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}!GetByte@{GetByte}}
+\index{GetByte@{GetByte}!ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}}
+\doxysubsubsection{GetByte()}
+{\footnotesize\ttfamily int Modulation\+Index\+\_\+\+Flux\+Weakening\+::\+Get\+Byte (\begin{DoxyParamCaption}\item[{int}]{Position }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Position} & Byte position to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Byte returned from C\+A\+N\+\_\+\+D\+A\+TA (little endian) 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{964                                                       \{}
+\DoxyCodeLine{965     \textcolor{keywordflow}{return} Byte[Position];}
+\DoxyCodeLine{966 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_modulation_index___flux_weakening_ae32d90ce3e3e02f4d56aec43ef2ac8b9}} 
+\index{ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}!IfID\_ModulationIndex\_FluxWeakening@{IfID\_ModulationIndex\_FluxWeakening}}
+\index{IfID\_ModulationIndex\_FluxWeakening@{IfID\_ModulationIndex\_FluxWeakening}!ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}}
+\doxysubsubsection{IfID\_ModulationIndex\_FluxWeakening()}
+{\footnotesize\ttfamily void Modulation\+Index\+\_\+\+Flux\+Weakening\+::\+If\+I\+D\+\_\+\+Modulation\+Index\+\_\+\+Flux\+Weakening (\begin{DoxyParamCaption}\item[{struct can\+\_\+frame $\ast$}]{frame,  }\item[{\textbf{ nlohmann\+::json} \&}]{U\+D\+P\+\_\+\+Package }\end{DoxyParamCaption})}
+
+
+
+Verify if the ID\textquotesingle{}s frame received refers to this class; if so, process according the manual. 
+
+Verifica se o ID da C\+AN refere-\/se a classe \doxyref{Modulation\+Index\+\_\+\+Flux\+Weakening}{p.}{class_modulation_index___flux_weakening}; caso afirmativo, chama a função de update e atualiza os campos da mensagem json.
+
+
+\begin{DoxyParams}{Parameters}
+{\em C\+AN} & frame received from the motor \\
+\hline
+{\em Json} & packet to store the data to be sent for the graphical interface\\
+\hline
+{\em Struct} & referente ao can \\
+\hline
+{\em Pacote} & json para posterior envio a interface \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{989                                                                                                                         \{}
+\DoxyCodeLine{990     \textcolor{keywordflow}{if}(frame-\/>can\_id == 173)\{}
+\DoxyCodeLine{991 }
+\DoxyCodeLine{992         UpdateObject(frame-\/>data);}
+\DoxyCodeLine{993 }
+\DoxyCodeLine{994         UDP\_Package[\textcolor{stringliteral}{"ID"}]                       =       \textcolor{stringliteral}{"ModulationIndex\_FluxWeakening"};}
+\DoxyCodeLine{995         UDP\_Package[\textcolor{stringliteral}{"FluxWeakeningOutput"}]      =       FluxWeakeningOutputProcessed;}
+\DoxyCodeLine{996         UDP\_Package[\textcolor{stringliteral}{"IdCommandProcessed"}]       =       IdCommandProcessed;}
+\DoxyCodeLine{997         UDP\_Package[\textcolor{stringliteral}{"IqCommandProcessed"}]       =       IqCommandProcessed;}
+\DoxyCodeLine{998 }
+\DoxyCodeLine{999     \}}
+\DoxyCodeLine{1000 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_modulation_index___flux_weakening_a514dc777a5b6250fad05397162adb379}} 
+\index{ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}!UpdateObject@{UpdateObject}}
+\index{UpdateObject@{UpdateObject}!ModulationIndex\_FluxWeakening@{ModulationIndex\_FluxWeakening}}
+\doxysubsubsection{UpdateObject()}
+{\footnotesize\ttfamily void Modulation\+Index\+\_\+\+Flux\+Weakening\+::\+Update\+Object (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA }\end{DoxyParamCaption})}
+
+
+
+Atualiza os parâmetros do objeto conforme a mensagem C\+AN recebida. 
+
+Start the data processing according to the manual 
+\begin{DoxyParams}{Parameters}
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & 8 bytes data received from the motor\\
+\hline
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & Conjunto de 8 bytes recebidos pela C\+AN \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{975                                                                        \{}
+\DoxyCodeLine{976     ModulationIndexProcessed        =   ProcessTorqueReceive(CAN\_DATA, 1, 0)/10;}
+\DoxyCodeLine{977     FluxWeakeningOutputProcessed    =   ProcessTorqueReceive(CAN\_DATA, 3, 2);}
+\DoxyCodeLine{978     IdCommandProcessed              =   ProcessTorqueReceive(CAN\_DATA, 5, 4);}
+\DoxyCodeLine{979     IqCommandProcessed              =   ProcessTorqueReceive(CAN\_DATA, 7, 6);}
+\DoxyCodeLine{980 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}

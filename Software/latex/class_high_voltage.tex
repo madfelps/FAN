@@ -1,0 +1,81 @@
+\doxysection{High\+Voltage Class Reference}
+\label{class_high_voltage}\index{HighVoltage@{HighVoltage}}
+
+
+This function process high voltage parameter through two\textquotesingle{}s complement.  
+
+
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+Inheritance diagram for High\+Voltage\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_high_voltage}
+\end{center}
+\end{figure}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static float \textbf{ Process\+High\+Voltage} (unsigned char $\ast$, int M\+S\+Byte, int L\+S\+Byte)
+\begin{DoxyCompactList}\small\item\em This function process high voltage parameter through two\textquotesingle{}s complement. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This function process high voltage parameter through two\textquotesingle{}s complement. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_high_voltage_ae9b9aafcea67876288f1f1c8fdfc6c6e}} 
+\index{HighVoltage@{HighVoltage}!ProcessHighVoltage@{ProcessHighVoltage}}
+\index{ProcessHighVoltage@{ProcessHighVoltage}!HighVoltage@{HighVoltage}}
+\doxysubsubsection{ProcessHighVoltage()}
+{\footnotesize\ttfamily float High\+Voltage\+::\+Process\+High\+Voltage (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA,  }\item[{int}]{M\+S\+Byte,  }\item[{int}]{L\+S\+Byte }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+This function process high voltage parameter through two\textquotesingle{}s complement. 
+
+Processamento do parâmetro de alta tensão recebido pelo motor.
+
+
+\begin{DoxyParams}{Parameters}
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & Data received from motor \\
+\hline
+{\em M\+S\+Byte} & Most significant byte \\
+\hline
+{\em L\+S\+Byte} & Less significant byte \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Processed decimal high voltage data according two\textquotesingle{}s complement
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em Conjunto} & de 8 bytes recebidos pela C\+AN \\
+\hline
+{\em M\+S\+Byte} & índice do byte mais significativo \\
+\hline
+{\em L\+S\+Byte} & índice do byte menos significativo \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Alta tensão processada na forma decimal 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{183                                                                                     \{}
+\DoxyCodeLine{184 }
+\DoxyCodeLine{185     \textcolor{keywordtype}{float} HighVoltageValue = CAN\_DATA[LSByte] + CAN\_DATA[MSByte] * 256;}
+\DoxyCodeLine{186     HighVoltageValue = NegativeValuesTwoBytes(HighVoltageValue);}
+\DoxyCodeLine{187     HighVoltageValue = HighVoltageValue/10;}
+\DoxyCodeLine{188     \textcolor{keywordflow}{return} HighVoltageValue;}
+\DoxyCodeLine{189 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}
