@@ -1,0 +1,171 @@
+\doxysection{Fault\+Errors Class Reference}
+\label{class_fault_errors}\index{FaultErrors@{FaultErrors}}
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Fault\+Errors} ()
+\item 
+void \textbf{ If\+Id\+\_\+\+Fault\+Errors} (struct can\+\_\+frame $\ast$frame, \textbf{ nlohmann\+::json} \&U\+D\+P\+\_\+\+Package)
+\begin{DoxyCompactList}\small\item\em Verifica se o ID da C\+AN refere-\/se a classe Fault Errors; caso afirmativo, chama a função de update e atualiza os campos da mensagem json. \end{DoxyCompactList}\item 
+void \textbf{ Update\+Object} (unsigned char $\ast$C\+A\+N\+\_\+\+D\+A\+TA)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Função\+: Fault Errors Parâmetros\+: Valor em lógica binária Retorno\+: Valor decimal, positivo ou negativo, conforme a lógica 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{class_fault_errors_aac9afaa8d00b2617c524da0abd5c7191}} 
+\index{FaultErrors@{FaultErrors}!FaultErrors@{FaultErrors}}
+\index{FaultErrors@{FaultErrors}!FaultErrors@{FaultErrors}}
+\doxysubsubsection{FaultErrors()}
+{\footnotesize\ttfamily Fault\+Errors\+::\+Fault\+Errors (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1188                         \{}
+\DoxyCodeLine{1189     std::array<std::pair<bool, std::string>, 64> errors\{}
+\DoxyCodeLine{1190     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Hardware Gate/Desaturation Fault"}),}
+\DoxyCodeLine{1191     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"HW Over-\/current Fault"}),}
+\DoxyCodeLine{1192     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Accelerator Shorted"}),}
+\DoxyCodeLine{1193     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Accelerator Open"}),}
+\DoxyCodeLine{1194     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Current Sensor Low"}),}
+\DoxyCodeLine{1195     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Current Sensor High"}),}
+\DoxyCodeLine{1196     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Module Temperature Low"}),}
+\DoxyCodeLine{1197     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Module Temperature High"}),}
+\DoxyCodeLine{1198 }
+\DoxyCodeLine{1199     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Control PCB Temperature Low"}),}
+\DoxyCodeLine{1200     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Control PCB Temperature High"}),}
+\DoxyCodeLine{1201     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Gate Drive PCB Temperature Low"}),}
+\DoxyCodeLine{1202     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Gate Drive PCB Temperature High"}),}
+\DoxyCodeLine{1203     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"5V Sense Voltage Low"}),}
+\DoxyCodeLine{1204     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"5V Sense Voltage High"}),}
+\DoxyCodeLine{1205     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"12V Sense Voltage Low"}),}
+\DoxyCodeLine{1206     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"12V Sense Voltage High"}),}
+\DoxyCodeLine{1207 }
+\DoxyCodeLine{1208     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"2.5V Sense Voltage Low"}),}
+\DoxyCodeLine{1209     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"2.5V Sense Voltage High"}),}
+\DoxyCodeLine{1210     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"1.5V Sense Voltage Low"}),}
+\DoxyCodeLine{1211     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"1.5V Sense Voltage High"}),}
+\DoxyCodeLine{1212     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"DC Bus Voltage High"}),}
+\DoxyCodeLine{1213     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"DC Bus Voltage Low"}),}
+\DoxyCodeLine{1214     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Pre-\/charge Timeout"}),}
+\DoxyCodeLine{1215     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Pre-\/charge Voltage Failure"}),}
+\DoxyCodeLine{1216 }
+\DoxyCodeLine{1217     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"EEPROM Checksum Invalid"}),}
+\DoxyCodeLine{1218     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"EEPROM Data Out of Range"}),}
+\DoxyCodeLine{1219     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"EEPROM Update Required"}),}
+\DoxyCodeLine{1220     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Reserved"}),}
+\DoxyCodeLine{1221     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Reserved"}),}
+\DoxyCodeLine{1222     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Reserved"}),}
+\DoxyCodeLine{1223     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Brake Shorted"}),}
+\DoxyCodeLine{1224     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Brake Open"}),}
+\DoxyCodeLine{1225 }
+\DoxyCodeLine{1226     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Motor Over-\/speed Fault"}),}
+\DoxyCodeLine{1227     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Over-\/current Fault"}),}
+\DoxyCodeLine{1228     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Over-\/voltage Fault"}),}
+\DoxyCodeLine{1229     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Inverter Over-\/temperature Fault"}),}
+\DoxyCodeLine{1230     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Accelerator Input Shorted Fault"}),}
+\DoxyCodeLine{1231     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Accelerator Input Open Fault"}),}
+\DoxyCodeLine{1232     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Direction Command Fault"}),}
+\DoxyCodeLine{1233     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Inverter Response Time-\/out Fault"}),}
+\DoxyCodeLine{1234 }
+\DoxyCodeLine{1235     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Hardware Gate/Desaturation Fault"}),}
+\DoxyCodeLine{1236     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Hardware Over-\/current Fault"}),}
+\DoxyCodeLine{1237     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Under-\/voltage Fault"}),}
+\DoxyCodeLine{1238     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"CAN Command Message Lost Fault"}),}
+\DoxyCodeLine{1239     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Motor Over-\/temperature Fault"}),}
+\DoxyCodeLine{1240     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Reserved"}),}
+\DoxyCodeLine{1241     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Reserved"}),}
+\DoxyCodeLine{1242     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Reserved"}),}
+\DoxyCodeLine{1243 }
+\DoxyCodeLine{1244     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Brake Input Shorted Fault"}),}
+\DoxyCodeLine{1245     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Brake Input Open Fault"}),}
+\DoxyCodeLine{1246     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Module A Over-\/temperature Fault"}),}
+\DoxyCodeLine{1247     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Module B Over-\/temperature Fault"}),}
+\DoxyCodeLine{1248     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Module C Over-\/temperature Fault"}),}
+\DoxyCodeLine{1249     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"PCB Over-\/temperature Fault"}),}
+\DoxyCodeLine{1250     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Gate Drive Board 1 Over-\/temperature Fault"}),}
+\DoxyCodeLine{1251     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Gate Drive Board 2 Over-\/temperature Fault"}),}
+\DoxyCodeLine{1252 }
+\DoxyCodeLine{1253     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Gate Drive Board 3 Over-\/temperature Fault"}),}
+\DoxyCodeLine{1254     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Current Sensor Fault"}),}
+\DoxyCodeLine{1255     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Reserved"}),}
+\DoxyCodeLine{1256     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Reserved"}),}
+\DoxyCodeLine{1257     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Reserved"}),}
+\DoxyCodeLine{1258     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Reserved"}),}
+\DoxyCodeLine{1259     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Resolver Not Connected"}),}
+\DoxyCodeLine{1260     std::make\_pair(\textcolor{keyword}{false}, \textcolor{stringliteral}{"Inverter Discharge Active"})}
+\DoxyCodeLine{1261 }
+\DoxyCodeLine{1262     \};}
+\DoxyCodeLine{1263 \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_fault_errors_a475dc18adfde42f8be0624653b2af15e}} 
+\index{FaultErrors@{FaultErrors}!IfId\_FaultErrors@{IfId\_FaultErrors}}
+\index{IfId\_FaultErrors@{IfId\_FaultErrors}!FaultErrors@{FaultErrors}}
+\doxysubsubsection{IfId\_FaultErrors()}
+{\footnotesize\ttfamily void Fault\+Errors\+::\+If\+Id\+\_\+\+Fault\+Errors (\begin{DoxyParamCaption}\item[{struct can\+\_\+frame $\ast$}]{frame,  }\item[{\textbf{ nlohmann\+::json} \&}]{U\+D\+P\+\_\+\+Package }\end{DoxyParamCaption})}
+
+
+
+Verifica se o ID da C\+AN refere-\/se a classe Fault Errors; caso afirmativo, chama a função de update e atualiza os campos da mensagem json. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Struct} & referente ao can \\
+\hline
+{\em Pacote} & json para posterior envio a interface \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1272                                                                                     \{}
+\DoxyCodeLine{1273     \textcolor{keywordflow}{if}(frame-\/>can\_id == 171)\{}
+\DoxyCodeLine{1274         this-\/>UpdateObject(frame-\/>data);}
+\DoxyCodeLine{1275 }
+\DoxyCodeLine{1276         UDP\_Package[\textcolor{stringliteral}{"ID"}]                           = \textcolor{stringliteral}{"FaultErrors"};}
+\DoxyCodeLine{1277         UDP\_Package[\textcolor{stringliteral}{"FaultCode\_0"}]                  = Errors\_Bytes[0];}
+\DoxyCodeLine{1278         UDP\_Package[\textcolor{stringliteral}{"FaultCode\_1"}]                  = Errors\_Bytes[1];}
+\DoxyCodeLine{1279         UDP\_Package[\textcolor{stringliteral}{"FaultCode\_2"}]                  = Errors\_Bytes[2];}
+\DoxyCodeLine{1280         UDP\_Package[\textcolor{stringliteral}{"FaultCode\_3"}]                  = Errors\_Bytes[3];}
+\DoxyCodeLine{1281         UDP\_Package[\textcolor{stringliteral}{"FaultCode\_4"}]                  = Errors\_Bytes[4];}
+\DoxyCodeLine{1282         UDP\_Package[\textcolor{stringliteral}{"FaultCode\_5"}]                  = Errors\_Bytes[5];}
+\DoxyCodeLine{1283         UDP\_Package[\textcolor{stringliteral}{"FaultCode\_6"}]                  = Errors\_Bytes[6];}
+\DoxyCodeLine{1284         UDP\_Package[\textcolor{stringliteral}{"FaultCode\_7"}]                  = Errors\_Bytes[7];}
+\DoxyCodeLine{1285     \}}
+\DoxyCodeLine{1286 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_fault_errors_a8b103590682efc0e4067c48ab19cd6e8}} 
+\index{FaultErrors@{FaultErrors}!UpdateObject@{UpdateObject}}
+\index{UpdateObject@{UpdateObject}!FaultErrors@{FaultErrors}}
+\doxysubsubsection{UpdateObject()}
+{\footnotesize\ttfamily void Fault\+Errors\+::\+Update\+Object (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA }\end{DoxyParamCaption})}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1288                                                      \{}
+\DoxyCodeLine{1289     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < 7; i++)\{}
+\DoxyCodeLine{1290         Errors\_Bytes[i] = CAN\_DATA[i];}
+\DoxyCodeLine{1291     \}}
+\DoxyCodeLine{1292 }
+\DoxyCodeLine{1293 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}
