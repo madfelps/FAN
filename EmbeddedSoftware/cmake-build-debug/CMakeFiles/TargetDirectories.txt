@@ -1,3 +1,0 @@
-/home/felipe/CLionProjects/FAN/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/felipe/CLionProjects/FAN/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/felipe/CLionProjects/FAN/cmake-build-debug/CMakeFiles/FAN.dir
