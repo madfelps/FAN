@@ -125,9 +125,9 @@ background-color: rgb(186, 189, 182);</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
+      <string notr="true">
 
-background-color: rgb(13, 94, 4);</string>
+background-color: rgb(178, 255, 102);</string>
      </property>
      <property name="text">
       <string>SEND</string>
@@ -344,20 +344,21 @@ background-color: rgb(13, 94, 4);</string>
       <string notr="true">color: rgb(255, 255, 255);</string>
      </property>
      <property name="text">
-      <string>MOTOR HABILITATION</string>
+      <string>MOTOR </string>
      </property>
     </widget>
     <widget class="QPushButton" name="enable_motor_button">
      <property name="geometry">
       <rect>
-       <x>596</x>
-       <y>268</y>
-       <width>77</width>
+       <x>388</x>
+       <y>270</y>
+       <width>99</width>
        <height>61</height>
       </rect>
      </property>
      <property name="font">
       <font>
+       <pointsize>12</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -374,14 +375,15 @@ background-color: rgb(186, 189, 182);</string>
     <widget class="QPushButton" name="disable_motor_button">
      <property name="geometry">
       <rect>
-       <x>680</x>
-       <y>268</y>
-       <width>75</width>
+       <x>492</x>
+       <y>270</y>
+       <width>97</width>
        <height>61</height>
       </rect>
      </property>
      <property name="font">
       <font>
+       <pointsize>12</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -399,7 +401,7 @@ background-color: rgb(186, 189, 182);</string>
      <property name="geometry">
       <rect>
        <x>388</x>
-       <y>344</y>
+       <y>346</y>
        <width>201</width>
        <height>55</height>
       </rect>
@@ -506,21 +508,15 @@ border-color: rgb(0, 0, 0);</string>
      <x>0</x>
      <y>0</y>
      <width>1020</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuIn_cio">
-    <property name="title">
-     <string>Home</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuSobre">
     <property name="title">
      <string>Help</string>
     </property>
     <addaction name="actionSobre"/>
    </widget>
-   <addaction name="menuIn_cio"/>
    <addaction name="menuSobre"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

@@ -2,6 +2,9 @@
     <qresource prefix="/imagens">
         <file>images/aero.jpeg</file>
         <file>images/felipe.jpeg</file>
+        <file>images/glauco.jpg</file>
+        <file>images/greco.png</file>
+        <file>images/henrique.jpg</file>
         <file>images/gaspar.jpeg</file>
     </qresource>
 </RCC>

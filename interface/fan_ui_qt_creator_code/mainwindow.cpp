@@ -245,7 +245,7 @@ void MainWindow::on_enable_motor_button_clicked()
 
     flag_motor = true;
     /*You can to change the button style, just change the parameters: color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));\n\nbackground-color: rgb(13, 94, 4);") */
-    ui->enable_motor_button->setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));\n\nbackground-color: rgb(13, 94, 4);");
+    ui->enable_motor_button->setStyleSheet("background-color: rgb(178, 255, 102);");
     ui->disable_motor_button->setStyleSheet("color: rgb(255, 255, 255);\ncolor: rgb(46, 52, 54);\nbackground-color: rgb(186, 189, 182);");
 
     QJsonObject UDP_Packet_Send;
@@ -260,7 +260,7 @@ void MainWindow::on_disable_motor_button_clicked()
 {
 
     flag_motor = false;
-    ui->disable_motor_button->setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));\n\nbackground-color: rgb(13, 94, 4);");
+    ui->disable_motor_button->setStyleSheet("background-color: rgb(255, 30, 30);");
     ui->enable_motor_button->setStyleSheet("color: rgb(255, 255, 255);\ncolor: rgb(46, 52, 54);\nbackground-color: rgb(186, 189, 182);");
 
     QJsonObject UDP_Packet_Send;

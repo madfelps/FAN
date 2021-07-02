@@ -242,7 +242,7 @@ void QMeter::drawLabel(QPainter *painter)
     QFontMetricsF fm( this->font() );
     double w=fm.size(Qt::TextSingleLine,m_label).width();
 
-    QRectF labelRect=QRectF(-20,15,40,10);
+    QRectF labelRect=QRectF(-10,15,20,10);
 
     if(w>labelRect.width())
     {
