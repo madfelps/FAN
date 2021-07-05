@@ -16,20 +16,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    about.cpp \
     main.cpp \
     mainwindow.cpp \
     qmeter.cpp \
-    qmeterdrawfunctions.cpp \
-    sobre.cpp
+    qmeterdrawfunctions.cpp
 
 HEADERS += \
+    about.h \
     mainwindow.h \
-    qmeter.h \
-    sobre.h
+    qmeter.h
 
 FORMS += \
-    mainwindow.ui \
-    sobre.ui
+    about.ui \
+    mainwindow.ui
 
 QMAKE_CXXFLAGS += -std=gnu++11
 

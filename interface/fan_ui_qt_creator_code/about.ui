@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Sobre</class>
- <widget class="QDialog" name="Sobre">
+ <class>About</class>
+ <widget class="QDialog" name="About">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -69,10 +69,10 @@ background-color: rgb(181, 181, 181);</string>
       <string notr="true">background-color: rgb(181, 181, 181);</string>
      </property>
      <property name="text">
-      <string>Interface gráfica para utilização do túnel de vento do hangar 2 do Departamente de Engenharia Aeronáutica da Escola de Engenharia de São Carlos - EESC USP, como parte do projeto de Iniciação Científica &quot;Desenvolvimento de um Software Embarcado para controle via Comunicação CAN de um Túnel de Vento&quot; entre 2020 e 2021.
+      <string>Graphical interface for using the wind tunnel in hangar 2 of the Aeronautical Engineering Department at São Carlos School of Engineering - EESC USP, as part of the Scientific Initiation project &quot;Development of an embedded software for control via CAN communication of a wind tunnel &quot; between 2020 and 2021.
 
-Orientandos:
-Felipe Moura Madureira, Gaspar Henrique Martins de Oliveira </string>
+Students:
+Felipe Moura Madureira, Gaspar Henrique Martins de Oliveira</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -172,8 +172,8 @@ background-color: rgb(181, 181, 181);</string>
       </font>
      </property>
      <property name="text">
-      <string>Orientadores: 
-Prof.Dr.Paulo Celso Greco Júnio, Prof.Dr.Glauco, Doutorando Henrique Borges Garcia
+      <string>Advisors: 
+Prof.PhD.Paulo Celso Greco Júnio, Prof.PhD.Glauco, PhD. Student Henrique Borges Garcia
 
 </string>
      </property>

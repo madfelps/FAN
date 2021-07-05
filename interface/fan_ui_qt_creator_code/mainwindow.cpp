@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "sobre.h"
+#include "about.h"
 /**  Maximum temperature value showed in motor thermometer */
 constexpr int MAX_MOTOR_TEMP  = 90;
 /**  Limit range value of motor thermometer low temperature */
@@ -232,10 +232,10 @@ void MainWindow::on_sendButton_clicked()
     }
 }
 
-void MainWindow::on_actionSobre_triggered()
+void MainWindow::on_actionAbout_triggered()
 {
-    Sobre sobre;
-    sobre.exec();
+    About about;
+    about.exec();
 }
 
 

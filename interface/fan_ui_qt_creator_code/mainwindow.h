@@ -38,11 +38,11 @@ private slots:
     */
     void on_sendButton_clicked();
 
-    /**  Sobre tag function
-     * @brief This function is called when Help/Sobre tag is clicked and a new window
+    /**  About tag function
+     * @brief This function is called when Help/About tag is clicked and a new window
      * is showed with informations about the autors.
     */
-    void on_actionSobre_triggered();
+    void on_actionAbout_triggered();
 
     /**  ENABLE button function
      * @brief This function is called when the ENABLE button is clicked and enables the motor and speed
