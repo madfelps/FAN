@@ -20,12 +20,14 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     qmeter.cpp \
-    qmeterdrawfunctions.cpp
+    qmeterdrawfunctions.cpp \
+    tcpTransfer.cpp
 
 HEADERS += \
     about.h \
     mainwindow.h \
-    qmeter.h
+    qmeter.h \
+    tcpTransfer.h
 
 FORMS += \
     about.ui \
