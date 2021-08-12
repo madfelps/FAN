@@ -141,6 +141,10 @@ void MainWindow::thermometers_config()
 
 void MainWindow::receiveMessages()
 {
+    /*Creation of TCP socket for log*/
+    mSocket = new QTcpSocket(this);
+    connect(mSocket, &QTcpSocket::readyRead, [&](){
+    });
     /*Creation of UDP socket for communication*/
     socket = new QUdpSocket(this);
     /*Receiving, serializing and interpreting received messages*/
@@ -270,3 +274,9 @@ void MainWindow::on_disable_motor_button_clicked()
     sendJsonToUDP(UDP_Packet_Send);
 
 }
+
+void MainWindow::on_log_button_clicked()
+{
+
+}
+

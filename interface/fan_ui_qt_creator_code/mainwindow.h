@@ -13,12 +13,14 @@
 /** The QJsonDocument class provides a way to read and write JSON documents.*/
 #include <QJsonDocument>
 
+#include <QTcpSocket>
 
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+class QTcpSocket;
 //!  The MainWindow class.
 class MainWindow : public QMainWindow
 {
@@ -56,7 +58,10 @@ private slots:
     */
     void on_disable_motor_button_clicked();
 
+    void on_log_button_clicked();
+
 private:
+    QTcpSocket *mSocket;
     /** ui Describes the User Interface design */
     Ui::MainWindow *ui;
     QUdpSocket *socket;

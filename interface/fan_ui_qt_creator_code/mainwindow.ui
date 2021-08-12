@@ -498,6 +498,19 @@ border-color: rgb(0, 0, 0);</string>
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
+    <widget class="QPushButton" name="log_button">
+     <property name="geometry">
+      <rect>
+       <x>634</x>
+       <y>270</y>
+       <width>69</width>
+       <height>59</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LOG</string>
+     </property>
+    </widget>
    </widget>
    <zorder>frame</zorder>
    <zorder>meterWidget</zorder>
