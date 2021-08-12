@@ -24,8 +24,9 @@ constexpr int SLIDER_MAX_SPEED = 5000;
 /** speed slider steps value */
 constexpr int SLIDER_STEPS = 200;
 /** Socket UDP port*/
-constexpr int PORT = 8080;
-
+constexpr int UDP_PORT = 8080;
+/** Socket TCP port*/
+constexpr int TCP_PORT = 8080;
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -141,10 +142,7 @@ void MainWindow::thermometers_config()
 
 void MainWindow::receiveMessages()
 {
-    /*Creation of TCP socket for log*/
-    mSocket = new QTcpSocket(this);
-    connect(mSocket, &QTcpSocket::readyRead, [&](){
-    });
+
     /*Creation of UDP socket for communication*/
     socket = new QUdpSocket(this);
     /*Receiving, serializing and interpreting received messages*/
@@ -218,10 +216,18 @@ void MainWindow::receiveMessages()
         }
     });
 
+    /*Creation of TCP socket for log*/
+    mSocket = new QTcpSocket(this);
+    connect(mSocket, &QTcpSocket::readyRead, [&](){
+        QByteArray Tcp_Buffer;
+        QTextStream T(mSocket);
+        qDebug() << "\n" << T.readAll();
+    });
+
 }
 
 void MainWindow::sendJsonToUDP(const QJsonObject& qJsonObject) {
-    socket->writeDatagram(QJsonDocument{qJsonObject}.toJson(), QHostAddress{"127.0.0.1"}, PORT);
+    socket->writeDatagram(QJsonDocument{qJsonObject}.toJson(), QHostAddress{"127.0.0.1"}, UDP_PORT);
 }
 
 void MainWindow::on_sendButton_clicked()
@@ -277,6 +283,10 @@ void MainWindow::on_disable_motor_button_clicked()
 
 void MainWindow::on_log_button_clicked()
 {
-
+    mSocket ->connectToHost("127.0.0.1",TCP_PORT);
+    QJsonObject UDP_Packet_Send;
+    UDP_Packet_Send["ID"] = "log_id";
+    UDP_Packet_Send["Log_Command"] = true;
+    sendJsonToUDP(UDP_Packet_Send);
 }
 

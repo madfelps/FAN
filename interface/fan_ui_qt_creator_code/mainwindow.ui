@@ -507,6 +507,9 @@ border-color: rgb(0, 0, 0);</string>
        <height>59</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(170, 170, 127);</string>
+     </property>
      <property name="text">
       <string>LOG</string>
      </property>
