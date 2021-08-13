@@ -12,9 +12,19 @@
 #include <QJsonObject>
 /** The QJsonDocument class provides a way to read and write JSON documents.*/
 #include <QJsonDocument>
-
+/** */
 #include <QTcpSocket>
+/** */
 #include <QTextStream>
+/** */
+#include <QFile>
+#include <QFileDialog>
+/** */
+#include <QMessageBox>
+/** */
+#include <QDir>
+
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -61,10 +71,12 @@ private slots:
     void on_log_button_clicked();
 
 private:
-    QTcpSocket *mSocket;
+
     /** ui Describes the User Interface design */
     Ui::MainWindow *ui;
     QUdpSocket *socket;
+    QTcpSocket *mSocket;
+    QFile CAN_datalog_file;
 
     /**
      * @brief This function sets the engine speedometer design parameters.
@@ -132,6 +144,13 @@ private:
      * updates the values in the graphic interface.
      */
     void receiveMessages();
+
+    /**
+     * @brief tcp_connect
+     */
+    void datalog_init();
+    void fill_datalog_file();
+
 
 };
 #endif // MAINWINDOW_H
