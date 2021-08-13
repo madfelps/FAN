@@ -23,8 +23,8 @@
 #include <QMessageBox>
 /** */
 #include <QDir>
-#include <QTextCodec>
-#include <QFileDialog>
+
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -68,6 +68,7 @@ private slots:
     */
     void on_disable_motor_button_clicked();
 
+    void on_log_button_clicked();
 
 private:
 
@@ -148,7 +149,7 @@ private:
      * @brief tcp_connect
      */
     void datalog_init();
-    void fillDatalogFile();
+    void fill_datalog_file();
 
 
 };
