@@ -498,22 +498,6 @@ border-color: rgb(0, 0, 0);</string>
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
-    <widget class="QPushButton" name="log_button">
-     <property name="geometry">
-      <rect>
-       <x>634</x>
-       <y>270</y>
-       <width>69</width>
-       <height>59</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(170, 170, 127);</string>
-     </property>
-     <property name="text">
-      <string>LOG</string>
-     </property>
-    </widget>
    </widget>
    <zorder>frame</zorder>
    <zorder>meterWidget</zorder>
@@ -533,7 +517,15 @@ border-color: rgb(0, 0, 0);</string>
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuDataLog">
+    <property name="title">
+     <string>DataLog</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionOpen"/>
+   </widget>
    <addaction name="menuAbout"/>
+   <addaction name="menuDataLog"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAbout">
@@ -545,6 +537,11 @@ border-color: rgb(0, 0, 0);</string>
    </property>
    <property name="toolTip">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
    </property>
   </action>
  </widget>

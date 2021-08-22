@@ -26,7 +26,7 @@ constexpr int SLIDER_STEPS = 200;
 /** Socket UDP port*/
 constexpr int UDP_PORT = 8080;
 /** Socket TCP port*/
-constexpr int TCP_PORT = 8080;
+constexpr int TCP_PORT = 8082;
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -44,8 +44,12 @@ MainWindow::MainWindow(QWidget *parent)
     /*Configure the SpeedSlider*/
     speedslider_config();
 
+
     /*Create a socket and receive the messages sended by embedded board via UDP*/
     receiveMessages();
+
+    /*Fill txt file with FAN datas*/
+    fill_datalog_file();
 
 }
 
@@ -54,7 +58,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::datalog_init()
+{
 
+    /*File manipulation*/
+    QString local = "C:/Users/Cliente/Documents/USP_2021/IC/Git/FAN/interface/fan_ui_qt_creator_code/datalog";
+    QString filename = "PM100_CAN_datalog.txt";
+    QDir dir(local);
+    CAN_datalog_file.setFileName(dir.absoluteFilePath(filename));
+
+    if(!CAN_datalog_file.open(QFile::WriteOnly|QFile::Text))
+    {
+        QMessageBox::warning(this,"ERROR","Error opening log file!");
+        return;
+    }
+    QTextStream log(&CAN_datalog_file);
+}
 int MainWindow::getProperValue(int value, int singleStep)
 {
 
@@ -142,7 +161,9 @@ void MainWindow::thermometers_config()
 
 void MainWindow::receiveMessages()
 {
-
+    /*Creation of TCP socket for datalog*/
+    mSocket = new QTcpSocket(this);
+    mSocket ->connectToHost("127.0.0.1",TCP_PORT);
     /*Creation of UDP socket for communication*/
     socket = new QUdpSocket(this);
     /*Receiving, serializing and interpreting received messages*/
@@ -216,16 +237,20 @@ void MainWindow::receiveMessages()
         }
     });
 
-    /*Creation of TCP socket for log*/
-    mSocket = new QTcpSocket(this);
-    connect(mSocket, &QTcpSocket::readyRead, [&](){
-        QByteArray Tcp_Buffer;
-        QTextStream T(mSocket);
-        qDebug() << "\n" << T.readAll();
-    });
-
 }
 
+void MainWindow::fill_datalog_file()
+{
+    /*Fill txt file with FAN system data*/
+    connect(mSocket, &QTcpSocket::readyRead, [&](){
+        QByteArray TCP_Buffer;
+        QString text;
+        TCP_Buffer = mSocket->readAll();
+        text = mSocket->readAll();
+        qDebug() << "\n" << TCP_Buffer;
+        CAN_datalog_file.flush();
+    });
+}
 void MainWindow::sendJsonToUDP(const QJsonObject& qJsonObject) {
     socket->writeDatagram(QJsonDocument{qJsonObject}.toJson(), QHostAddress{"127.0.0.1"}, UDP_PORT);
 }
@@ -264,6 +289,8 @@ void MainWindow::on_enable_motor_button_clicked()
 
     sendJsonToUDP(UDP_Packet_Send);
 
+    /*Initialize the datalog file*/
+    datalog_init();
 }
 
 void MainWindow::on_disable_motor_button_clicked()
@@ -279,11 +306,14 @@ void MainWindow::on_disable_motor_button_clicked()
 
     sendJsonToUDP(UDP_Packet_Send);
 
+    /*Close datalog and tcp socket */
+    mSocket->close();
+    CAN_datalog_file.close();
 }
 
 void MainWindow::on_log_button_clicked()
 {
-    mSocket ->connectToHost("127.0.0.1",TCP_PORT);
+
     QJsonObject UDP_Packet_Send;
     UDP_Packet_Send["ID"] = "log_id";
     UDP_Packet_Send["Log_Command"] = true;
