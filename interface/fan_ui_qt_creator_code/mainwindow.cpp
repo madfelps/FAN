@@ -26,7 +26,7 @@ constexpr int SLIDER_STEPS = 200;
 /** Socket UDP port*/
 constexpr int UDP_PORT = 8080;
 /** Socket TCP port*/
-constexpr int TCP_PORT = 8082;
+constexpr int TCP_PORT = 8053;
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -62,9 +62,9 @@ void MainWindow::datalog_init()
 {
 
     /*File manipulation*/
-    QString local = "C:/Users/Cliente/Documents/USP_2021/IC/Git/FAN/interface/fan_ui_qt_creator_code/datalog";
+    QString path = "C:/Users/Cliente/Documents/USP_2021/IC/Git/FAN/interface/fan_ui_qt_creator_code/datalog";
     QString filename = "PM100_CAN_datalog.txt";
-    QDir dir(local);
+    QDir dir(path);
     CAN_datalog_file.setFileName(dir.absoluteFilePath(filename));
 
     if(!CAN_datalog_file.open(QFile::WriteOnly|QFile::Text))
@@ -164,6 +164,7 @@ void MainWindow::receiveMessages()
     /*Creation of TCP socket for datalog*/
     mSocket = new QTcpSocket(this);
     mSocket ->connectToHost("127.0.0.1",TCP_PORT);
+
     /*Creation of UDP socket for communication*/
     socket = new QUdpSocket(this);
     /*Receiving, serializing and interpreting received messages*/
