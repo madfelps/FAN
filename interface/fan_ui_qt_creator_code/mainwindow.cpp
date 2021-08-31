@@ -28,6 +28,8 @@ constexpr int UDP_PORT = 8080;
 /** Socket TCP port*/
 constexpr int TCP_PORT = 8053;
 
+QString text;
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -61,10 +63,10 @@ MainWindow::~MainWindow()
 void MainWindow::datalog_init()
 {
 
-    /*File manipulation*/
-    QString path = "C:/Users/Cliente/Documents/USP_2021/IC/Git/FAN/interface/fan_ui_qt_creator_code/datalog";
+    //File manipulation/
+    QString local = "/home/felipe/Desktop/IC/FAN/interface/fan_ui_qt_creator_code/datalog";
     QString filename = "PM100_CAN_datalog.txt";
-    QDir dir(path);
+    QDir dir(local);
     CAN_datalog_file.setFileName(dir.absoluteFilePath(filename));
 
     if(!CAN_datalog_file.open(QFile::WriteOnly|QFile::Text))
@@ -72,7 +74,7 @@ void MainWindow::datalog_init()
         QMessageBox::warning(this,"ERROR","Error opening log file!");
         return;
     }
-    QTextStream log(&CAN_datalog_file);
+
 }
 int MainWindow::getProperValue(int value, int singleStep)
 {
@@ -242,13 +244,20 @@ void MainWindow::receiveMessages()
 
 void MainWindow::fill_datalog_file()
 {
-    /*Fill txt file with FAN system data*/
+    //Fill txt file with FAN system data/
     connect(mSocket, &QTcpSocket::readyRead, [&](){
         QByteArray TCP_Buffer;
-        QString text;
+        qDebug() << "connect entrou";
+
         TCP_Buffer = mSocket->readAll();
-        text = mSocket->readAll();
-        qDebug() << "\n" << TCP_Buffer;
+        for(int i = 0; i < 1024; i++)
+        {
+           if(TCP_Buffer[i] == '/'){
+                        TCP_Buffer[i] = '\n';
+            }
+         }
+        text  = QString(TCP_Buffer);
+        qDebug() << "\n" << text;
         CAN_datalog_file.flush();
     });
 }
@@ -278,6 +287,12 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_enable_motor_button_clicked()
 {
+    ui->inverterThermometer->setValue(35);
+    ui->textTempInverter->setText("35");
+    ui->motorThermometer->setValue(30);
+    ui->textTempMotor->setText("30");
+
+    ui->torque_label->setText("0.1");
 
     flag_motor = true;
     /*You can to change the button style, just change the parameters: color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));\n\nbackground-color: rgb(13, 94, 4);") */
@@ -286,7 +301,7 @@ void MainWindow::on_enable_motor_button_clicked()
 
     QJsonObject UDP_Packet_Send;
     UDP_Packet_Send["ID"] = "enable_id";
-    UDP_Packet_Send["Enable_Command"] = true;
+    UDP_Packet_Send["Enable_Command"] = "true";
 
     sendJsonToUDP(UDP_Packet_Send);
 
@@ -297,19 +312,21 @@ void MainWindow::on_enable_motor_button_clicked()
 void MainWindow::on_disable_motor_button_clicked()
 {
 
+    QTextStream out(&CAN_datalog_file);
+    out << text;
     flag_motor = false;
     ui->disable_motor_button->setStyleSheet("background-color: rgb(255, 30, 30);");
     ui->enable_motor_button->setStyleSheet("color: rgb(255, 255, 255);\ncolor: rgb(46, 52, 54);\nbackground-color: rgb(186, 189, 182);");
 
     QJsonObject UDP_Packet_Send;
     UDP_Packet_Send["ID"] = "disable_id";
-    UDP_Packet_Send["Enable_Command"] = false;
+    UDP_Packet_Send["Enable_Command"] = "false";
 
     sendJsonToUDP(UDP_Packet_Send);
 
     /*Close datalog and tcp socket */
-    mSocket->close();
-    CAN_datalog_file.close();
+    //mSocket->close();
+    //CAN_datalog_file.close();
 }
 
 void MainWindow::on_log_button_clicked()
