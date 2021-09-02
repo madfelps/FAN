@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     datalog_init();
 
     /*Fill txt file with FAN datas*/
-    fill_datalog_file();
+    //fill_datalog_file();
 
 }
 
@@ -247,32 +247,16 @@ void MainWindow::receiveMessages()
 void MainWindow::fill_datalog_file()
 {
     volatile int buffer_size = 0;
-    int bar_count = 0;
-    int count = 0;
+
     //Fill txt file with FAN system data/
     connect(mSocket, &QTcpSocket::readyRead, [&](){
-        count++;
         QByteArray TCP_Buffer;
         QTextStream out(&CAN_datalog_file);
         TCP_Buffer = mSocket->readAll();
         buffer_size = TCP_Buffer.size();
-        qDebug() << count <<"\n";
-        qDebug() << TCP_Buffer << "\n";
-        for(int i = 0; i < buffer_size; i++)
-        {
-           if(TCP_Buffer[i] == '/')
-           {
-             bar_count++;
-             if(bar_count == 2)
-             {
-                 bar_count = 0;
-                qDebug() << "Finish Datalog" << "\n";
-                /*Close datalog and tcp socket */
-                mSocket->close();
-                CAN_datalog_file.close();
-             }
-            }
-        }
+
+        qDebug() << buffer_size << "\n";
+
         for(int i = 0; i < buffer_size; i++)
         {
            if(TCP_Buffer[i] == '/')
@@ -282,10 +266,20 @@ void MainWindow::fill_datalog_file()
 
         }
         text  = QString(TCP_Buffer);
-        //qDebug() << "\n" << text;
         out << text;
 
         CAN_datalog_file.flush();
+        for(int i = 0; i < buffer_size; i++)
+        {
+           if(TCP_Buffer[i] == 'A')
+           {
+                qDebug() << "Finish Datalog" << "\n";
+                /*Close datalog and tcp socket */
+                mSocket->close();
+                CAN_datalog_file.close();
+
+            }
+        }
 
     });
 }
@@ -356,12 +350,4 @@ void MainWindow::on_disable_motor_button_clicked()
 
 }
 
-void MainWindow::on_log_button_clicked()
-{
-
-    QJsonObject UDP_Packet_Send;
-    UDP_Packet_Send["ID"] = "log_id";
-    UDP_Packet_Send["Log_Command"] = true;
-    sendJsonToUDP(UDP_Packet_Send);
-}
 

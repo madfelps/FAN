@@ -68,7 +68,6 @@ private slots:
     */
     void on_disable_motor_button_clicked();
 
-    void on_log_button_clicked();
 
 private:
 
