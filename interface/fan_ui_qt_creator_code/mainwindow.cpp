@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent)
     /*Create a socket and receive the messages sended by embedded board via UDP*/
     receiveMessages();
 
+    datalog_init();
+
     /*Fill txt file with FAN datas*/
     fill_datalog_file();
 
@@ -64,7 +66,7 @@ void MainWindow::datalog_init()
 {
 
     //File manipulation/
-    QString local = "/home/felipe/Desktop/IC/FAN/interface/fan_ui_qt_creator_code/datalog";
+    QString local = "/home/gaspar/Documentos/IC/codigos/Git_2/FAN/interface/fan_ui_qt_creator_code/datalog";
     QString filename = "PM100_CAN_datalog.txt";
     QDir dir(local);
     CAN_datalog_file.setFileName(dir.absoluteFilePath(filename));
@@ -244,21 +246,47 @@ void MainWindow::receiveMessages()
 
 void MainWindow::fill_datalog_file()
 {
+    volatile int buffer_size = 0;
+    int bar_count = 0;
+    int count = 0;
     //Fill txt file with FAN system data/
     connect(mSocket, &QTcpSocket::readyRead, [&](){
+        count++;
         QByteArray TCP_Buffer;
-        qDebug() << "connect entrou";
-
+        QTextStream out(&CAN_datalog_file);
         TCP_Buffer = mSocket->readAll();
-        for(int i = 0; i < 1024; i++)
+        buffer_size = TCP_Buffer.size();
+        qDebug() << count <<"\n";
+        qDebug() << TCP_Buffer << "\n";
+        for(int i = 0; i < buffer_size; i++)
         {
-           if(TCP_Buffer[i] == '/'){
-                        TCP_Buffer[i] = '\n';
+           if(TCP_Buffer[i] == '/')
+           {
+             bar_count++;
+             if(bar_count == 2)
+             {
+                 bar_count = 0;
+                qDebug() << "Finish Datalog" << "\n";
+                /*Close datalog and tcp socket */
+                mSocket->close();
+                CAN_datalog_file.close();
+             }
             }
-         }
+        }
+        for(int i = 0; i < buffer_size; i++)
+        {
+           if(TCP_Buffer[i] == '/')
+           {
+              TCP_Buffer[i] = '\n';
+           }
+
+        }
         text  = QString(TCP_Buffer);
-        qDebug() << "\n" << text;
+        //qDebug() << "\n" << text;
+        out << text;
+
         CAN_datalog_file.flush();
+
     });
 }
 void MainWindow::sendJsonToUDP(const QJsonObject& qJsonObject) {
@@ -306,27 +334,26 @@ void MainWindow::on_enable_motor_button_clicked()
     sendJsonToUDP(UDP_Packet_Send);
 
     /*Initialize the datalog file*/
-    datalog_init();
+
 }
 
 void MainWindow::on_disable_motor_button_clicked()
 {
 
-    QTextStream out(&CAN_datalog_file);
-    out << text;
+
     flag_motor = false;
     ui->disable_motor_button->setStyleSheet("background-color: rgb(255, 30, 30);");
     ui->enable_motor_button->setStyleSheet("color: rgb(255, 255, 255);\ncolor: rgb(46, 52, 54);\nbackground-color: rgb(186, 189, 182);");
 
     QJsonObject UDP_Packet_Send;
-    UDP_Packet_Send["ID"] = "disable_id";
+    UDP_Packet_Send["ID"] = "enable_id";
     UDP_Packet_Send["Enable_Command"] = "false";
 
     sendJsonToUDP(UDP_Packet_Send);
 
-    /*Close datalog and tcp socket */
-    //mSocket->close();
-    //CAN_datalog_file.close();
+
+    fill_datalog_file();
+
 }
 
 void MainWindow::on_log_button_clicked()
