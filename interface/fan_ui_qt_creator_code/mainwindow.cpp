@@ -66,11 +66,11 @@ void MainWindow::datalog_init()
 {
 
     //File manipulation/
-    QString local = "/home/gaspar/Documentos/IC/codigos/Git_2/FAN/interface/fan_ui_qt_creator_code/datalog";
+    //QString local = "/home/gaspar/Documentos/IC/codigos/Git_2/FAN/interface/fan_ui_qt_creator_code/datalog";
     QString filename = "PM100_CAN_datalog.txt";
-    QDir dir(local);
-    CAN_datalog_file.setFileName(dir.absoluteFilePath(filename));
-
+    //QDir dir(local);
+    //CAN_datalog_file.setFileName(dir.absoluteFilePath(filename));
+    CAN_datalog_file.setFileName(filename);
     if(!CAN_datalog_file.open(QFile::WriteOnly|QFile::Text))
     {
         QMessageBox::warning(this,"ERROR","Error opening log file!");
@@ -271,7 +271,7 @@ void MainWindow::fill_datalog_file()
         CAN_datalog_file.flush();
         for(int i = 0; i < buffer_size; i++)
         {
-           if(TCP_Buffer[i] == 'A')
+           if(TCP_Buffer[i] == '*')
            {
                 qDebug() << "Finish Datalog" << "\n";
                 /*Close datalog and tcp socket */
@@ -327,7 +327,7 @@ void MainWindow::on_enable_motor_button_clicked()
 
     sendJsonToUDP(UDP_Packet_Send);
 
-    /*Initialize the datalog file*/
+
 
 }
 
@@ -343,10 +343,13 @@ void MainWindow::on_disable_motor_button_clicked()
     UDP_Packet_Send["ID"] = "enable_id";
     UDP_Packet_Send["Enable_Command"] = "false";
 
+    /*Initialize the datalog file*/
+    fill_datalog_file();
+    /*Send UDP message*/
     sendJsonToUDP(UDP_Packet_Send);
 
 
-    fill_datalog_file();
+
 
 }
 
