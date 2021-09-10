@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.17"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>FAN: Referência da Classe FaultErrors</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">FAN
+   &#160;<span id="projectnumber">1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Gerado por Doxygen 1.8.17 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Busca');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Busca');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Membros Públicos</a> &#124;
+<a href="class_fault_errors-members.html">Lista de todos os Membros</a>  </div>
+  <div class="headertitle">
+<div class="title">Referência da Classe FaultErrors</div>  </div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Membros Públicos</h2></td></tr>
+<tr class="memitem:aac9afaa8d00b2617c524da0abd5c7191"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fault_errors.html#aac9afaa8d00b2617c524da0abd5c7191">FaultErrors</a> ()</td></tr>
+<tr class="separator:aac9afaa8d00b2617c524da0abd5c7191"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a475dc18adfde42f8be0624653b2af15e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fault_errors.html#a475dc18adfde42f8be0624653b2af15e">IfId_FaultErrors</a> (struct can_frame *frame, <a class="el" href="mainn_8cpp.html#ab701e3ac61a85b337ec5c1abaad6742d">nlohmann::json</a> &amp;UDP_Package)</td></tr>
+<tr class="memdesc:a475dc18adfde42f8be0624653b2af15e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifica se o ID da CAN refere-se a classe Fault Errors; caso afirmativo, chama a função de update e atualiza os campos da mensagem json.  <a href="class_fault_errors.html#a475dc18adfde42f8be0624653b2af15e">Mais...</a><br /></td></tr>
+<tr class="separator:a475dc18adfde42f8be0624653b2af15e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b103590682efc0e4067c48ab19cd6e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fault_errors.html#a8b103590682efc0e4067c48ab19cd6e8">UpdateObject</a> (unsigned char *CAN_DATA)</td></tr>
+<tr class="separator:a8b103590682efc0e4067c48ab19cd6e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Descrição detalhada</h2>
+<div class="textblock"><p>Função: Fault Errors Parâmetros: Valor em lógica binária Retorno: Valor decimal, positivo ou negativo, conforme a lógica </p>
+
+<p class="definition">Definição na linha <a class="el" href="_remy_h_v_h250_8h_source.html#l00832">832</a> do arquivo <a class="el" href="_remy_h_v_h250_8h_source.html">RemyHVH250.h</a>.</p>
+</div><h2 class="groupheader">Construtores e Destrutores</h2>
+<a id="aac9afaa8d00b2617c524da0abd5c7191"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac9afaa8d00b2617c524da0abd5c7191">&#9670;&nbsp;</a></span>FaultErrors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FaultErrors::FaultErrors </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definição na linha <a class="el" href="_remy_h_v_h250_8cpp_source.html#l01188">1188</a> do arquivo <a class="el" href="_remy_h_v_h250_8cpp_source.html">RemyHVH250.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01188"></a><span class="lineno"> 1188</span>&#160;                        {</div>
+<div class="line"><a name="l01189"></a><span class="lineno"> 1189</span>&#160;    std::array&lt;std::pair&lt;bool, std::string&gt;, 64&gt; errors{</div>
+<div class="line"><a name="l01190"></a><span class="lineno"> 1190</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Hardware Gate/Desaturation Fault&quot;</span>),</div>
+<div class="line"><a name="l01191"></a><span class="lineno"> 1191</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;HW Over-current Fault&quot;</span>),</div>
+<div class="line"><a name="l01192"></a><span class="lineno"> 1192</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Accelerator Shorted&quot;</span>),</div>
+<div class="line"><a name="l01193"></a><span class="lineno"> 1193</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Accelerator Open&quot;</span>),</div>
+<div class="line"><a name="l01194"></a><span class="lineno"> 1194</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Current Sensor Low&quot;</span>),</div>
+<div class="line"><a name="l01195"></a><span class="lineno"> 1195</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Current Sensor High&quot;</span>),</div>
+<div class="line"><a name="l01196"></a><span class="lineno"> 1196</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Module Temperature Low&quot;</span>),</div>
+<div class="line"><a name="l01197"></a><span class="lineno"> 1197</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Module Temperature High&quot;</span>),</div>
+<div class="line"><a name="l01198"></a><span class="lineno"> 1198</span>&#160; </div>
+<div class="line"><a name="l01199"></a><span class="lineno"> 1199</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Control PCB Temperature Low&quot;</span>),</div>
+<div class="line"><a name="l01200"></a><span class="lineno"> 1200</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Control PCB Temperature High&quot;</span>),</div>
+<div class="line"><a name="l01201"></a><span class="lineno"> 1201</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Gate Drive PCB Temperature Low&quot;</span>),</div>
+<div class="line"><a name="l01202"></a><span class="lineno"> 1202</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Gate Drive PCB Temperature High&quot;</span>),</div>
+<div class="line"><a name="l01203"></a><span class="lineno"> 1203</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;5V Sense Voltage Low&quot;</span>),</div>
+<div class="line"><a name="l01204"></a><span class="lineno"> 1204</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;5V Sense Voltage High&quot;</span>),</div>
+<div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;12V Sense Voltage Low&quot;</span>),</div>
+<div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;12V Sense Voltage High&quot;</span>),</div>
+<div class="line"><a name="l01207"></a><span class="lineno"> 1207</span>&#160; </div>
+<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;2.5V Sense Voltage Low&quot;</span>),</div>
+<div class="line"><a name="l01209"></a><span class="lineno"> 1209</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;2.5V Sense Voltage High&quot;</span>),</div>
+<div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;1.5V Sense Voltage Low&quot;</span>),</div>
+<div class="line"><a name="l01211"></a><span class="lineno"> 1211</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;1.5V Sense Voltage High&quot;</span>),</div>
+<div class="line"><a name="l01212"></a><span class="lineno"> 1212</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;DC Bus Voltage High&quot;</span>),</div>
+<div class="line"><a name="l01213"></a><span class="lineno"> 1213</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;DC Bus Voltage Low&quot;</span>),</div>
+<div class="line"><a name="l01214"></a><span class="lineno"> 1214</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Pre-charge Timeout&quot;</span>),</div>
+<div class="line"><a name="l01215"></a><span class="lineno"> 1215</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Pre-charge Voltage Failure&quot;</span>),</div>
+<div class="line"><a name="l01216"></a><span class="lineno"> 1216</span>&#160; </div>
+<div class="line"><a name="l01217"></a><span class="lineno"> 1217</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;EEPROM Checksum Invalid&quot;</span>),</div>
+<div class="line"><a name="l01218"></a><span class="lineno"> 1218</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;EEPROM Data Out of Range&quot;</span>),</div>
+<div class="line"><a name="l01219"></a><span class="lineno"> 1219</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;EEPROM Update Required&quot;</span>),</div>
+<div class="line"><a name="l01220"></a><span class="lineno"> 1220</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reserved&quot;</span>),</div>
+<div class="line"><a name="l01221"></a><span class="lineno"> 1221</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reserved&quot;</span>),</div>
+<div class="line"><a name="l01222"></a><span class="lineno"> 1222</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reserved&quot;</span>),</div>
+<div class="line"><a name="l01223"></a><span class="lineno"> 1223</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Brake Shorted&quot;</span>),</div>
+<div class="line"><a name="l01224"></a><span class="lineno"> 1224</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Brake Open&quot;</span>),</div>
+<div class="line"><a name="l01225"></a><span class="lineno"> 1225</span>&#160; </div>
+<div class="line"><a name="l01226"></a><span class="lineno"> 1226</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Motor Over-speed Fault&quot;</span>),</div>
+<div class="line"><a name="l01227"></a><span class="lineno"> 1227</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Over-current Fault&quot;</span>),</div>
+<div class="line"><a name="l01228"></a><span class="lineno"> 1228</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Over-voltage Fault&quot;</span>),</div>
+<div class="line"><a name="l01229"></a><span class="lineno"> 1229</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Inverter Over-temperature Fault&quot;</span>),</div>
+<div class="line"><a name="l01230"></a><span class="lineno"> 1230</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Accelerator Input Shorted Fault&quot;</span>),</div>
+<div class="line"><a name="l01231"></a><span class="lineno"> 1231</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Accelerator Input Open Fault&quot;</span>),</div>
+<div class="line"><a name="l01232"></a><span class="lineno"> 1232</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Direction Command Fault&quot;</span>),</div>
+<div class="line"><a name="l01233"></a><span class="lineno"> 1233</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Inverter Response Time-out Fault&quot;</span>),</div>
+<div class="line"><a name="l01234"></a><span class="lineno"> 1234</span>&#160; </div>
+<div class="line"><a name="l01235"></a><span class="lineno"> 1235</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Hardware Gate/Desaturation Fault&quot;</span>),</div>
+<div class="line"><a name="l01236"></a><span class="lineno"> 1236</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Hardware Over-current Fault&quot;</span>),</div>
+<div class="line"><a name="l01237"></a><span class="lineno"> 1237</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Under-voltage Fault&quot;</span>),</div>
+<div class="line"><a name="l01238"></a><span class="lineno"> 1238</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;CAN Command Message Lost Fault&quot;</span>),</div>
+<div class="line"><a name="l01239"></a><span class="lineno"> 1239</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Motor Over-temperature Fault&quot;</span>),</div>
+<div class="line"><a name="l01240"></a><span class="lineno"> 1240</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reserved&quot;</span>),</div>
+<div class="line"><a name="l01241"></a><span class="lineno"> 1241</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reserved&quot;</span>),</div>
+<div class="line"><a name="l01242"></a><span class="lineno"> 1242</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reserved&quot;</span>),</div>
+<div class="line"><a name="l01243"></a><span class="lineno"> 1243</span>&#160; </div>
+<div class="line"><a name="l01244"></a><span class="lineno"> 1244</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Brake Input Shorted Fault&quot;</span>),</div>
+<div class="line"><a name="l01245"></a><span class="lineno"> 1245</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Brake Input Open Fault&quot;</span>),</div>
+<div class="line"><a name="l01246"></a><span class="lineno"> 1246</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Module A Over-temperature Fault&quot;</span>),</div>
+<div class="line"><a name="l01247"></a><span class="lineno"> 1247</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Module B Over-temperature Fault&quot;</span>),</div>
+<div class="line"><a name="l01248"></a><span class="lineno"> 1248</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Module C Over-temperature Fault&quot;</span>),</div>
+<div class="line"><a name="l01249"></a><span class="lineno"> 1249</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;PCB Over-temperature Fault&quot;</span>),</div>
+<div class="line"><a name="l01250"></a><span class="lineno"> 1250</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Gate Drive Board 1 Over-temperature Fault&quot;</span>),</div>
+<div class="line"><a name="l01251"></a><span class="lineno"> 1251</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Gate Drive Board 2 Over-temperature Fault&quot;</span>),</div>
+<div class="line"><a name="l01252"></a><span class="lineno"> 1252</span>&#160; </div>
+<div class="line"><a name="l01253"></a><span class="lineno"> 1253</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Gate Drive Board 3 Over-temperature Fault&quot;</span>),</div>
+<div class="line"><a name="l01254"></a><span class="lineno"> 1254</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Current Sensor Fault&quot;</span>),</div>
+<div class="line"><a name="l01255"></a><span class="lineno"> 1255</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reserved&quot;</span>),</div>
+<div class="line"><a name="l01256"></a><span class="lineno"> 1256</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reserved&quot;</span>),</div>
+<div class="line"><a name="l01257"></a><span class="lineno"> 1257</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reserved&quot;</span>),</div>
+<div class="line"><a name="l01258"></a><span class="lineno"> 1258</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reserved&quot;</span>),</div>
+<div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Resolver Not Connected&quot;</span>),</div>
+<div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160;    std::make_pair(<span class="keyword">false</span>, <span class="stringliteral">&quot;Inverter Discharge Active&quot;</span>)</div>
+<div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160; </div>
+<div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;    };</div>
+<div class="line"><a name="l01263"></a><span class="lineno"> 1263</span>&#160;}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Funções membros</h2>
+<a id="a475dc18adfde42f8be0624653b2af15e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a475dc18adfde42f8be0624653b2af15e">&#9670;&nbsp;</a></span>IfId_FaultErrors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FaultErrors::IfId_FaultErrors </td>
+          <td>(</td>
+          <td class="paramtype">struct can_frame *&#160;</td>
+          <td class="paramname"><em>frame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="mainn_8cpp.html#ab701e3ac61a85b337ec5c1abaad6742d">nlohmann::json</a> &amp;&#160;</td>
+          <td class="paramname"><em>UDP_Package</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Verifica se o ID da CAN refere-se a classe Fault Errors; caso afirmativo, chama a função de update e atualiza os campos da mensagem json. </p>
+<dl class="params"><dt>Parâmetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Struct</td><td>referente ao can </td></tr>
+    <tr><td class="paramname">Pacote</td><td>json para posterior envio a interface </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Retorna</dt><dd>void </dd></dl>
+
+<p class="definition">Definição na linha <a class="el" href="_remy_h_v_h250_8cpp_source.html#l01272">1272</a> do arquivo <a class="el" href="_remy_h_v_h250_8cpp_source.html">RemyHVH250.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01272"></a><span class="lineno"> 1272</span>&#160;                                                                                    {</div>
+<div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;    <span class="keywordflow">if</span>(frame-&gt;can_id == 171){</div>
+<div class="line"><a name="l01274"></a><span class="lineno"> 1274</span>&#160;        this-&gt;<a class="code" href="class_fault_errors.html#a8b103590682efc0e4067c48ab19cd6e8">UpdateObject</a>(frame-&gt;data);</div>
+<div class="line"><a name="l01275"></a><span class="lineno"> 1275</span>&#160; </div>
+<div class="line"><a name="l01276"></a><span class="lineno"> 1276</span>&#160;        UDP_Package[<span class="stringliteral">&quot;ID&quot;</span>]                           = <span class="stringliteral">&quot;FaultErrors&quot;</span>;</div>
+<div class="line"><a name="l01277"></a><span class="lineno"> 1277</span>&#160;        UDP_Package[<span class="stringliteral">&quot;FaultCode_0&quot;</span>]                  = Errors_Bytes[0];</div>
+<div class="line"><a name="l01278"></a><span class="lineno"> 1278</span>&#160;        UDP_Package[<span class="stringliteral">&quot;FaultCode_1&quot;</span>]                  = Errors_Bytes[1];</div>
+<div class="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;        UDP_Package[<span class="stringliteral">&quot;FaultCode_2&quot;</span>]                  = Errors_Bytes[2];</div>
+<div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160;        UDP_Package[<span class="stringliteral">&quot;FaultCode_3&quot;</span>]                  = Errors_Bytes[3];</div>
+<div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;        UDP_Package[<span class="stringliteral">&quot;FaultCode_4&quot;</span>]                  = Errors_Bytes[4];</div>
+<div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;        UDP_Package[<span class="stringliteral">&quot;FaultCode_5&quot;</span>]                  = Errors_Bytes[5];</div>
+<div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160;        UDP_Package[<span class="stringliteral">&quot;FaultCode_6&quot;</span>]                  = Errors_Bytes[6];</div>
+<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;        UDP_Package[<span class="stringliteral">&quot;FaultCode_7&quot;</span>]                  = Errors_Bytes[7];</div>
+<div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160;    }</div>
+<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a8b103590682efc0e4067c48ab19cd6e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b103590682efc0e4067c48ab19cd6e8">&#9670;&nbsp;</a></span>UpdateObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FaultErrors::UpdateObject </td>
+          <td>(</td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"><em>CAN_DATA</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definição na linha <a class="el" href="_remy_h_v_h250_8cpp_source.html#l01288">1288</a> do arquivo <a class="el" href="_remy_h_v_h250_8cpp_source.html">RemyHVH250.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01288"></a><span class="lineno"> 1288</span>&#160;                                                     {</div>
+<div class="line"><a name="l01289"></a><span class="lineno"> 1289</span>&#160;    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; 7; i++){</div>
+<div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;        Errors_Bytes[i] = CAN_DATA[i];</div>
+<div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;    }</div>
+<div class="line"><a name="l01292"></a><span class="lineno"> 1292</span>&#160; </div>
+<div class="line"><a name="l01293"></a><span class="lineno"> 1293</span>&#160;}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<hr/>A documentação para essa classe foi gerada a partir dos seguintes arquivos:<ul>
+<li><a class="el" href="_remy_h_v_h250_8h_source.html">RemyHVH250.h</a></li>
+<li><a class="el" href="_remy_h_v_h250_8cpp_source.html">RemyHVH250.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<div class="ttc" id="aclass_fault_errors_html_a8b103590682efc0e4067c48ab19cd6e8"><div class="ttname"><a href="class_fault_errors.html#a8b103590682efc0e4067c48ab19cd6e8">FaultErrors::UpdateObject</a></div><div class="ttdeci">void UpdateObject(unsigned char *CAN_DATA)</div><div class="ttdef"><b>Definition:</b> <a href="_remy_h_v_h250_8cpp_source.html#l01288">RemyHVH250.cpp:1288</a></div></div>
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Gerado por &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.17
+</small></address>
+</body>
+</html>

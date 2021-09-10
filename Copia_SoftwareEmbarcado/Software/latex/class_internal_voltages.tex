@@ -1,0 +1,234 @@
+\doxysection{Internal\+Voltages Class Reference}
+\label{class_internal_voltages}\index{InternalVoltages@{InternalVoltages}}
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+Inheritance diagram for Internal\+Voltages\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_internal_voltages}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Internal\+Voltages} ()
+\item 
+\textbf{ Internal\+Voltages} (unsigned char $\ast$C\+A\+N\+\_\+\+D\+A\+TA)
+\item 
+void \textbf{ Update\+Object} (unsigned char $\ast$C\+A\+N\+\_\+\+D\+A\+TA)
+\begin{DoxyCompactList}\small\item\em Atualiza os parâmetros do objeto conforme a mensagem C\+AN recebida. \end{DoxyCompactList}\item 
+void \textbf{ If\+I\+D\+\_\+\+Internal\+Voltages} (struct can\+\_\+frame $\ast$frame, \textbf{ nlohmann\+::json} \&U\+D\+P\+\_\+\+Package)
+\begin{DoxyCompactList}\small\item\em Verify if the ID\textquotesingle{}s frame received refers to this class; if so, process according the manual. \end{DoxyCompactList}\item 
+float \textbf{ Get\+Voltage\+Reference1\+Dot5} ()
+\item 
+float \textbf{ Get\+Voltage\+Reference2\+Dot5} ()
+\item 
+float \textbf{ Get\+Voltage\+Reference5\+Dot0} ()
+\item 
+float \textbf{ Get\+Voltage\+Reference12} ()
+\item 
+int \textbf{ Get\+Byte} (int Position)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{class_internal_voltages_ae35f3940ed575d60aeef6b7e5bcab6a3}} 
+\index{InternalVoltages@{InternalVoltages}!InternalVoltages@{InternalVoltages}}
+\index{InternalVoltages@{InternalVoltages}!InternalVoltages@{InternalVoltages}}
+\doxysubsubsection{InternalVoltages()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Internal\+Voltages\+::\+Internal\+Voltages (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Data bytes to be received from C\+AN protocol (little endian) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{845                                   \{}
+\DoxyCodeLine{846     VoltageReference1Dot5 = 0.0;}
+\DoxyCodeLine{847     VoltageReference2Dot5 = 0.0;}
+\DoxyCodeLine{848     VoltageReference5Dot0 = 0.0;}
+\DoxyCodeLine{849     VoltageReference12    = 0.0;}
+\DoxyCodeLine{850 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_internal_voltages_ac6fec3e5dcb35889fd8edb91a0531d92}} 
+\index{InternalVoltages@{InternalVoltages}!InternalVoltages@{InternalVoltages}}
+\index{InternalVoltages@{InternalVoltages}!InternalVoltages@{InternalVoltages}}
+\doxysubsubsection{InternalVoltages()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Internal\+Voltages\+::\+Internal\+Voltages (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA }\end{DoxyParamCaption})}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{852                                                          \{}
+\DoxyCodeLine{853     VoltageReference1Dot5 = 0.0;}
+\DoxyCodeLine{854     VoltageReference2Dot5 = 0.0;}
+\DoxyCodeLine{855     VoltageReference5Dot0 = 0.0;}
+\DoxyCodeLine{856     VoltageReference12    = 0.0;}
+\DoxyCodeLine{857 \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_internal_voltages_a1fb27fb501cb8fa6d923078b0140566d}} 
+\index{InternalVoltages@{InternalVoltages}!GetByte@{GetByte}}
+\index{GetByte@{GetByte}!InternalVoltages@{InternalVoltages}}
+\doxysubsubsection{GetByte()}
+{\footnotesize\ttfamily int Internal\+Voltages\+::\+Get\+Byte (\begin{DoxyParamCaption}\item[{int}]{Position }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Position} & Byte position to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Byte returned from C\+A\+N\+\_\+\+D\+A\+TA (little endian) 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{859                                          \{}
+\DoxyCodeLine{860     \textcolor{keywordflow}{return} Byte[Position];}
+\DoxyCodeLine{861 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_internal_voltages_ad7fd72e45f1376c950c3729f2ea83815}} 
+\index{InternalVoltages@{InternalVoltages}!GetVoltageReference12@{GetVoltageReference12}}
+\index{GetVoltageReference12@{GetVoltageReference12}!InternalVoltages@{InternalVoltages}}
+\doxysubsubsection{GetVoltageReference12()}
+{\footnotesize\ttfamily float Internal\+Voltages\+::\+Get\+Voltage\+Reference12 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+12V Reference 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{888                                              \{}
+\DoxyCodeLine{889     \textcolor{keywordflow}{return} GetVoltageReference12();}
+\DoxyCodeLine{890 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_internal_voltages_aa32c996b4333beda78b576612dec7ece}} 
+\index{InternalVoltages@{InternalVoltages}!GetVoltageReference1Dot5@{GetVoltageReference1Dot5}}
+\index{GetVoltageReference1Dot5@{GetVoltageReference1Dot5}!InternalVoltages@{InternalVoltages}}
+\doxysubsubsection{GetVoltageReference1Dot5()}
+{\footnotesize\ttfamily float Internal\+Voltages\+::\+Get\+Voltage\+Reference1\+Dot5 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+1.\+5V Reference 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{876                                                 \{}
+\DoxyCodeLine{877     \textcolor{keywordflow}{return} GetVoltageReference1Dot5();}
+\DoxyCodeLine{878 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_internal_voltages_a0cfb6a2cc1be3f83412f6953aa100fc1}} 
+\index{InternalVoltages@{InternalVoltages}!GetVoltageReference2Dot5@{GetVoltageReference2Dot5}}
+\index{GetVoltageReference2Dot5@{GetVoltageReference2Dot5}!InternalVoltages@{InternalVoltages}}
+\doxysubsubsection{GetVoltageReference2Dot5()}
+{\footnotesize\ttfamily float Internal\+Voltages\+::\+Get\+Voltage\+Reference2\+Dot5 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+1.\+5V Reference 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{880                                                 \{}
+\DoxyCodeLine{881     \textcolor{keywordflow}{return} GetVoltageReference2Dot5();}
+\DoxyCodeLine{882 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_internal_voltages_a40e41d34fba0e322009df7ed2182ab36}} 
+\index{InternalVoltages@{InternalVoltages}!GetVoltageReference5Dot0@{GetVoltageReference5Dot0}}
+\index{GetVoltageReference5Dot0@{GetVoltageReference5Dot0}!InternalVoltages@{InternalVoltages}}
+\doxysubsubsection{GetVoltageReference5Dot0()}
+{\footnotesize\ttfamily float Internal\+Voltages\+::\+Get\+Voltage\+Reference5\+Dot0 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+1.\+5V Reference 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{884                                                 \{}
+\DoxyCodeLine{885     \textcolor{keywordflow}{return} GetVoltageReference5Dot0();}
+\DoxyCodeLine{886 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_internal_voltages_aa5aea125b9512b045c51ff91f0f9741a}} 
+\index{InternalVoltages@{InternalVoltages}!IfID\_InternalVoltages@{IfID\_InternalVoltages}}
+\index{IfID\_InternalVoltages@{IfID\_InternalVoltages}!InternalVoltages@{InternalVoltages}}
+\doxysubsubsection{IfID\_InternalVoltages()}
+{\footnotesize\ttfamily void Internal\+Voltages\+::\+If\+I\+D\+\_\+\+Internal\+Voltages (\begin{DoxyParamCaption}\item[{struct can\+\_\+frame $\ast$}]{frame,  }\item[{\textbf{ nlohmann\+::json} \&}]{U\+D\+P\+\_\+\+Package }\end{DoxyParamCaption})}
+
+
+
+Verify if the ID\textquotesingle{}s frame received refers to this class; if so, process according the manual. 
+
+Verifica se o ID da C\+AN refere-\/se a classe \doxyref{Internal\+Voltages}{p.}{class_internal_voltages}; caso afirmativo, chama a função de update e atualiza os campos da mensagem json.
+
+
+\begin{DoxyParams}{Parameters}
+{\em C\+AN} & frame received from the motor \\
+\hline
+{\em Json} & packet to store the data to be sent for the graphical interface\\
+\hline
+{\em Struct} & referente ao can \\
+\hline
+{\em Pacote} & json para posterior envio a interface \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{899                                                                                               \{}
+\DoxyCodeLine{900     \textcolor{keywordflow}{if}(frame-\/>can\_id == 169)\{}
+\DoxyCodeLine{901         this-\/>UpdateObject(frame-\/>data);}
+\DoxyCodeLine{902 }
+\DoxyCodeLine{903         UDP\_Package[\textcolor{stringliteral}{"ID"}]                       =   \textcolor{stringliteral}{"InternalVoltages"};}
+\DoxyCodeLine{904         UDP\_Package[\textcolor{stringliteral}{"VoltageReference1Dot5"}]    =   VoltageReference1Dot5;}
+\DoxyCodeLine{905         UDP\_Package[\textcolor{stringliteral}{"VoltageReference2Dot5"}]    =   VoltageReference2Dot5;}
+\DoxyCodeLine{906         UDP\_Package[\textcolor{stringliteral}{"VoltageReference5Dot0"}]    =   VoltageReference5Dot0;}
+\DoxyCodeLine{907         UDP\_Package[\textcolor{stringliteral}{"VoltageReference12"}]   =   VoltageReference12;}
+\DoxyCodeLine{908     \}}
+\DoxyCodeLine{909 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_internal_voltages_a412c642064276fcc9db35d9fb8823edb}} 
+\index{InternalVoltages@{InternalVoltages}!UpdateObject@{UpdateObject}}
+\index{UpdateObject@{UpdateObject}!InternalVoltages@{InternalVoltages}}
+\doxysubsubsection{UpdateObject()}
+{\footnotesize\ttfamily void Internal\+Voltages\+::\+Update\+Object (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA }\end{DoxyParamCaption})}
+
+
+
+Atualiza os parâmetros do objeto conforme a mensagem C\+AN recebida. 
+
+Start the data processing according to the manual 
+\begin{DoxyParams}{Parameters}
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & 8 bytes data received from the motor\\
+\hline
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & Conjunto de 8 bytes recebidos pela C\+AN \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{869                                                           \{}
+\DoxyCodeLine{870     VoltageReference1Dot5   =   ProcessLowVoltage(CAN\_DATA, 1, 0);}
+\DoxyCodeLine{871     VoltageReference2Dot5   =   ProcessLowVoltage(CAN\_DATA, 3, 2);}
+\DoxyCodeLine{872     VoltageReference5Dot0   =   ProcessLowVoltage(CAN\_DATA, 5, 4);}
+\DoxyCodeLine{873     VoltageReference12      =   ProcessLowVoltage(CAN\_DATA, 7, 6);}
+\DoxyCodeLine{874 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}
