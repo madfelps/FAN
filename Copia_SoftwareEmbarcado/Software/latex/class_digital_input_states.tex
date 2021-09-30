@@ -1,0 +1,98 @@
+\doxysection{Digital\+Input\+States Class Reference}
+\label{class_digital_input_states}\index{DigitalInputStates@{DigitalInputStates}}
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Digital\+Input\+States} ()
+\item 
+void \textbf{ Update\+Frame} (struct can\+\_\+frame $\ast$frame)
+\begin{DoxyCompactList}\small\item\em Update the can frame\textquotesingle{}s bytes according to the values from Digital\+Input\+\_\+X (1 $<$= X $<$= 8) \end{DoxyCompactList}\item 
+int \textbf{ Get\+Byte} (int Position)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{class_digital_input_states_ae8cddad4d7f35aba57bc191896678f5d}} 
+\index{DigitalInputStates@{DigitalInputStates}!DigitalInputStates@{DigitalInputStates}}
+\index{DigitalInputStates@{DigitalInputStates}!DigitalInputStates@{DigitalInputStates}}
+\doxysubsubsection{DigitalInputStates()}
+{\footnotesize\ttfamily Digital\+Input\+States\+::\+Digital\+Input\+States (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Data bytes to be received from C\+AN protocol (little endian) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1070                                       \{}
+\DoxyCodeLine{1071     DigitalInput\_1 = 0;}
+\DoxyCodeLine{1072     DigitalInput\_2 = 0;}
+\DoxyCodeLine{1073     DigitalInput\_3 = 0;}
+\DoxyCodeLine{1074     DigitalInput\_4 = 0;}
+\DoxyCodeLine{1075     DigitalInput\_5 = 0;}
+\DoxyCodeLine{1076     DigitalInput\_6 = 0;}
+\DoxyCodeLine{1077     DigitalInput\_7 = 0;}
+\DoxyCodeLine{1078     DigitalInput\_8 = 0;}
+\DoxyCodeLine{1079 \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_digital_input_states_afa7d59e799b0a24ddc471d5d4492ad1b}} 
+\index{DigitalInputStates@{DigitalInputStates}!GetByte@{GetByte}}
+\index{GetByte@{GetByte}!DigitalInputStates@{DigitalInputStates}}
+\doxysubsubsection{GetByte()}
+{\footnotesize\ttfamily int Digital\+Input\+States\+::\+Get\+Byte (\begin{DoxyParamCaption}\item[{int}]{Position }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Position} & Byte position to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Byte returned from C\+A\+N\+\_\+\+D\+A\+TA (little endian) 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1093                                            \{}
+\DoxyCodeLine{1094     \textcolor{keywordflow}{return} Byte[Position];}
+\DoxyCodeLine{1095 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_digital_input_states_a8c74739cd8e6d3b099e84ce2267a3fdd}} 
+\index{DigitalInputStates@{DigitalInputStates}!UpdateFrame@{UpdateFrame}}
+\index{UpdateFrame@{UpdateFrame}!DigitalInputStates@{DigitalInputStates}}
+\doxysubsubsection{UpdateFrame()}
+{\footnotesize\ttfamily void Digital\+Input\+States\+::\+Update\+Frame (\begin{DoxyParamCaption}\item[{struct can\+\_\+frame $\ast$}]{frame }\end{DoxyParamCaption})}
+
+
+
+Update the can frame\textquotesingle{}s bytes according to the values from Digital\+Input\+\_\+X (1 $<$= X $<$= 8) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em frame} & can frame to be send to the motor \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1081                                                            \{}
+\DoxyCodeLine{1082     frame-\/>can\_id = DIGITAL\_IN;}
+\DoxyCodeLine{1083     frame-\/>data[0] = DigitalInput\_1;}
+\DoxyCodeLine{1084     frame-\/>data[1] = DigitalInput\_2;}
+\DoxyCodeLine{1085     frame-\/>data[2] = DigitalInput\_3;}
+\DoxyCodeLine{1086     frame-\/>data[3] = DigitalInput\_4;}
+\DoxyCodeLine{1087     frame-\/>data[4] = DigitalInput\_5;}
+\DoxyCodeLine{1088     frame-\/>data[5] = DigitalInput\_6;}
+\DoxyCodeLine{1089     frame-\/>data[6] = DigitalInput\_7;}
+\DoxyCodeLine{1090     frame-\/>data[7] = DigitalInput\_8;}
+\DoxyCodeLine{1091 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}

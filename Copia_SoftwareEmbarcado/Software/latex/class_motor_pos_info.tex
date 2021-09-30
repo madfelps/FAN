@@ -1,0 +1,278 @@
+\doxysection{Motor\+Pos\+Info Class Reference}
+\label{class_motor_pos_info}\index{MotorPosInfo@{MotorPosInfo}}
+
+
+Motor position information class.  
+
+
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+Inheritance diagram for Motor\+Pos\+Info\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_motor_pos_info}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Motor\+Pos\+Info} (unsigned char $\ast$)
+\begin{DoxyCompactList}\small\item\em Construtor da classe \doxyref{Motor\+Pos\+Info}{p.}{class_motor_pos_info}. \end{DoxyCompactList}\item 
+\textbf{ Motor\+Pos\+Info} ()
+\item 
+void \textbf{ Update\+Object} (unsigned char $\ast$C\+A\+N\+\_\+\+D\+A\+TA)
+\begin{DoxyCompactList}\small\item\em Atualiza os parâmetros do objeto conforme a mensagem C\+AN recebida. \end{DoxyCompactList}\item 
+void \textbf{ Show\+All\+Values\+Processed} ()
+\begin{DoxyCompactList}\small\item\em Print all the processd data from this class. \end{DoxyCompactList}\item 
+void \textbf{ If\+I\+D\+\_\+\+Motor\+Pos\+Info} (struct can\+\_\+frame $\ast$frame, \textbf{ nlohmann\+::json} \&U\+D\+P\+\_\+\+Package)
+\begin{DoxyCompactList}\small\item\em Verify if the ID\textquotesingle{}s frame received refers to this class; if so, process according the manual. \end{DoxyCompactList}\item 
+float \textbf{ Get\+Motor\+Angle\+Processed} ()
+\item 
+float \textbf{ Get\+Motor\+Speed\+Processed} ()
+\item 
+float \textbf{ Get\+Electrical\+Out\+Freq\+Processed} ()
+\item 
+float \textbf{ Get\+Delta\+Resolver\+Filtered\+Processed} ()
+\item 
+int \textbf{ Get\+Byte} (int Position)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Motor position information class. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{class_motor_pos_info_a2a36fc0a871531da922c2f84dcbeaf5f}} 
+\index{MotorPosInfo@{MotorPosInfo}!MotorPosInfo@{MotorPosInfo}}
+\index{MotorPosInfo@{MotorPosInfo}!MotorPosInfo@{MotorPosInfo}}
+\doxysubsubsection{MotorPosInfo()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Motor\+Pos\+Info\+::\+Motor\+Pos\+Info (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA }\end{DoxyParamCaption})}
+
+
+
+Construtor da classe \doxyref{Motor\+Pos\+Info}{p.}{class_motor_pos_info}. 
+
+Data bytes to be received from C\+AN protocol 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{204                                                  \{}
+\DoxyCodeLine{205     MotorAngle                      = 0;}
+\DoxyCodeLine{206     MotorAngleProcessed             = ProcessAngle(CAN\_DATA, 1, 0);}
+\DoxyCodeLine{207     MotorSpeed                      = 0;}
+\DoxyCodeLine{208     MotorSpeedProcessed             = ProcessAngleVelocity(CAN\_DATA, 3, 2);}
+\DoxyCodeLine{209     ElectricalOutFreq               = 0;}
+\DoxyCodeLine{210     DeltaResolverFiltered           = 0;}
+\DoxyCodeLine{211 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_motor_pos_info_a64e79492522229088db92d17ef77d04c}} 
+\index{MotorPosInfo@{MotorPosInfo}!MotorPosInfo@{MotorPosInfo}}
+\index{MotorPosInfo@{MotorPosInfo}!MotorPosInfo@{MotorPosInfo}}
+\doxysubsubsection{MotorPosInfo()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Motor\+Pos\+Info\+::\+Motor\+Pos\+Info (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{191                           \{}
+\DoxyCodeLine{192     MotorAngle                      = 0;}
+\DoxyCodeLine{193     MotorAngleProcessed             = 0;}
+\DoxyCodeLine{194     MotorSpeed                      = 0;}
+\DoxyCodeLine{195     MotorSpeedProcessed             = 0;}
+\DoxyCodeLine{196     ElectricalOutFreq               = 0;}
+\DoxyCodeLine{197     DeltaResolverFiltered           = 0;}
+\DoxyCodeLine{198 \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_motor_pos_info_a344d82036b52fed9427636199d9c13bc}} 
+\index{MotorPosInfo@{MotorPosInfo}!GetByte@{GetByte}}
+\index{GetByte@{GetByte}!MotorPosInfo@{MotorPosInfo}}
+\doxysubsubsection{GetByte()}
+{\footnotesize\ttfamily int Motor\+Pos\+Info\+::\+Get\+Byte (\begin{DoxyParamCaption}\item[{int}]{Position }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Position} & Byte position to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Byte returned from C\+A\+N\+\_\+\+D\+A\+TA 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{230                                      \{}
+\DoxyCodeLine{231     \textcolor{keywordflow}{return} Byte[Position];}
+\DoxyCodeLine{232 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_motor_pos_info_ac078315ee2be62d81985cbafe13921c9}} 
+\index{MotorPosInfo@{MotorPosInfo}!GetDeltaResolverFilteredProcessed@{GetDeltaResolverFilteredProcessed}}
+\index{GetDeltaResolverFilteredProcessed@{GetDeltaResolverFilteredProcessed}!MotorPosInfo@{MotorPosInfo}}
+\doxysubsubsection{GetDeltaResolverFilteredProcessed()}
+{\footnotesize\ttfamily float Motor\+Pos\+Info\+::\+Get\+Delta\+Resolver\+Filtered\+Processed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+Return delta resolver filtered parameter processed through two\textquotesingle{}s complement concept 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{226                                                      \{}
+\DoxyCodeLine{227     \textcolor{keywordflow}{return} DeltaResolverFilteredProcessed;}
+\DoxyCodeLine{228 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_motor_pos_info_aa424751af1bccb472a088b2a74bbfccf}} 
+\index{MotorPosInfo@{MotorPosInfo}!GetElectricalOutFreqProcessed@{GetElectricalOutFreqProcessed}}
+\index{GetElectricalOutFreqProcessed@{GetElectricalOutFreqProcessed}!MotorPosInfo@{MotorPosInfo}}
+\doxysubsubsection{GetElectricalOutFreqProcessed()}
+{\footnotesize\ttfamily float Motor\+Pos\+Info\+::\+Get\+Electrical\+Out\+Freq\+Processed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+Return electrical out frequency parameter processed through two\textquotesingle{}s complement concept 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{222                                                  \{}
+\DoxyCodeLine{223     \textcolor{keywordflow}{return} ElectricalOutFreqProcessed;}
+\DoxyCodeLine{224 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_motor_pos_info_a0b41fbe155fa026b3f892d1a9aac1683}} 
+\index{MotorPosInfo@{MotorPosInfo}!GetMotorAngleProcessed@{GetMotorAngleProcessed}}
+\index{GetMotorAngleProcessed@{GetMotorAngleProcessed}!MotorPosInfo@{MotorPosInfo}}
+\doxysubsubsection{GetMotorAngleProcessed()}
+{\footnotesize\ttfamily float Motor\+Pos\+Info\+::\+Get\+Motor\+Angle\+Processed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+Return motor angle parameter processed through two\textquotesingle{}s complement concept 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{214                                           \{}
+\DoxyCodeLine{215     \textcolor{keywordflow}{return} MotorAngleProcessed;}
+\DoxyCodeLine{216 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_motor_pos_info_aadd0c41b8ec34b10790e665d3778b300}} 
+\index{MotorPosInfo@{MotorPosInfo}!GetMotorSpeedProcessed@{GetMotorSpeedProcessed}}
+\index{GetMotorSpeedProcessed@{GetMotorSpeedProcessed}!MotorPosInfo@{MotorPosInfo}}
+\doxysubsubsection{GetMotorSpeedProcessed()}
+{\footnotesize\ttfamily float Motor\+Pos\+Info\+::\+Get\+Motor\+Speed\+Processed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+Return motor speed parameter processed through two\textquotesingle{}s complement concept 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{218                                           \{}
+\DoxyCodeLine{219     \textcolor{keywordflow}{return} MotorSpeedProcessed;}
+\DoxyCodeLine{220 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_motor_pos_info_ac9228951b37137aef853c2f972dce1ac}} 
+\index{MotorPosInfo@{MotorPosInfo}!IfID\_MotorPosInfo@{IfID\_MotorPosInfo}}
+\index{IfID\_MotorPosInfo@{IfID\_MotorPosInfo}!MotorPosInfo@{MotorPosInfo}}
+\doxysubsubsection{IfID\_MotorPosInfo()}
+{\footnotesize\ttfamily void Motor\+Pos\+Info\+::\+If\+I\+D\+\_\+\+Motor\+Pos\+Info (\begin{DoxyParamCaption}\item[{struct can\+\_\+frame $\ast$}]{frame,  }\item[{\textbf{ nlohmann\+::json} \&}]{U\+D\+P\+\_\+\+Package }\end{DoxyParamCaption})}
+
+
+
+Verify if the ID\textquotesingle{}s frame received refers to this class; if so, process according the manual. 
+
+Verifica se o ID da C\+AN refere-\/se a classe \doxyref{Motor\+Pos\+Info}{p.}{class_motor_pos_info}; caso afirmativo, chama a função de update e atualiza os campos da mensagem json.
+
+
+\begin{DoxyParams}{Parameters}
+{\em C\+AN} & frame received from the motor \\
+\hline
+{\em Json} & packet to store the data to be sent for the graphical interface\\
+\hline
+{\em Struct} & referente ao can \\
+\hline
+{\em Pacote} & json para posterior envio a interface \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{268                                                                                       \{}
+\DoxyCodeLine{269     \textcolor{keywordflow}{if}(frame-\/>can\_id == 165)\{}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{271         this-\/>UpdateObject(frame-\/>data);}
+\DoxyCodeLine{272 }
+\DoxyCodeLine{273         UDP\_Package[\textcolor{stringliteral}{"ID"}]    = \textcolor{stringliteral}{"MOTOR\_POSITION"};}
+\DoxyCodeLine{274         UDP\_Package[\textcolor{stringliteral}{"Angle"}] = MotorAngleProcessed;}
+\DoxyCodeLine{275         UDP\_Package[\textcolor{stringliteral}{"Speed"}] = MotorSpeedProcessed;}
+\DoxyCodeLine{276 }
+\DoxyCodeLine{277 }
+\DoxyCodeLine{278     \}}
+\DoxyCodeLine{279 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_motor_pos_info_a36ffea83d0b94be1b69670a2f2aa9dfe}} 
+\index{MotorPosInfo@{MotorPosInfo}!ShowAllValuesProcessed@{ShowAllValuesProcessed}}
+\index{ShowAllValuesProcessed@{ShowAllValuesProcessed}!MotorPosInfo@{MotorPosInfo}}
+\doxysubsubsection{ShowAllValuesProcessed()}
+{\footnotesize\ttfamily void Motor\+Pos\+Info\+::\+Show\+All\+Values\+Processed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Print all the processd data from this class. 
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{256                                          \{}
+\DoxyCodeLine{257     \textcolor{comment}{//printf("Angle: \%f\(\backslash\)n", this-\/>GetMotorAngleProcessed());}}
+\DoxyCodeLine{258     \textcolor{comment}{//printf("Speed: \%f\(\backslash\)n", this-\/>GetMotorSpeedProcessed());}}
+\DoxyCodeLine{259 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_motor_pos_info_a0dc069cc847a2cf3b975a29cbb6f1858}} 
+\index{MotorPosInfo@{MotorPosInfo}!UpdateObject@{UpdateObject}}
+\index{UpdateObject@{UpdateObject}!MotorPosInfo@{MotorPosInfo}}
+\doxysubsubsection{UpdateObject()}
+{\footnotesize\ttfamily void Motor\+Pos\+Info\+::\+Update\+Object (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA }\end{DoxyParamCaption})}
+
+
+
+Atualiza os parâmetros do objeto conforme a mensagem C\+AN recebida. 
+
+Start the data processing according to the manual 
+\begin{DoxyParams}{Parameters}
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & 8 bytes data received from the motor\\
+\hline
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & Conjunto de 8 bytes recebidos pela C\+AN \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{241                                                       \{}
+\DoxyCodeLine{242     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < 8; i++)\{}
+\DoxyCodeLine{243         Byte[i] = CAN\_DATA[i];}
+\DoxyCodeLine{244     \}}
+\DoxyCodeLine{245 }
+\DoxyCodeLine{246     MotorAngle                      = 0;}
+\DoxyCodeLine{247     MotorAngleProcessed             = this-\/>ProcessAngle(CAN\_DATA, 1, 0);}
+\DoxyCodeLine{248     MotorSpeed                      = 0;}
+\DoxyCodeLine{249     MotorSpeedProcessed             = this-\/>ProcessAngleVelocity(CAN\_DATA, 3, 2);}
+\DoxyCodeLine{250     ElectricalOutFreq               = 0;}
+\DoxyCodeLine{251     DeltaResolverFiltered           = 0;}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}
