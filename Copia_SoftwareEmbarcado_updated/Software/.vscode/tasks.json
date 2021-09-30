@@ -1,0 +1,27 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++ arquivo de build ativo",
+			"command": "/usr/bin/g++",
+			"args": [
+				"-g",
+				"mainn.cpp",
+				"RemyHVH250.cpp",
+				"-I$(pwd)",
+				"-o",
+				"${fileDirname}/gaspar",
+				"-fopenmp"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compilador: /usr/bin/g++"
+		}
+	]
+}

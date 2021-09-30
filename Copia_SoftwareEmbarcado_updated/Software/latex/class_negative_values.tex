@@ -1,0 +1,66 @@
+\doxysection{Negative\+Values Class Reference}
+\label{class_negative_values}\index{NegativeValues@{NegativeValues}}
+
+
+This class\textquotesingle{} proposal is to process the data received from C\+AN using two\textquotesingle{}s complement.  
+
+
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+Inheritance diagram for Negative\+Values\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.073171cm]{class_negative_values}
+\end{center}
+\end{figure}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static float \textbf{ Negative\+Values\+Two\+Bytes} (float Value)
+\begin{DoxyCompactList}\small\item\em This function processes binary data into decimal data through the two\textquotesingle{}s complement. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class\textquotesingle{} proposal is to process the data received from C\+AN using two\textquotesingle{}s complement. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_negative_values_ac6627724c1b3d8973a9c16a50a554dae}} 
+\index{NegativeValues@{NegativeValues}!NegativeValuesTwoBytes@{NegativeValuesTwoBytes}}
+\index{NegativeValuesTwoBytes@{NegativeValuesTwoBytes}!NegativeValues@{NegativeValues}}
+\doxysubsubsection{NegativeValuesTwoBytes()}
+{\footnotesize\ttfamily float Negative\+Values\+::\+Negative\+Values\+Two\+Bytes (\begin{DoxyParamCaption}\item[{float}]{Value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+This function processes binary data into decimal data through the two\textquotesingle{}s complement. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Value} & to be processed through two\textquotesingle{}s complement \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Signed decimal data
+\end{DoxyReturn}
+@\+Função\+: Processa os números negativos em lógica binária para decimal, respeitando o sinal matemático ~\newline
+@\+Parâmetros\+: Valor em lógica binária ~\newline
+@\+Retorno\+: Valor decimal, positivo ou negativo, conforme a lógica 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{46                                                        \{}
+\DoxyCodeLine{47         \textcolor{keywordflow}{if}(Value >= 32768)\{}
+\DoxyCodeLine{48             Value = Value -\/ 65536;}
+\DoxyCodeLine{49         \}}
+\DoxyCodeLine{50         \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{51         \}}
+\DoxyCodeLine{52         \textcolor{keywordflow}{return} Value;}
+\DoxyCodeLine{53 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}

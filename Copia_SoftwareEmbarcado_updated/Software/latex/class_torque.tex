@@ -1,0 +1,80 @@
+\doxysection{Torque Class Reference}
+\label{class_torque}\index{Torque@{Torque}}
+
+
+This class refers to torque parameter.  
+
+
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+Inheritance diagram for Torque\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.170732cm]{class_torque}
+\end{center}
+\end{figure}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static float \textbf{ Process\+Torque\+Receive} (unsigned char $\ast$C\+A\+N\+\_\+\+D\+A\+TA, int M\+S\+Byte, int L\+S\+Byte)
+\begin{DoxyCompactList}\small\item\em This function process torque parameter through two\textquotesingle{}s complement. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class refers to torque parameter. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_torque_ae0649369ff044b010c5be0c8bb469cc5}} 
+\index{Torque@{Torque}!ProcessTorqueReceive@{ProcessTorqueReceive}}
+\index{ProcessTorqueReceive@{ProcessTorqueReceive}!Torque@{Torque}}
+\doxysubsubsection{ProcessTorqueReceive()}
+{\footnotesize\ttfamily float Torque\+::\+Process\+Torque\+Receive (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA,  }\item[{int}]{M\+S\+Byte,  }\item[{int}]{L\+S\+Byte }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+This function process torque parameter through two\textquotesingle{}s complement. 
+
+Processamento do torque recebido pelo motor para conversão na forma decimal.
+
+
+\begin{DoxyParams}{Parameters}
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & Data received from motor \\
+\hline
+{\em M\+S\+Byte} & Most significant byte \\
+\hline
+{\em L\+S\+Byte} & Less significant byte \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Processed decimal torque data according two\textquotesingle{}s complement
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & Conjunto de 8 bytes recebidos por meio da C\+AN \\
+\hline
+{\em M\+S\+Byte} & índice do byte mais signiticativo \\
+\hline
+{\em L\+S\+Byte} & índice do byte menos significativo \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxyref{Torque}{p.}{class_torque} processado na forma decimal 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{103                                                                                  \{}
+\DoxyCodeLine{104     \textcolor{keywordtype}{float} TorqueValue = CAN\_DATA[LSByte] + CAN\_DATA[MSByte] * 256;}
+\DoxyCodeLine{105     TorqueValue = NegativeValuesTwoBytes(TorqueValue);}
+\DoxyCodeLine{106     TorqueValue = TorqueValue/10;}
+\DoxyCodeLine{107     \textcolor{keywordflow}{return} TorqueValue;}
+\DoxyCodeLine{108 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}

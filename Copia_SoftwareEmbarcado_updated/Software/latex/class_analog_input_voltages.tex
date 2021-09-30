@@ -1,0 +1,117 @@
+\doxysection{Analog\+Input\+Voltages Class Reference}
+\label{class_analog_input_voltages}\index{AnalogInputVoltages@{AnalogInputVoltages}}
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+Inheritance diagram for Analog\+Input\+Voltages\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_analog_input_voltages}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Analog\+Input\+Voltages} ()
+\item 
+\textbf{ Analog\+Input\+Voltages} (unsigned char $\ast$C\+A\+N\+\_\+\+D\+A\+TA)
+\item 
+void \textbf{ If\+I\+D\+\_\+\+Analog\+Input\+Voltages} (struct can\+\_\+frame $\ast$frame, \textbf{ nlohmann\+::json} \&U\+D\+P\+\_\+\+Package)
+\begin{DoxyCompactList}\small\item\em Verify if the ID\textquotesingle{}s frame received refers to this class; if so, process according the manual. \end{DoxyCompactList}\item 
+int \textbf{ Get\+Byte} (int Position)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{class_analog_input_voltages_ad88293d05aae5fe352031a21fc76053e}} 
+\index{AnalogInputVoltages@{AnalogInputVoltages}!AnalogInputVoltages@{AnalogInputVoltages}}
+\index{AnalogInputVoltages@{AnalogInputVoltages}!AnalogInputVoltages@{AnalogInputVoltages}}
+\doxysubsubsection{AnalogInputVoltages()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Analog\+Input\+Voltages\+::\+Analog\+Input\+Voltages (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Data bytes to be received from C\+AN protocol (little endian) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{913                                         \{}
+\DoxyCodeLine{914     AnalogInput1            = 0.0;}
+\DoxyCodeLine{915     AnalogInput1Processed   = 0.0;}
+\DoxyCodeLine{916     AnalogInput2            = 0.0;}
+\DoxyCodeLine{917     AnalogInput2Processed   = 0.0;}
+\DoxyCodeLine{918     AnalogInput3            = 0.0;}
+\DoxyCodeLine{919     AnalogInput3Processed   = 0.0;}
+\DoxyCodeLine{920     AnalogInput4            = 0.0;}
+\DoxyCodeLine{921     AnalogInput4Processed   = 0.0;}
+\DoxyCodeLine{922     AnalogInput5            = 0.0;}
+\DoxyCodeLine{923     AnalogInput5Processed   = 0.0;}
+\DoxyCodeLine{924     AnalogInput6            = 0.0;}
+\DoxyCodeLine{925     AnalogInput6Processed   = 0.0;}
+\DoxyCodeLine{926 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_analog_input_voltages_ae49b98040d1b2951763782478e33bc08}} 
+\index{AnalogInputVoltages@{AnalogInputVoltages}!AnalogInputVoltages@{AnalogInputVoltages}}
+\index{AnalogInputVoltages@{AnalogInputVoltages}!AnalogInputVoltages@{AnalogInputVoltages}}
+\doxysubsubsection{AnalogInputVoltages()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Analog\+Input\+Voltages\+::\+Analog\+Input\+Voltages (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA }\end{DoxyParamCaption})}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{928                                                                \{}
+\DoxyCodeLine{929     AnalogInput1Processed   = 0.0;}
+\DoxyCodeLine{930     AnalogInput2Processed   = 0.0;}
+\DoxyCodeLine{931     AnalogInput3Processed   = 0.0;}
+\DoxyCodeLine{932     AnalogInput4Processed   = 0.0;}
+\DoxyCodeLine{933     AnalogInput5Processed   = 0.0;}
+\DoxyCodeLine{934     AnalogInput6Processed   = 0.0;}
+\DoxyCodeLine{935 }
+\DoxyCodeLine{936 \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_analog_input_voltages_ab3332cc8fc302b409006886fd6bf93b4}} 
+\index{AnalogInputVoltages@{AnalogInputVoltages}!GetByte@{GetByte}}
+\index{GetByte@{GetByte}!AnalogInputVoltages@{AnalogInputVoltages}}
+\doxysubsubsection{GetByte()}
+{\footnotesize\ttfamily int Analog\+Input\+Voltages\+::\+Get\+Byte (\begin{DoxyParamCaption}\item[{int}]{Position }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Position} & Byte position to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Byte returned from C\+A\+N\+\_\+\+D\+A\+TA (little endian) 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{938                                             \{}
+\DoxyCodeLine{939     \textcolor{keywordflow}{return} Byte[0];}
+\DoxyCodeLine{940 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_analog_input_voltages_ae2d19afaef71b208c97d5b73092449ca}} 
+\index{AnalogInputVoltages@{AnalogInputVoltages}!IfID\_AnalogInputVoltages@{IfID\_AnalogInputVoltages}}
+\index{IfID\_AnalogInputVoltages@{IfID\_AnalogInputVoltages}!AnalogInputVoltages@{AnalogInputVoltages}}
+\doxysubsubsection{IfID\_AnalogInputVoltages()}
+{\footnotesize\ttfamily void Analog\+Input\+Voltages\+::\+If\+I\+D\+\_\+\+Analog\+Input\+Voltages (\begin{DoxyParamCaption}\item[{struct can\+\_\+frame $\ast$}]{frame,  }\item[{\textbf{ nlohmann\+::json} \&}]{U\+D\+P\+\_\+\+Package }\end{DoxyParamCaption})}
+
+
+
+Verify if the ID\textquotesingle{}s frame received refers to this class; if so, process according the manual. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em C\+AN} & frame received from the motor \\
+\hline
+{\em Json} & packet to store the data to be sent for the graphical interface \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}

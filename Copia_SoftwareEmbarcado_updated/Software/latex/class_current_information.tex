@@ -1,0 +1,243 @@
+\doxysection{Current\+Information Class Reference}
+\label{class_current_information}\index{CurrentInformation@{CurrentInformation}}
+
+
+{\ttfamily \#include $<$Remy\+H\+V\+H250.\+h$>$}
+
+Inheritance diagram for Current\+Information\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_current_information}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Current\+Information} ()
+\item 
+\textbf{ Current\+Information} (unsigned char $\ast$C\+A\+N\+\_\+\+D\+A\+TA)
+\item 
+void \textbf{ Update\+Object} (unsigned char $\ast$C\+A\+N\+\_\+\+D\+A\+TA)
+\begin{DoxyCompactList}\small\item\em Atualiza os parâmetros do objeto conforme a mensagem C\+AN recebida. \end{DoxyCompactList}\item 
+void \textbf{ If\+I\+D\+\_\+\+Current\+Information} (struct can\+\_\+frame $\ast$frame, \textbf{ nlohmann\+::json} \&U\+D\+P\+\_\+\+Package)
+\begin{DoxyCompactList}\small\item\em Verify if the ID\textquotesingle{}s frame received refers to this class; if so, process according the manual. \end{DoxyCompactList}\item 
+float \textbf{ Get\+Phase\+A\+Current\+Processed} ()
+\item 
+float \textbf{ Get\+Phase\+B\+Current\+Processed} ()
+\item 
+float \textbf{ Get\+Phase\+C\+Current\+Processed} ()
+\item 
+float \textbf{ Get\+D\+C\+Bus\+Current\+Processed} ()
+\item 
+int \textbf{ Get\+Byte} (int Position)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{class_current_information_adb44a1ecd018bbef726b6306d26a7dd9}} 
+\index{CurrentInformation@{CurrentInformation}!CurrentInformation@{CurrentInformation}}
+\index{CurrentInformation@{CurrentInformation}!CurrentInformation@{CurrentInformation}}
+\doxysubsubsection{CurrentInformation()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Current\+Information\+::\+Current\+Information (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Data bytes to be received from C\+AN protocol (little endian) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{615                                       \{}
+\DoxyCodeLine{616     PhaseACurrent                   =   0.0;}
+\DoxyCodeLine{617     PhaseACurrentProcessed          =   0.0;}
+\DoxyCodeLine{618     PhaseBCurrent                   =   0.0;}
+\DoxyCodeLine{619     PhaseBCurrentProcessed          =   0.0;}
+\DoxyCodeLine{620     PhaseCCurrent                   =   0.0;}
+\DoxyCodeLine{621     PhaseCCurrentProcessed          =   0.0;}
+\DoxyCodeLine{622     DC\_BusCurrent                   =   0.0;}
+\DoxyCodeLine{623     DC\_BusCurrentProcessed          =   0.0;}
+\DoxyCodeLine{624 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_current_information_a78b83480679e27c33e45023152f26fea}} 
+\index{CurrentInformation@{CurrentInformation}!CurrentInformation@{CurrentInformation}}
+\index{CurrentInformation@{CurrentInformation}!CurrentInformation@{CurrentInformation}}
+\doxysubsubsection{CurrentInformation()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Current\+Information\+::\+Current\+Information (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA }\end{DoxyParamCaption})}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{632                                                              \{}
+\DoxyCodeLine{633     PhaseACurrentProcessed  =   ProcessTorqueReceive(CAN\_DATA, 1, 0);}
+\DoxyCodeLine{634     PhaseBCurrentProcessed  =   ProcessTorqueReceive(CAN\_DATA, 3, 2);}
+\DoxyCodeLine{635     PhaseCCurrentProcessed  =   ProcessTorqueReceive(CAN\_DATA, 5, 4);}
+\DoxyCodeLine{636     DC\_BusCurrentProcessed  =   ProcessTorqueReceive(CAN\_DATA, 7, 6);}
+\DoxyCodeLine{637 \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{class_current_information_a780c873d4e00f203d4f9b74fae7c5384}} 
+\index{CurrentInformation@{CurrentInformation}!GetByte@{GetByte}}
+\index{GetByte@{GetByte}!CurrentInformation@{CurrentInformation}}
+\doxysubsubsection{GetByte()}
+{\footnotesize\ttfamily int Current\+Information\+::\+Get\+Byte (\begin{DoxyParamCaption}\item[{int}]{Position }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Position} & Byte position to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Byte returned from C\+A\+N\+\_\+\+D\+A\+TA (little endian) 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{627                                            \{}
+\DoxyCodeLine{628     \textcolor{keywordflow}{return} Byte[Position];}
+\DoxyCodeLine{629 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_current_information_ac5f35c072a93b5f362a3d173bb5e54f7}} 
+\index{CurrentInformation@{CurrentInformation}!GetDCBusCurrentProcessed@{GetDCBusCurrentProcessed}}
+\index{GetDCBusCurrentProcessed@{GetDCBusCurrentProcessed}!CurrentInformation@{CurrentInformation}}
+\doxysubsubsection{GetDCBusCurrentProcessed()}
+{\footnotesize\ttfamily float Current\+Information\+::\+Get\+D\+C\+Bus\+Current\+Processed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+DC Bus current processed through two\textquotesingle{}s complement 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{668                                                   \{}
+\DoxyCodeLine{669     \textcolor{keywordflow}{return} DC\_BusCurrentProcessed;}
+\DoxyCodeLine{670 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_current_information_a1bf0b6e1eda1e7f17f02d9d52863c8fe}} 
+\index{CurrentInformation@{CurrentInformation}!GetPhaseACurrentProcessed@{GetPhaseACurrentProcessed}}
+\index{GetPhaseACurrentProcessed@{GetPhaseACurrentProcessed}!CurrentInformation@{CurrentInformation}}
+\doxysubsubsection{GetPhaseACurrentProcessed()}
+{\footnotesize\ttfamily float Current\+Information\+::\+Get\+Phase\+A\+Current\+Processed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+Phase A current processed through two\textquotesingle{}s complement 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{656                                                    \{}
+\DoxyCodeLine{657     \textcolor{keywordflow}{return} PhaseACurrentProcessed;}
+\DoxyCodeLine{658 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_current_information_a0b892db1e8813638e574d2b3dbe87dd2}} 
+\index{CurrentInformation@{CurrentInformation}!GetPhaseBCurrentProcessed@{GetPhaseBCurrentProcessed}}
+\index{GetPhaseBCurrentProcessed@{GetPhaseBCurrentProcessed}!CurrentInformation@{CurrentInformation}}
+\doxysubsubsection{GetPhaseBCurrentProcessed()}
+{\footnotesize\ttfamily float Current\+Information\+::\+Get\+Phase\+B\+Current\+Processed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+Phase B current processed through two\textquotesingle{}s complement 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{660                                                    \{}
+\DoxyCodeLine{661     \textcolor{keywordflow}{return} PhaseBCurrentProcessed;}
+\DoxyCodeLine{662 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_current_information_a4a11f5de7a7c62e5763789b321bebb3c}} 
+\index{CurrentInformation@{CurrentInformation}!GetPhaseCCurrentProcessed@{GetPhaseCCurrentProcessed}}
+\index{GetPhaseCCurrentProcessed@{GetPhaseCCurrentProcessed}!CurrentInformation@{CurrentInformation}}
+\doxysubsubsection{GetPhaseCCurrentProcessed()}
+{\footnotesize\ttfamily float Current\+Information\+::\+Get\+Phase\+C\+Current\+Processed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+Phase C current processed through two\textquotesingle{}s complement 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{664                                                    \{}
+\DoxyCodeLine{665     \textcolor{keywordflow}{return} PhaseCCurrentProcessed;}
+\DoxyCodeLine{666 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_current_information_a8229f602824e8f92cb22f43b3b0dff54}} 
+\index{CurrentInformation@{CurrentInformation}!IfID\_CurrentInformation@{IfID\_CurrentInformation}}
+\index{IfID\_CurrentInformation@{IfID\_CurrentInformation}!CurrentInformation@{CurrentInformation}}
+\doxysubsubsection{IfID\_CurrentInformation()}
+{\footnotesize\ttfamily void Current\+Information\+::\+If\+I\+D\+\_\+\+Current\+Information (\begin{DoxyParamCaption}\item[{struct can\+\_\+frame $\ast$}]{frame,  }\item[{\textbf{ nlohmann\+::json} \&}]{U\+D\+P\+\_\+\+Package }\end{DoxyParamCaption})}
+
+
+
+Verify if the ID\textquotesingle{}s frame received refers to this class; if so, process according the manual. 
+
+Verifica se o ID da C\+AN refere-\/se a classe \doxyref{Current\+Information}{p.}{class_current_information}; caso afirmativo, chama a função de update e atualiza os campos da mensagem json.
+
+
+\begin{DoxyParams}{Parameters}
+{\em C\+AN} & frame received from the motor \\
+\hline
+{\em Json} & packet to store the data to be sent for the graphical interface\\
+\hline
+{\em Struct} & referente ao can \\
+\hline
+{\em Pacote} & json para posterior envio a interface \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{679                                                                                                   \{}
+\DoxyCodeLine{680     \textcolor{keywordflow}{if}(frame-\/>can\_id == 166)\{}
+\DoxyCodeLine{681 }
+\DoxyCodeLine{682         this-\/>UpdateObject(frame-\/>data);}
+\DoxyCodeLine{683 }
+\DoxyCodeLine{684         UDP\_Package[\textcolor{stringliteral}{"ID"}]                   =       \textcolor{stringliteral}{"CURRENT\_INFORMATION"};}
+\DoxyCodeLine{685         UDP\_Package[\textcolor{stringliteral}{"PhaseACurrent"}]        =       PhaseACurrentProcessed;}
+\DoxyCodeLine{686         UDP\_Package[\textcolor{stringliteral}{"PhaseBCurrent"}]        =       PhaseBCurrentProcessed;}
+\DoxyCodeLine{687         UDP\_Package[\textcolor{stringliteral}{"PhaseCCurrent"}]        =       PhaseCCurrentProcessed;}
+\DoxyCodeLine{688         UDP\_Package[\textcolor{stringliteral}{"DC\_BusCurrent"}]        =       DC\_BusCurrentProcessed;}
+\DoxyCodeLine{689     \}}
+\DoxyCodeLine{690 \}}
+
+\end{DoxyCode}
+\mbox{\label{class_current_information_a12cba26b53a98de7df5150dc2dae7fc6}} 
+\index{CurrentInformation@{CurrentInformation}!UpdateObject@{UpdateObject}}
+\index{UpdateObject@{UpdateObject}!CurrentInformation@{CurrentInformation}}
+\doxysubsubsection{UpdateObject()}
+{\footnotesize\ttfamily void Current\+Information\+::\+Update\+Object (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{C\+A\+N\+\_\+\+D\+A\+TA }\end{DoxyParamCaption})}
+
+
+
+Atualiza os parâmetros do objeto conforme a mensagem C\+AN recebida. 
+
+Start the data processing according to the manual 
+\begin{DoxyParams}{Parameters}
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & 8 bytes data received from the motor\\
+\hline
+{\em C\+A\+N\+\_\+\+D\+A\+TA} & Conjunto de 8 bytes recebidos pela C\+AN \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{645                                                             \{}
+\DoxyCodeLine{646     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < 8; i++)\{}
+\DoxyCodeLine{647         Byte[i] = GetByte(i);}
+\DoxyCodeLine{648     \}}
+\DoxyCodeLine{649 }
+\DoxyCodeLine{650     PhaseACurrentProcessed  =   this-\/>ProcessTorqueReceive(CAN\_DATA, 1, 0);}
+\DoxyCodeLine{651     PhaseBCurrentProcessed  =   this-\/>ProcessTorqueReceive(CAN\_DATA, 3, 2);}
+\DoxyCodeLine{652     PhaseCCurrentProcessed  =   this-\/>ProcessTorqueReceive(CAN\_DATA, 5, 4);}
+\DoxyCodeLine{653     DC\_BusCurrentProcessed  =   this-\/>ProcessTorqueReceive(CAN\_DATA, 7, 6);}
+\DoxyCodeLine{654 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+h}\item 
+/home/felipe/\+C\+Lion\+Projects/\+F\+A\+N/\textbf{ Remy\+H\+V\+H250.\+cpp}\end{DoxyCompactItemize}
